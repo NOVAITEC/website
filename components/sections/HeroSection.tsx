@@ -140,26 +140,26 @@ export function HeroSection() {
             <p className="text-paper/50 text-sm font-inter mb-4">
               Vertrouwd door ondernemers die hun tijd terug willen
             </p>
-            <div className="flex items-center justify-center space-x-8">
+            <div className="flex items-center justify-center space-x-8 text-paper/70">
               <div className="text-center">
-                <p className="text-2xl font-montserrat font-bold text-amber">
+                <p className="text-2xl font-montserrat font-bold text-teal">
                   4 uur
                 </p>
-                <p className="text-sm font-inter text-slate-400">per week bespaard</p>
+                <p className="text-sm font-inter">per week bespaard</p>
               </div>
               <div className="w-px h-12 bg-paper/10" />
               <div className="text-center">
-                <p className="text-2xl font-montserrat font-bold text-amber">
+                <p className="text-2xl font-montserrat font-bold text-teal">
                   2 weken
                 </p>
-                <p className="text-sm font-inter text-slate-400">eerste resultaat</p>
+                <p className="text-sm font-inter">eerste resultaat</p>
               </div>
               <div className="w-px h-12 bg-paper/10" />
               <div className="text-center">
-                <p className="text-2xl font-montserrat font-bold text-amber">
+                <p className="text-2xl font-montserrat font-bold text-teal">
                   100%
                 </p>
-                <p className="text-sm font-inter text-slate-400">persoonlijke service</p>
+                <p className="text-sm font-inter">persoonlijke service</p>
               </div>
             </div>
           </motion.div>
