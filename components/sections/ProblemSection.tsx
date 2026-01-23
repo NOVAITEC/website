@@ -25,7 +25,7 @@ const problems = [
     iconColor: 'text-teal',
     title: 'Geen Overzicht',
     description:
-      "Klantgegevens in WhatsApp, offertes in Excel en to-do's in je hoofd. Als jij uitvalt, staat alles stil.",
+      "Klantgegevens in WhatsApp, offertes in Excel en to-do&apos;s in je hoofd. Als jij uitvalt, staat alles stil.",
   },
 ];
 
@@ -59,7 +59,7 @@ export function ProblemSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-inter text-lg text-slate-400"
         >
-          Of voelt het vaker als brandjes blussen en 's avonds nog administratie doen?
+          Of voelt het vaker als brandjes blussen en &apos;s avonds nog administratie doen?
         </motion.p>
       </div>
 
