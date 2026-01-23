@@ -25,7 +25,7 @@ const problems = [
     iconColor: 'text-teal',
     title: 'Geen Overzicht',
     description:
-      "Klantgegevens in WhatsApp, offertes in Excel en to-do&apos;s in je hoofd. Als jij uitvalt, staat alles stil.",
+      "Klantgegevens in WhatsApp, offertes in Excel en to-do's in je hoofd. Als jij uitvalt, staat alles stil.",
   },
 ];
 
