@@ -42,13 +42,18 @@ export function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <Image
-                src="/images/novaitec_logo_transparant_wit_tekst-wit.png"
-                alt="NOVAITEC Logo"
-                width={140}
-                height={40}
-                className="w-auto h-10"
-              />
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/images/novaitec_beeldmerk_transparant_wit.png"
+                  alt="NOVAITEC Icon"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10"
+                />
+                <span className="text-2xl font-montserrat font-bold text-paper tracking-tight">
+                  NOVAITEC<span className="text-teal">.</span>
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
