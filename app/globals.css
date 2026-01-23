@@ -10,10 +10,6 @@
     --radius: 0.75rem;
   }
 
-  * {
-    @apply border-border;
-  }
-
   body {
     @apply bg-paper text-slate-text font-inter;
   }
