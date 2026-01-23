@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { name: "Over Mij", href: "#over" },
@@ -78,12 +79,11 @@ export function Header() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, duration: 0.4 }}
               >
-                <Link
-                  href="#contact"
-                  className="bg-teal text-midnight px-6 py-2.5 rounded-lg font-inter font-semibold hover:bg-teal/90 transition-all duration-200 hover:scale-105"
-                >
-                  Start Gesprek
-                </Link>
+                <Button asChild className="hover:scale-105">
+                  <Link href="#contact">
+                    Start Gesprek
+                  </Link>
+                </Button>
               </motion.div>
             </div>
 
@@ -164,13 +164,14 @@ export function Header() {
                     transition={{ delay: 0.4 }}
                     className="mt-8"
                   >
-                    <Link
-                      href="#contact"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-center bg-teal text-midnight px-6 py-3 rounded-lg font-inter font-semibold hover:bg-teal/90 transition-all duration-200"
-                    >
-                      Start Gesprek
-                    </Link>
+                    <Button asChild className="w-full">
+                      <Link
+                        href="#contact"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Start Gesprek
+                      </Link>
+                    </Button>
                   </motion.div>
                 </nav>
 
