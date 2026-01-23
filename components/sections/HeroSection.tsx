@@ -64,7 +64,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center space-x-2 bg-teal/10 border border-teal/20 rounded-full px-4 py-2 mb-8"
+            className="inline-flex items-center space-x-2 bg-slate-800/80 border border-teal/30 rounded-full px-4 py-2 mb-8"
           >
             <Sparkles className="w-4 h-4 text-teal" />
             <span className="text-teal text-sm font-inter font-medium">
@@ -77,7 +77,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-5xl md:text-7xl font-montserrat font-bold text-paper mb-6 leading-tight"
+            className="text-5xl md:text-7xl font-montserrat font-extrabold text-white mb-6 leading-tight"
           >
             Wij verkopen geen{" "}
             <span className="text-teal">AI</span>
@@ -87,12 +87,11 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-4xl md:text-6xl font-montserrat font-bold text-paper mb-8 leading-tight"
+            className="text-4xl md:text-6xl font-montserrat font-extrabold text-white mb-8 leading-tight"
           >
             Wij verkopen{" "}
-            <span className="bg-gradient-to-r from-teal to-amber bg-clip-text text-transparent">
-              rust en resultaat
-            </span>
+            <span className="text-teal">rust</span> en{" "}
+            <span className="text-amber">resultaat</span>
           </motion.h2>
 
           {/* Subtitle */}
@@ -102,9 +101,9 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="text-xl md:text-2xl text-paper/70 font-inter mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            Geen gedoe. Gewoon bouwen. Ik heb je proces in kaart gebracht en
-            vertaal chaos naar werkende systemen. Resultaat binnen 2 weken
-            zichtbaar.
+            Van handmatige chaos naar geautomatiseerde rust. Wij bouwen slimme
+            workflows die voor jou werken, in plaats van andersom. Geen dikke
+            rapporten, maar werkende software binnen 2 weken.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -141,26 +140,26 @@ export function HeroSection() {
             <p className="text-paper/50 text-sm font-inter mb-4">
               Vertrouwd door ondernemers die hun tijd terug willen
             </p>
-            <div className="flex items-center justify-center space-x-8 text-paper/70">
+            <div className="flex items-center justify-center space-x-8">
               <div className="text-center">
-                <p className="text-2xl font-montserrat font-bold text-teal">
+                <p className="text-2xl font-montserrat font-bold text-amber">
                   4 uur
                 </p>
-                <p className="text-sm font-inter">per week bespaard</p>
+                <p className="text-sm font-inter text-slate-400">per week bespaard</p>
               </div>
               <div className="w-px h-12 bg-paper/10" />
               <div className="text-center">
-                <p className="text-2xl font-montserrat font-bold text-teal">
+                <p className="text-2xl font-montserrat font-bold text-amber">
                   2 weken
                 </p>
-                <p className="text-sm font-inter">eerste resultaat</p>
+                <p className="text-sm font-inter text-slate-400">eerste resultaat</p>
               </div>
               <div className="w-px h-12 bg-paper/10" />
               <div className="text-center">
-                <p className="text-2xl font-montserrat font-bold text-teal">
+                <p className="text-2xl font-montserrat font-bold text-amber">
                   100%
                 </p>
-                <p className="text-sm font-inter">persoonlijke service</p>
+                <p className="text-sm font-inter text-slate-400">persoonlijke service</p>
               </div>
             </div>
           </motion.div>
