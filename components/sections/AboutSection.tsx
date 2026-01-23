@@ -111,7 +111,7 @@ export default function AboutSection() {
                 <span className="text-teal">agents</span> schieten uit de grond.
                 Maar als ik naar de realiteit kijk, zie ik{" "}
                 <span className="text-amber">ondernemers</span> vooral brandjes
-                blussen en 's avonds administratie doen.
+                blussen en &apos;s avonds administratie doen.
               </p>
 
               <p className="font-inter text-lg text-slate-200 leading-relaxed">
