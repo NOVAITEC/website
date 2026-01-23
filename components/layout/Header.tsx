@@ -41,17 +41,14 @@ export function Header() {
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center">
               <Image
-                src="/images/novaitec_beeldmerk_transparant_kleur.png"
+                src="/images/novaitec_logo_transparant_wit_tekst-wit.png"
                 alt="NOVAITEC Logo"
-                width={40}
+                width={140}
                 height={40}
-                className="w-10 h-10"
+                className="w-auto h-10"
               />
-              <span className="text-2xl font-montserrat font-bold text-paper">
-                NOVAITEC
-              </span>
             </Link>
 
             {/* Desktop Navigation */}
