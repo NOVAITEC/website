@@ -13,6 +13,10 @@ import {
   BrainCircuit,
   Send,
   TrendingUp,
+  MessageSquare,
+  Calendar,
+  User,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -272,6 +276,109 @@ function AnimatedChart() {
 }
 
 // =============================================================================
+// CHAT MOCKUP (Slide AI Agents Visual)
+// =============================================================================
+
+function ChatMockup() {
+  const messages = [
+    {
+      id: 1,
+      type: 'user' as const,
+      text: 'Kun je de offertes van vandaag samenvatten?',
+    },
+    {
+      id: 2,
+      type: 'ai' as const,
+      text: 'Natuurlijk! Vandaag zijn er 3 offertes binnengekomen met een totaalwaarde van €12.450. De hoogste (€7.200) is van TechBedrijf BV voor een dashboard project.',
+    },
+  ];
+
+  return (
+    <div className="relative bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full max-w-xl mx-auto">
+      {/* Terminal header */}
+      <div className="absolute top-4 left-4 flex gap-2">
+        <div className="w-3 h-3 rounded-full bg-red-500/70" />
+        <div className="w-3 h-3 rounded-full bg-amber/70" />
+        <div className="w-3 h-3 rounded-full bg-green-500/70" />
+      </div>
+      <div className="absolute top-4 right-4 font-mono text-xs text-slate-500">
+        ai-assistant.chat
+      </div>
+
+      {/* Chat messages */}
+      <div className="mt-8 space-y-4">
+        {messages.map((msg, i) => (
+          <motion.div
+            key={msg.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 + i * 0.4, duration: 0.5 }}
+            className={cn(
+              'flex gap-3',
+              msg.type === 'user' ? 'justify-end' : 'justify-start'
+            )}
+          >
+            {msg.type === 'ai' && (
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal/20 border border-teal/30 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-teal" />
+              </div>
+            )}
+            <div
+              className={cn(
+                'max-w-[80%] px-4 py-3 rounded-2xl text-sm',
+                msg.type === 'user'
+                  ? 'bg-slate-700/50 text-slate-200 rounded-br-md'
+                  : 'bg-teal/10 border border-teal/20 text-slate-300 rounded-bl-md'
+              )}
+            >
+              {msg.text}
+            </div>
+            {msg.type === 'user' && (
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-700/50 border border-slate-600 flex items-center justify-center">
+                <User className="w-4 h-4 text-slate-400" />
+              </div>
+            )}
+          </motion.div>
+        ))}
+
+        {/* Typing indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 1.1, duration: 0.5 }}
+          className="flex gap-3"
+        >
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal/20 border border-teal/30 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-teal" />
+          </div>
+          <div className="bg-teal/10 border border-teal/20 rounded-2xl rounded-bl-md px-4 py-3">
+            <div className="flex gap-1">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-teal/60"
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+              />
+              <motion.div
+                className="w-2 h-2 rounded-full bg-teal/60"
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0.15 }}
+              />
+              <motion.div
+                className="w-2 h-2 rounded-full bg-teal/60"
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0.3 }}
+              />
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
 // SLIDE 1: INTRO / DE BELOFTE
 // =============================================================================
 
@@ -396,7 +503,67 @@ function SlideAutomation() {
 }
 
 // =============================================================================
-// SLIDE 3: SLIMME DASHBOARDS
+// SLIDE 3: AI AGENTS (NEW)
+// =============================================================================
+
+function SlideAIAgents() {
+  return (
+    <div className="relative flex-shrink-0 w-screen h-full flex items-center">
+      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Left: Text Content */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="space-y-6"
+        >
+          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-4 py-2">
+            <MessageSquare className="w-4 h-4 text-teal" />
+            <span className="font-mono text-sm text-teal uppercase tracking-wide">
+              AI Agents
+            </span>
+          </div>
+
+          <h3 className="font-montserrat font-extrabold text-4xl md:text-5xl lg:text-6xl text-white">
+            Jouw{' '}
+            <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
+              Tweede Brein.
+            </span>
+          </h3>
+
+          <p className="font-inter text-lg text-slate-400 leading-relaxed max-w-lg">
+            AI die met je meedenkt. Mailtjes beantwoorden, offertes voorbereiden
+            of samenvattingen maken. Terwijl jij slaapt, werkt NOVAITEC door.
+          </p>
+
+          <motion.a
+            href="#contact"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] transition-shadow"
+          >
+            Ontdek AI Mogelijkheden
+            <ArrowRight className="w-5 h-5" />
+          </motion.a>
+        </motion.div>
+
+        {/* Right: Chat Mockup */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+        >
+          <ChatMockup />
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// SLIDE 4: SLIMME DASHBOARDS
 // =============================================================================
 
 function SlideDashboards() {
@@ -526,13 +693,116 @@ function SlideOwnership() {
 }
 
 // =============================================================================
+// SLIDE 6: GRAND FINALE (NEW)
+// =============================================================================
+
+function SlideGrandFinale() {
+  return (
+    <div className="relative flex-shrink-0 w-screen h-full flex items-center justify-center">
+      {/* Radial glow background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(6,182,212,0.15) 0%, transparent 60%)',
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 text-center max-w-4xl px-6">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-mono text-sm uppercase tracking-wider text-teal mb-6"
+        >
+          READY?
+        </motion.p>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="font-montserrat font-extrabold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white mb-6"
+        >
+          Genoeg{' '}
+          <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
+            gezien?
+          </span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="font-inter text-xl md:text-2xl text-slate-400 mb-14 max-w-2xl mx-auto"
+        >
+          Je weet nu wat er kan. De enige vraag is:{' '}
+          <span className="text-white font-medium">wanneer beginnen we?</span>
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          <motion.a
+            href="#contact"
+            whileHover={{ scale: 1.05, boxShadow: '0 0 80px -10px rgba(6,182,212,0.8)' }}
+            whileTap={{ scale: 0.95 }}
+            className="group inline-flex items-center gap-4 bg-teal text-midnight font-montserrat font-bold text-lg md:text-xl px-10 py-5 md:px-14 md:py-6 rounded-2xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.6)] transition-all"
+          >
+            <Calendar className="w-6 h-6" />
+            Plan je Strategie Sessie
+            <motion.div
+              className="transition-transform"
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ArrowRight className="w-6 h-6" />
+            </motion.div>
+          </motion.a>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// SLIDE COUNTER (NEW)
+// =============================================================================
+
+const TOTAL_SLIDES = 6;
+
+function SlideCounter({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
+  // Map scroll progress to current slide number (1-6)
+  const slideNumber = useTransform(scrollYProgress, (value) => {
+    const slide = Math.min(Math.floor(value * TOTAL_SLIDES) + 1, TOTAL_SLIDES);
+    return slide.toString().padStart(2, '0');
+  });
+
+  return (
+    <div className="absolute bottom-8 left-8 font-mono text-sm flex items-baseline gap-1">
+      <motion.span className="text-teal font-medium">{slideNumber}</motion.span>
+      <span className="text-slate-600">/</span>
+      <span className="text-slate-600">06</span>
+    </div>
+  );
+}
+
+// =============================================================================
 // SLIDE INDICATORS
 // =============================================================================
 
 function SlideIndicator({ index, scrollYProgress }: { index: number; scrollYProgress: MotionValue<number> }) {
+  // 6 slides: each takes 1/6 (0.167) of the progress
+  const interval = 1 / TOTAL_SLIDES;
   const backgroundColor = useTransform(
     scrollYProgress,
-    [index * 0.25, (index + 0.5) * 0.25, (index + 1) * 0.25],
+    [index * interval, (index + 0.5) * interval, (index + 1) * interval],
     ['#334155', '#06B6D4', '#334155']
   );
 
@@ -547,7 +817,7 @@ function SlideIndicator({ index, scrollYProgress }: { index: number; scrollYProg
 function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
   return (
     <div className="absolute bottom-8 right-8 flex gap-2">
-      {[0, 1, 2, 3].map((i) => (
+      {[0, 1, 2, 3, 4, 5].map((i) => (
         <SlideIndicator key={i} index={i} scrollYProgress={scrollYProgress} />
       ))}
     </div>
