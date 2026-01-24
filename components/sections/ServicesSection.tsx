@@ -362,7 +362,7 @@ function ChatMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative flex-shrink-0 w-screen h-full flex items-center justify-center">
+    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center justify-center rounded-3xl overflow-hidden">
       {/* Network Animation Background */}
       <NetworkAnimation />
 
@@ -427,7 +427,7 @@ function SlideIntro() {
 
 function SlideAutomation() {
   return (
-    <div className="relative flex-shrink-0 w-screen h-full flex items-center">
+    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -486,7 +486,7 @@ function SlideAutomation() {
 
 function SlideAIAgents() {
   return (
-    <div className="relative flex-shrink-0 w-screen h-full flex items-center">
+    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -547,7 +547,7 @@ function SlideAIAgents() {
 
 function SlideDashboards() {
   return (
-    <div className="relative flex-shrink-0 w-screen h-full flex items-center">
+    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Animated Chart Visual */}
         <motion.div
@@ -607,7 +607,7 @@ function SlideDashboards() {
 
 function SlideOwnership() {
   return (
-    <div className="relative flex-shrink-0 w-screen h-full flex items-center justify-center">
+    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
       {/* Centered content */}
       <div className="text-center max-w-3xl px-4 sm:px-6">
         <motion.div
@@ -673,7 +673,7 @@ function SlideOwnership() {
 
 function SlideGrandFinale() {
   return (
-    <div className="relative flex-shrink-0 w-screen h-full flex items-center justify-center">
+    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
       {/* Radial glow background */}
       <div
         className="absolute inset-0"
@@ -828,8 +828,8 @@ function ServicesSectionDesktop() {
   }, [scrollYProgress]);
 
   // Convert vertical scroll (0-1) to horizontal translation
-  // 6 slides = 600vw total, translate from 0% to -83.33%
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-83.33%']);
+  // 6 slides + gaps, translate to show all slides ending at the last one
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-85%']);
 
   // Smooth progress for the progress bar
   const smoothProgress = useSpring(scrollYProgress, {
@@ -842,7 +842,7 @@ function ServicesSectionDesktop() {
     <section
       ref={containerRef}
       id="oplossing"
-      className="relative h-[600vh] bg-midnight"
+      className="relative h-[800vh] bg-midnight"
     >
       {/* Sticky viewport */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -862,7 +862,7 @@ function ServicesSectionDesktop() {
         />
 
         {/* Horizontal slide track - w-max ensures container expands to fit all 6 slides */}
-        <motion.div style={{ x }} className="flex h-full w-max will-change-transform">
+        <motion.div style={{ x }} className="flex h-full w-max will-change-transform gap-16 lg:gap-24">
           <SlideIntro />
           <SlideAutomation />
           <SlideAIAgents />
