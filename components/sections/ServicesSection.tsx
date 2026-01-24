@@ -372,12 +372,12 @@ function SlideIntro() {
       <NetworkAnimation />
 
       {/* Content */}
-      <div className="relative z-10 text-center max-w-5xl px-6">
+      <div className="relative z-10 text-center max-w-5xl px-4 sm:px-6">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-mono text-sm uppercase tracking-wider text-teal mb-6"
+          className="font-mono text-xs sm:text-sm uppercase tracking-wider text-teal mb-3 sm:mb-6"
         >
           DE OPLOSSING
         </motion.p>
@@ -387,7 +387,7 @@ function SlideIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="font-montserrat font-extrabold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white mb-6"
+          className="font-montserrat font-extrabold text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-white mb-3 sm:mb-6 leading-tight"
         >
           Wij bouwen jouw{' '}
           <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
@@ -400,7 +400,7 @@ function SlideIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="font-inter text-xl md:text-2xl text-slate-400 mb-14"
+          className="font-inter text-sm sm:text-lg md:text-xl text-slate-400 mb-8 sm:mb-14"
         >
           Stop met handmatig werk. Start met schalen.
         </motion.p>
@@ -411,14 +411,14 @@ function SlideIntro() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="flex items-center justify-center gap-3 text-slate-500"
+          className="flex items-center justify-center gap-2 sm:gap-3 text-slate-500"
         >
-          <span className="font-inter text-sm">Scroll om te ontdekken</span>
+          <span className="font-inter text-xs sm:text-sm">Scroll om te ontdekken</span>
           <motion.div
             animate={{ x: [0, 8, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.div>
         </motion.div>
       </div>
@@ -433,41 +433,40 @@ function SlideIntro() {
 function SlideAutomation() {
   return (
     <div className="relative flex-shrink-0 w-screen h-full flex items-center">
-      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="space-y-6"
+          className="space-y-3 sm:space-y-6 text-center lg:text-left"
         >
-          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-4 py-2">
-            <Bot className="w-4 h-4 text-teal" />
-            <span className="font-mono text-sm text-teal uppercase tracking-wide">
+          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+            <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-teal" />
+            <span className="font-mono text-xs sm:text-sm text-teal uppercase tracking-wide">
               Workflow Automatisering
             </span>
           </div>
 
-          <h3 className="font-montserrat font-extrabold text-4xl md:text-5xl lg:text-6xl text-white">
+          <h3 className="font-montserrat font-extrabold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
             De &apos;Busy Work&apos;{' '}
             <span className="text-teal">Killer.</span>
           </h3>
 
-          <p className="font-inter text-lg text-slate-400 leading-relaxed max-w-lg">
+          <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
             Je typt data over. Je sleept bestanden. Je checkt mailtjes. Stop
-            daarmee. Wij koppelen je systemen aan elkaar via API&apos;s. Van
-            factuur tot CRM, volledig hands-off.
+            daarmee. Wij koppelen je systemen aan elkaar via API&apos;s.
           </p>
 
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] transition-shadow"
+            className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] transition-shadow"
           >
-            Bekijk Automation Cases
-            <ArrowRight className="w-5 h-5" />
+            Bekijk Cases
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.a>
         </motion.div>
 
@@ -477,6 +476,7 @@ function SlideAutomation() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7 }}
+          className="w-full max-w-md lg:max-w-xl scale-75 sm:scale-90 lg:scale-100"
         >
           <WorkflowMockup />
         </motion.div>
@@ -492,42 +492,42 @@ function SlideAutomation() {
 function SlideAIAgents() {
   return (
     <div className="relative flex-shrink-0 w-screen h-full flex items-center">
-      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="space-y-6"
+          className="space-y-3 sm:space-y-6 text-center lg:text-left"
         >
-          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-4 py-2">
-            <MessageSquare className="w-4 h-4 text-teal" />
-            <span className="font-mono text-sm text-teal uppercase tracking-wide">
+          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+            <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 text-teal" />
+            <span className="font-mono text-xs sm:text-sm text-teal uppercase tracking-wide">
               AI Agents
             </span>
           </div>
 
-          <h3 className="font-montserrat font-extrabold text-4xl md:text-5xl lg:text-6xl text-white">
+          <h3 className="font-montserrat font-extrabold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
             Jouw{' '}
             <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
               Tweede Brein.
             </span>
           </h3>
 
-          <p className="font-inter text-lg text-slate-400 leading-relaxed max-w-lg">
+          <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
             AI die met je meedenkt. Mailtjes beantwoorden, offertes voorbereiden
-            of samenvattingen maken. Terwijl jij slaapt, werkt NOVAITEC door.
+            of samenvattingen maken.
           </p>
 
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] transition-shadow"
+            className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] transition-shadow"
           >
-            Ontdek AI Mogelijkheden
-            <ArrowRight className="w-5 h-5" />
+            Ontdek AI
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.a>
         </motion.div>
 
@@ -537,6 +537,7 @@ function SlideAIAgents() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7 }}
+          className="w-full max-w-md lg:max-w-xl scale-75 sm:scale-90 lg:scale-100"
         >
           <ChatMockup />
         </motion.div>
@@ -552,14 +553,14 @@ function SlideAIAgents() {
 function SlideDashboards() {
   return (
     <div className="relative flex-shrink-0 w-screen h-full flex items-center">
-      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Animated Chart Visual */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="order-2 lg:order-1"
+          className="w-full max-w-md lg:max-w-xl scale-75 sm:scale-90 lg:scale-100"
         >
           <AnimatedChart />
         </motion.div>
@@ -570,36 +571,34 @@ function SlideDashboards() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7 }}
-          className="space-y-6 order-1 lg:order-2"
+          className="space-y-3 sm:space-y-6 text-center lg:text-left"
         >
-          <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-4 py-2">
-            <LayoutDashboard className="w-4 h-4 text-amber" />
-            <span className="font-mono text-sm text-amber uppercase tracking-wide">
+          <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+            <LayoutDashboard className="w-3 h-3 sm:w-4 sm:h-4 text-amber" />
+            <span className="font-mono text-xs sm:text-sm text-amber uppercase tracking-wide">
               Slimme Dashboards
             </span>
           </div>
 
-          <h3 className="font-montserrat font-extrabold text-4xl md:text-5xl lg:text-6xl text-white">
+          <h3 className="font-montserrat font-extrabold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
             Stuur op{' '}
             <span className="text-amber">Data</span>,{' '}
-            <br className="hidden md:block" />
             niet op gevoel.
           </h3>
 
-          <p className="font-inter text-lg text-slate-400 leading-relaxed max-w-lg">
-            Geen maandelijkse rapportages in PDF, maar real-time inzichten. Zie
-            direct hoeveel winst je vandaag hebt gemaakt. Wij bouwen custom
-            dashboards die je écht begrijpt.
+          <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
+            Real-time inzichten. Zie direct hoeveel winst je vandaag hebt
+            gemaakt. Custom dashboards die je écht begrijpt.
           </p>
 
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 bg-transparent border-2 border-amber text-amber font-inter font-semibold px-6 py-3 rounded-xl hover:bg-amber hover:text-midnight transition-all"
+            className="inline-flex items-center gap-2 bg-transparent border-2 border-amber text-amber font-inter font-semibold text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:bg-amber hover:text-midnight transition-all"
           >
-            Zie Voorbeeld Dashboard
-            <ArrowRight className="w-5 h-5" />
+            Zie Voorbeeld
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.a>
         </motion.div>
       </div>
@@ -615,17 +614,17 @@ function SlideOwnership() {
   return (
     <div className="relative flex-shrink-0 w-screen h-full flex items-center justify-center">
       {/* Centered content */}
-      <div className="text-center max-w-3xl px-6">
+      <div className="text-center max-w-3xl px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ type: 'spring', stiffness: 200 }}
-          className="mb-8"
+          className="mb-4 sm:mb-8"
         >
-          <div className="inline-flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-full bg-amber/10 border border-amber/30">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 rounded-full bg-amber/10 border border-amber/30">
             <ShieldCheck
-              className="w-14 h-14 md:w-20 md:h-20 text-amber drop-shadow-[0_0_20px_rgba(245,158,11,0.5)]"
+              className="w-8 h-8 sm:w-12 sm:h-12 md:w-20 md:h-20 text-amber drop-shadow-[0_0_20px_rgba(245,158,11,0.5)]"
               strokeWidth={1.5}
             />
           </div>
@@ -636,7 +635,7 @@ function SlideOwnership() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="font-montserrat font-extrabold text-5xl md:text-6xl lg:text-7xl text-white mb-6"
+          className="font-montserrat font-extrabold text-2xl sm:text-4xl md:text-5xl lg:text-7xl text-white mb-3 sm:mb-6 leading-tight"
         >
           Geen{' '}
           <span className="text-amber">Gijzeling.</span>
@@ -647,11 +646,9 @@ function SlideOwnership() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="font-inter text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto"
+          className="font-inter text-sm sm:text-base md:text-lg text-slate-400 mb-6 sm:mb-10 max-w-2xl mx-auto"
         >
-          Veel bureaus houden de sleutels. Wij niet. We bouwen in standaarden
-          (n8n, SQL). Jij blijft 100% eigenaar van je systeem en data. Geen
-          vendor lock-in.
+          We bouwen in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
         </motion.p>
 
         <motion.div
@@ -664,10 +661,10 @@ function SlideOwnership() {
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-semibold text-lg px-10 py-5 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.6)] hover:shadow-[0_0_60px_-10px_rgba(6,182,212,0.8)] transition-shadow"
+            className="inline-flex items-center gap-2 sm:gap-3 bg-teal text-midnight font-montserrat font-semibold text-sm sm:text-base md:text-lg px-6 py-3 sm:px-10 sm:py-5 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.6)] hover:shadow-[0_0_60px_-10px_rgba(6,182,212,0.8)] transition-shadow"
           >
             Start Samenwerking
-            <ArrowRight className="w-6 h-6" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
           </motion.a>
         </motion.div>
       </div>
@@ -692,12 +689,12 @@ function SlideGrandFinale() {
       />
 
       {/* Content */}
-      <div className="relative z-10 text-center max-w-4xl px-6">
+      <div className="relative z-10 text-center max-w-4xl px-4 sm:px-6">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-mono text-sm uppercase tracking-wider text-teal mb-6"
+          className="font-mono text-xs sm:text-sm uppercase tracking-wider text-teal mb-3 sm:mb-6"
         >
           READY?
         </motion.p>
@@ -707,7 +704,7 @@ function SlideGrandFinale() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="font-montserrat font-extrabold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white mb-6"
+          className="font-montserrat font-extrabold text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-white mb-3 sm:mb-6 leading-tight"
         >
           Genoeg{' '}
           <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
@@ -720,7 +717,7 @@ function SlideGrandFinale() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="font-inter text-xl md:text-2xl text-slate-400 mb-14 max-w-2xl mx-auto"
+          className="font-inter text-sm sm:text-lg md:text-xl text-slate-400 mb-8 sm:mb-14 max-w-2xl mx-auto"
         >
           Je weet nu wat er kan. De enige vraag is:{' '}
           <span className="text-white font-medium">wanneer beginnen we?</span>
@@ -736,16 +733,17 @@ function SlideGrandFinale() {
             href="#contact"
             whileHover={{ scale: 1.05, boxShadow: '0 0 80px -10px rgba(6,182,212,0.8)' }}
             whileTap={{ scale: 0.95 }}
-            className="group inline-flex items-center gap-4 bg-teal text-midnight font-montserrat font-bold text-lg md:text-xl px-10 py-5 md:px-14 md:py-6 rounded-2xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.6)] transition-all"
+            className="group inline-flex items-center gap-2 sm:gap-4 bg-teal text-midnight font-montserrat font-bold text-sm sm:text-base md:text-lg px-6 py-3 sm:px-10 sm:py-5 md:px-14 md:py-6 rounded-xl sm:rounded-2xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.6)] transition-all"
           >
-            <Calendar className="w-6 h-6" />
-            Plan je Strategie Sessie
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+            <span className="hidden sm:inline">Plan je Strategie Sessie</span>
+            <span className="sm:hidden">Plan Sessie</span>
             <motion.div
               className="transition-transform"
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <ArrowRight className="w-6 h-6" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             </motion.div>
           </motion.a>
         </motion.div>
