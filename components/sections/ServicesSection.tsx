@@ -885,8 +885,8 @@ function ServicesSectionDesktop() {
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Horizontal slide track */}
-        <motion.div style={{ x }} className="flex h-full will-change-transform">
+        {/* Horizontal slide track - w-max ensures container expands to fit all 6 slides */}
+        <motion.div style={{ x }} className="flex h-full w-max will-change-transform">
           <SlideIntro />
           <SlideAutomation />
           <SlideAIAgents />
