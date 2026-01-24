@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   ArrowRight,
@@ -19,23 +19,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-// =============================================================================
-// HOOKS
-// =============================================================================
-
-function useIsMobile(breakpoint = 1024) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < breakpoint);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, [breakpoint]);
-
-  return isMobile;
-}
 
 // =============================================================================
 // NOISE OVERLAY
@@ -1186,24 +1169,7 @@ function ServicesSectionMobile() {
 // =============================================================================
 
 export function ServicesSection() {
-  const isMobile = useIsMobile(1024);
-
-  // Prevent hydration mismatch by rendering a placeholder on first render
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    // Return a minimal placeholder during SSR
-    return (
-      <section id="oplossing" className="bg-midnight h-screen" />
-    );
-  }
-
-  if (isMobile) {
-    return <ServicesSectionMobile />;
-  }
-
+  // Always use cinema scroll - works on all devices
+  // Apple-style horizontal scroll experience
   return <ServicesSectionDesktop />;
 }
