@@ -77,33 +77,22 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-5xl md:text-7xl font-montserrat font-extrabold text-white mb-6 leading-tight"
+            className="text-6xl md:text-8xl font-montserrat font-extrabold text-white mb-8 leading-tight"
           >
-            Wij verkopen geen{" "}
-            <span className="text-teal">AI</span>
+            De <span className="text-teal">motor</span> achter
+            <br />
+            jouw ambitie.
           </motion.h1>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-4xl md:text-6xl font-montserrat font-extrabold text-white mb-8 leading-tight"
-          >
-            Wij verkopen{" "}
-            <span className="text-teal">rust</span> en{" "}
-            <span className="text-amber">resultaat</span>
-          </motion.h2>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-xl md:text-2xl text-paper/70 font-inter mb-12 max-w-2xl mx-auto leading-relaxed"
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-2xl md:text-3xl text-paper/80 font-inter mb-12 max-w-3xl mx-auto leading-relaxed"
           >
-            Van handmatige chaos naar geautomatiseerde rust. Wij bouwen slimme
-            workflows die voor jou werken, in plaats van andersom. Geen dikke
-            rapporten, maar werkende software binnen 2 weken.
+            Terwijl jij bouwt aan je visie, zorgen wij dat alles blijft draaien.
+            Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.
           </motion.p>
 
           {/* CTA Buttons */}

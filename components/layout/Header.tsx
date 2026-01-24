@@ -43,15 +43,15 @@ export function Header() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <Image
                   src="/images/novaitec_beeldmerk_transparant_wit.png"
                   alt="NOVAITEC Icon"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10"
+                  width={56}
+                  height={56}
+                  className="w-14 h-14"
                 />
-                <span className="text-2xl font-montserrat font-bold text-paper tracking-tight">
+                <span className="text-3xl font-montserrat font-bold text-paper tracking-tight">
                   NOVAITEC<span className="text-teal">.</span>
                 </span>
               </div>
