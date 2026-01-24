@@ -22,10 +22,9 @@ function ServiceBlock({ icon: Icon, iconColor, text, className, index }: Service
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={cn(
-        'group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm',
-        'border border-slate-700/50 rounded-xl p-8',
-        'hover:border-teal/50 hover:shadow-lg hover:shadow-teal/10',
-        'transition-all duration-300',
+        'group relative bg-slate-900/40 backdrop-blur-sm',
+        'border border-slate-800 rounded-2xl p-8',
+        'hover:border-teal/50 transition-all duration-300',
         'min-h-[200px] flex flex-col justify-center',
         className
       )}
@@ -34,20 +33,20 @@ function ServiceBlock({ icon: Icon, iconColor, text, className, index }: Service
       <div className="mb-6">
         <div
           className={cn(
-            'w-14 h-14 rounded-lg flex items-center justify-center',
-            'bg-gradient-to-br from-slate-700/50 to-slate-800/50',
-            'group-hover:scale-110 transition-transform duration-300'
+            'w-14 h-14 rounded-xl flex items-center justify-center',
+            'bg-slate-800/80 group-hover:bg-slate-800',
+            'transition-colors duration-300'
           )}
         >
-          <Icon className={cn('w-7 h-7', iconColor)} strokeWidth={2} />
+          <Icon className={cn('w-7 h-7', iconColor)} strokeWidth={1.5} />
         </div>
       </div>
 
       {/* Text */}
-      <p className="font-inter text-slate-300 leading-relaxed">{text}</p>
+      <p className="font-inter text-slate-400 leading-relaxed">{text}</p>
 
-      {/* Decorative corner accent */}
-      <div className="absolute top-0 right-0 w-20 h-20 bg-teal/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Decorative gradient blur */}
+      <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-teal/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </motion.div>
   );
 }
@@ -57,33 +56,31 @@ const services = [
     icon: Bot,
     iconColor: 'text-teal',
     text: 'Repeterende taken? Die doen we niet meer zelf. Van factuurverwerking tot klantcommunicatie: als het een patroon heeft, automatiseren we het.',
-    className: 'md:col-span-2', // Groot blok links
-    featured: true,
+    className: 'md:col-span-2',
   },
   {
     icon: LayoutDashboard,
     iconColor: 'text-amber',
     text: 'Stuur niet op onderbuikgevoel, maar op data. Al je cijfers in één helder overzicht.',
-    className: 'md:col-span-1', // Rechtsboven
+    className: 'md:col-span-1',
   },
   {
     icon: BrainCircuit,
     iconColor: 'text-teal',
     text: 'ChatGPT koppelen aan je mail? Documenten laten samenvatten? We maken je bedrijf slimmer.',
-    className: 'md:col-span-1', // Rechtsonder
+    className: 'md:col-span-1',
   },
   {
     icon: ShieldCheck,
-    iconColor: 'text-paper',
+    iconColor: 'text-amber',
     text: 'We bouwen in n8n en standaard tools. Geen vendor lock-in. Jij blijft eigenaar van je eigen systeem.',
-    className: 'md:col-span-3', // Breed onderaan
-    featured: true,
+    className: 'md:col-span-3',
   },
 ];
 
 export function ServicesSection() {
   return (
-    <SectionWrapper className="bg-paper" id="oplossing">
+    <SectionWrapper className="bg-midnight" id="oplossing">
       {/* Header */}
       <div className="max-w-3xl mx-auto text-center mb-16">
         <motion.p
@@ -100,7 +97,7 @@ export function ServicesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-montserrat font-bold text-4xl md:text-5xl text-midnight mb-6"
+          className="font-montserrat font-bold text-4xl md:text-5xl text-paper mb-6"
         >
           Van Chaos naar Controle.
         </motion.h2>
@@ -109,7 +106,7 @@ export function ServicesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="font-inter text-lg text-slate-text"
+          className="font-inter text-lg text-slate-400"
         >
           Geen pleisters plakken, maar het fundament herstellen. Dit is hoe we dat doen.
         </motion.p>
