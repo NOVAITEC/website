@@ -837,8 +837,8 @@ function ServicesSectionDesktop() {
   });
 
   // Convert vertical scroll (0-1) to horizontal translation
-  // 4 slides = 400vw total, translate from 0% to -75%
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
+  // 6 slides = 600vw total, translate from 0% to -83.33%
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-83.33%']);
 
   // Smooth progress for the progress bar
   const smoothProgress = useSpring(scrollYProgress, {
@@ -851,7 +851,7 @@ function ServicesSectionDesktop() {
     <section
       ref={containerRef}
       id="oplossing"
-      className="relative h-[300vh] bg-midnight"
+      className="relative h-[600vh] bg-midnight"
     >
       {/* Sticky viewport */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -874,8 +874,10 @@ function ServicesSectionDesktop() {
         <motion.div style={{ x }} className="flex h-full will-change-transform">
           <SlideIntro />
           <SlideAutomation />
+          <SlideAIAgents />
           <SlideDashboards />
           <SlideOwnership />
+          <SlideGrandFinale />
         </motion.div>
 
         {/* Progress bar at bottom */}
@@ -885,6 +887,9 @@ function ServicesSectionDesktop() {
             className="h-full bg-gradient-to-r from-teal to-cyan-400 origin-left"
           />
         </div>
+
+        {/* Slide counter */}
+        <SlideCounter scrollYProgress={scrollYProgress} />
 
         {/* Slide indicators */}
         <SlideIndicators scrollYProgress={scrollYProgress} />
@@ -987,7 +992,46 @@ function ServicesSectionMobile() {
         </motion.div>
       </div>
 
-      {/* Mobile Slide 3: Dashboards */}
+      {/* Mobile Slide 3: AI Agents (NEW) */}
+      <div className="relative z-10 container mx-auto px-6 py-16 space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="space-y-4"
+        >
+          <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-4 py-2">
+            <MessageSquare className="w-4 h-4 text-teal" />
+            <span className="font-mono text-sm text-teal uppercase">
+              AI Agents
+            </span>
+          </div>
+          <h3 className="font-montserrat font-extrabold text-3xl text-white">
+            Jouw <span className="bg-gradient-to-r from-teal to-cyan-300 bg-clip-text text-transparent">Tweede Brein.</span>
+          </h3>
+          <p className="font-inter text-slate-400 leading-relaxed">
+            AI die met je meedenkt. Mailtjes beantwoorden, offertes voorbereiden
+            of samenvattingen maken. Terwijl jij slaapt, werkt NOVAITEC door.
+          </p>
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold px-5 py-2.5 rounded-xl"
+          >
+            Ontdek AI
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          <ChatMockup />
+        </motion.div>
+      </div>
+
+      {/* Mobile Slide 4: Dashboards */}
       <div className="relative z-10 container mx-auto px-6 py-16 space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1069,6 +1113,52 @@ function ServicesSectionMobile() {
           className="inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-semibold px-8 py-4 rounded-xl shadow-[0_0_30px_-8px_rgba(6,182,212,0.5)]"
         >
           Start Samenwerking
+          <ArrowRight className="w-5 h-5" />
+        </motion.a>
+      </div>
+
+      {/* Mobile Slide 6: Grand Finale (NEW) */}
+      <div className="relative z-10 container mx-auto px-6 py-24 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-mono text-sm uppercase tracking-wider text-teal mb-4"
+        >
+          READY?
+        </motion.p>
+        <motion.h3
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-montserrat font-extrabold text-4xl md:text-5xl text-white mb-4"
+        >
+          Genoeg{' '}
+          <span className="bg-gradient-to-r from-teal to-cyan-300 bg-clip-text text-transparent">
+            gezien?
+          </span>
+        </motion.h3>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="font-inter text-lg text-slate-400 mb-10 max-w-md mx-auto"
+        >
+          Je weet nu wat er kan. De enige vraag is:{' '}
+          <span className="text-white font-medium">wanneer beginnen we?</span>
+        </motion.p>
+        <motion.a
+          href="#contact"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold px-8 py-4 rounded-xl shadow-[0_0_40px_-8px_rgba(6,182,212,0.6)]"
+        >
+          <Calendar className="w-5 h-5" />
+          Plan je Strategie Sessie
           <ArrowRight className="w-5 h-5" />
         </motion.a>
       </div>
