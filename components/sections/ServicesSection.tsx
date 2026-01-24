@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useMemo } from 'react';
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   ArrowRight,
   Bot,
@@ -831,10 +831,25 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 function ServicesSectionDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
+  // Custom scroll tracking that works with Lenis
+  // (Framer Motion's useScroll() doesn't detect Lenis's synthetic scroll correctly)
+  const scrollYProgress = useMotionValue(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+      scrollYProgress.set(progress);
+    };
+
+    // Initial calculation
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrollYProgress]);
 
   // Convert vertical scroll (0-1) to horizontal translation
   // 6 slides = 600vw total, translate from 0% to -83.33%
