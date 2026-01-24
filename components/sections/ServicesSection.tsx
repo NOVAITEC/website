@@ -163,9 +163,8 @@ function WorkflowMockup() {
               strokeWidth="2"
               strokeDasharray="6,4"
               initial={{ pathLength: 0, opacity: 0 }}
-              whileInView={{ pathLength: 1, opacity: 0.6 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 + i * 0.15 }}
+              animate={{ pathLength: 1, opacity: 0.6 }}
+              transition={{ duration: 0.8, delay: 0.5 + i * 0.15 }}
             />
           );
         })}
@@ -175,9 +174,8 @@ function WorkflowMockup() {
           <motion.g
             key={node.id}
             initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.12, type: 'spring', stiffness: 200 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 + i * 0.12, type: 'spring', stiffness: 200 }}
           >
             <rect
               x={node.x - 30}
@@ -246,9 +244,8 @@ function AnimatedChart() {
             <motion.div
               className="w-full bg-gradient-to-t from-teal/40 to-teal rounded-t-md"
               initial={{ height: 0 }}
-              whileInView={{ height: `${bar.height}%` }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 + i * 0.08, ease: 'easeOut' }}
+              animate={{ height: `${bar.height}%` }}
+              transition={{ duration: 0.7, delay: 0.5 + i * 0.08, ease: 'easeOut' }}
             />
             <span className="font-mono text-xs text-slate-500">{bar.label}</span>
           </div>
@@ -294,9 +291,8 @@ function ChatMockup() {
           <motion.div
             key={msg.id}
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 + i * 0.4, duration: 0.5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 + i * 0.4, duration: 0.5 }}
             className={cn(
               'flex gap-3',
               msg.type === 'user' ? 'justify-end' : 'justify-start'
@@ -328,9 +324,8 @@ function ChatMockup() {
         {/* Typing indicator */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 1.1, duration: 0.5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.3, duration: 0.5 }}
           className="flex gap-3"
         >
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal/20 border border-teal/30 flex items-center justify-center">
