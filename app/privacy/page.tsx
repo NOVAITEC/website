@@ -48,17 +48,17 @@ export default function PrivacyPage() {
                 <p className="leading-relaxed">
                   NOVAITEC, gevestigd in Nederland en ingeschreven bij de Kamer van Koophandel
                   onder nummer 99541807, respecteert de privacy van alle bezoekers van deze website.
-                  Wij dragen er zorg voor dat de persoonlijke informatie die u ons verschaft
+                  Ik draag er zorg voor dat de persoonlijke informatie die u mij verschaft
                   vertrouwelijk wordt behandeld.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
-                  2. Welke gegevens verzamelen wij?
+                  2. Welke gegevens verzamel ik?
                 </h2>
                 <p className="leading-relaxed mb-4">
-                  Wij verzamelen alleen gegevens die u zelf aan ons verstrekt via het contactformulier:
+                  Ik verzamel alleen gegevens die u zelf aan mij verstrekt via het contactformulier:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400">
                   <li>Naam</li>
@@ -73,12 +73,12 @@ export default function PrivacyPage() {
                   3. Doel van gegevensverwerking
                 </h2>
                 <p className="leading-relaxed">
-                  Wij gebruiken uw gegevens uitsluitend om:
+                  Ik gebruik uw gegevens uitsluitend om:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400 mt-4">
                   <li>Te reageren op uw contactverzoek of vraag</li>
                   <li>U te informeren over onze diensten indien u daarom heeft gevraagd</li>
-                  <li>De overeenkomst die wij met u sluiten uit te voeren</li>
+                  <li>De overeenkomst die ik met u sluit uit te voeren</li>
                 </ul>
               </section>
 
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
                   5. Bewaartermijn
                 </h2>
                 <p className="leading-relaxed">
-                  Wij bewaren uw persoonsgegevens niet langer dan strikt noodzakelijk is om
+                  Ik bewaar uw persoonsgegevens niet langer dan strikt noodzakelijk is om
                   de doelen te realiseren waarvoor uw gegevens worden verzameld. Contactgegevens
                   worden maximaal 2 jaar bewaard na het laatste contact, tenzij er een actieve
                   klantrelatie bestaat.
@@ -115,7 +115,7 @@ export default function PrivacyPage() {
                   Op grond van de Algemene Verordening Gegevensbescherming (AVG) heeft u de volgende rechten:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400">
-                  <li><strong className="text-slate-300">Recht op inzage:</strong> U kunt opvragen welke gegevens wij van u hebben</li>
+                  <li><strong className="text-slate-300">Recht op inzage:</strong> U kunt opvragen welke gegevens ik van u heb</li>
                   <li><strong className="text-slate-300">Recht op correctie:</strong> U kunt onjuiste gegevens laten aanpassen</li>
                   <li><strong className="text-slate-300">Recht op verwijdering:</strong> U kunt verzoeken uw gegevens te verwijderen</li>
                   <li><strong className="text-slate-300">Recht op bezwaar:</strong> U kunt bezwaar maken tegen de verwerking van uw gegevens</li>
@@ -127,7 +127,7 @@ export default function PrivacyPage() {
                   7. Beveiliging
                 </h2>
                 <p className="leading-relaxed">
-                  Wij nemen passende technische en organisatorische maatregelen om uw
+                  Ik neem passende technische en organisatorische maatregelen om uw
                   persoonsgegevens te beschermen tegen ongeoorloofde toegang, verlies of
                   diefstal. Onze website maakt gebruik van een SSL-certificaat voor een
                   beveiligde verbinding.

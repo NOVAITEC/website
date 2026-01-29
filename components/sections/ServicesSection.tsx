@@ -384,7 +384,7 @@ function SlideIntro() {
           transition={{ delay: 0.1, duration: 0.6 }}
           className="font-montserrat font-extrabold text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-white mb-3 sm:mb-6 leading-tight"
         >
-          Wij bouwen jouw{' '}
+          Ik bouw jouw{' '}
           <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
             digitale motor.
           </span>
@@ -451,7 +451,7 @@ function SlideAutomation() {
 
           <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
             Je typt data over. Je sleept bestanden. Je checkt mailtjes. Stop
-            daarmee. Wij koppelen je systemen aan elkaar via API&apos;s.
+            daarmee. Ik koppel je systemen aan elkaar via API&apos;s.
           </p>
 
           <motion.a
@@ -643,7 +643,7 @@ function SlideOwnership() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="font-inter text-sm sm:text-base md:text-lg text-slate-400 mb-6 sm:mb-10 max-w-2xl mx-auto"
         >
-          We bouwen in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
+          Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
         </motion.p>
 
         <motion.div
@@ -715,7 +715,7 @@ function SlideGrandFinale() {
           className="font-inter text-sm sm:text-lg md:text-xl text-slate-400 mb-8 sm:mb-14 max-w-2xl mx-auto"
         >
           Je weet nu wat er kan. De enige vraag is:{' '}
-          <span className="text-white font-medium">wanneer beginnen we?</span>
+          <span className="text-white font-medium">wanneer start jij?</span>
         </motion.p>
 
         <motion.div
@@ -928,7 +928,7 @@ function ServicesSectionMobile() {
           transition={{ delay: 0.1 }}
           className="font-montserrat font-extrabold text-4xl md:text-5xl text-white mb-4"
         >
-          Wij bouwen jouw{' '}
+          Ik bouw jouw{' '}
           <span className="bg-gradient-to-r from-teal to-cyan-300 bg-clip-text text-transparent">
             digitale motor.
           </span>
@@ -963,7 +963,7 @@ function ServicesSectionMobile() {
           </h3>
           <p className="font-inter text-slate-400 leading-relaxed">
             Je typt data over. Je sleept bestanden. Je checkt mailtjes. Stop
-            daarmee. Wij koppelen je systemen aan elkaar via API&apos;s.
+            daarmee. Ik koppel je systemen aan elkaar via API&apos;s.
           </p>
           <a
             href="#contact"
@@ -1092,7 +1092,7 @@ function ServicesSectionMobile() {
           transition={{ delay: 0.2 }}
           className="font-inter text-slate-400 mb-8 max-w-md mx-auto"
         >
-          We bouwen in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen
+          Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen
           vendor lock-in.
         </motion.p>
         <motion.a
@@ -1138,7 +1138,7 @@ function ServicesSectionMobile() {
           className="font-inter text-lg text-slate-400 mb-10 max-w-md mx-auto"
         >
           Je weet nu wat er kan. De enige vraag is:{' '}
-          <span className="text-white font-medium">wanneer beginnen we?</span>
+          <span className="text-white font-medium">wanneer start jij?</span>
         </motion.p>
         <motion.a
           href="#contact"

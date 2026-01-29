@@ -91,7 +91,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-2xl md:text-3xl text-paper/80 font-inter mb-12 max-w-3xl mx-auto leading-relaxed"
           >
-            Terwijl jij bouwt aan je visie, zorgen wij dat alles blijft draaien.
+            Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien.
             Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.
           </motion.p>
 

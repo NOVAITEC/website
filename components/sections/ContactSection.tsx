@@ -169,7 +169,7 @@ export function ContactSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="font-inter text-lg md:text-xl text-slate-400 leading-relaxed"
           >
-            Ik geloof in korte lijnen en heldere afspraken. Laten we samen kijken waar voor jou de winst ligt.
+            Ik geloof in korte lijnen en heldere afspraken. Ik kijk graag met je mee naar waar voor jou de winst ligt.
           </motion.p>
 
           {/* Contact Info */}

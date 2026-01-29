@@ -55,7 +55,7 @@ export default function CookiesPage() {
 
               <section>
                 <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
-                  Welke cookies gebruiken wij?
+                  Welke cookies gebruik ik?
                 </h2>
                 <p className="leading-relaxed mb-6">
                   NOVAITEC maakt gebruik van de volgende categorieën cookies:
@@ -107,7 +107,7 @@ export default function CookiesPage() {
                   </div>
                   <p className="text-slate-400 text-sm mb-4">
                     Deze cookies verzamelen geanonimiseerde informatie over hoe bezoekers
-                    de website gebruiken. Hiermee kunnen wij de website verbeteren.
+                    de website gebruiken. Hiermee kan ik de website verbeteren.
                   </p>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
@@ -140,7 +140,7 @@ export default function CookiesPage() {
                   Uw toestemming
                 </h2>
                 <p className="leading-relaxed">
-                  Bij uw eerste bezoek aan onze website vragen wij uw toestemming voor het
+                  Bij uw eerste bezoek aan de website vraag ik uw toestemming voor het
                   plaatsen van analytische cookies. Functionele cookies worden altijd geplaatst
                   omdat deze noodzakelijk zijn voor het functioneren van de website. U kunt
                   uw toestemming voor analytische cookies op elk moment intrekken.
@@ -173,7 +173,7 @@ export default function CookiesPage() {
                   De analytische cookies van Google Analytics worden geplaatst door Google LLC.
                   Google kan deze informatie aan derden verstrekken indien Google hiertoe
                   wettelijk wordt verplicht, of voor zover derden de informatie namens Google
-                  verwerken. Wij hebben hier geen invloed op. Lees het{" "}
+                  verwerken. Ik heb hier geen invloed op. Lees het{" "}
                   <a
                     href="https://policies.google.com/privacy"
                     target="_blank"
