@@ -153,31 +153,32 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.6,
-          delay: 1,
-          repeat: Infinity,
-          repeatType: "reverse",
-          repeatDelay: 0.5,
-        }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <div className="w-6 h-10 border-2 border-paper/30 rounded-full flex items-start justify-center p-2">
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="w-1.5 h-1.5 bg-teal rounded-full"
-          />
-        </div>
-      </motion.div>
+      {/* Scroll Indicator - hidden on mobile for performance */}
+      <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.6,
+            delay: 1,
+            repeat: Infinity,
+            repeatType: "reverse",
+            repeatDelay: 0.5,
+          }}
+        >
+          <div className="w-6 h-10 border-2 border-paper/30 rounded-full flex items-start justify-center p-2">
+            <motion.div
+              animate={{ y: [0, 12, 0] }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="w-1.5 h-1.5 bg-teal rounded-full"
+            />
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }

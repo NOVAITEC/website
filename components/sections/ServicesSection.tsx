@@ -1,7 +1,21 @@
 'use client';
 
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
+
+// Hook to detect if we should reduce animations (mobile/low-power)
+function useReducedAnimations() {
+  const [shouldReduce, setShouldReduce] = useState(false);
+
+  useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 768px)").matches ||
+                     'ontouchstart' in window;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setShouldReduce(isMobile || prefersReduced);
+  }, []);
+
+  return shouldReduce;
+}
 import {
   ArrowRight,
   ArrowDown,
@@ -42,17 +56,68 @@ function NoiseOverlay() {
 // =============================================================================
 
 function NetworkAnimation() {
+  const reduceAnimations = useReducedAnimations();
+
+  // Fewer nodes on mobile for better performance
+  const nodeCount = reduceAnimations ? 8 : 20;
+
   const nodes = useMemo(
     () =>
-      Array.from({ length: 20 }, (_, i) => ({
+      Array.from({ length: nodeCount }, (_, i) => ({
         id: i,
         x: 10 + Math.random() * 80,
         y: 10 + Math.random() * 80,
         size: 3 + Math.random() * 3,
         delay: Math.random() * 2,
       })),
-    []
+    [nodeCount]
   );
+
+  // On mobile, just show static nodes without infinite animations
+  if (reduceAnimations) {
+    return (
+      <div className="absolute inset-0 overflow-hidden">
+        <svg className="w-full h-full opacity-20">
+          {nodes.map((node, i) =>
+            nodes.slice(i + 1).map((other, j) => {
+              const distance = Math.hypot(node.x - other.x, node.y - other.y);
+              if (distance < 30) {
+                return (
+                  <line
+                    key={`line-${i}-${j}`}
+                    x1={`${node.x}%`}
+                    y1={`${node.y}%`}
+                    x2={`${other.x}%`}
+                    y2={`${other.y}%`}
+                    stroke="#06B6D4"
+                    strokeWidth="1"
+                    opacity="0.3"
+                  />
+                );
+              }
+              return null;
+            })
+          )}
+          {nodes.map((node) => (
+            <circle
+              key={node.id}
+              cx={`${node.x}%`}
+              cy={`${node.y}%`}
+              r={node.size}
+              fill="#06B6D4"
+              opacity="0.5"
+            />
+          ))}
+        </svg>
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(circle at center, transparent 0%, rgba(11,28,46,0.5) 50%, #0B1C2E 100%)'
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -936,18 +1001,9 @@ function ServicesSectionMobile() {
       className="relative h-[600vh] bg-midnight"
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
-        <NoiseOverlay />
-
-        <motion.div
-          className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-teal/15 blur-[100px]"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-0 w-[250px] h-[250px] rounded-full bg-amber/10 blur-[80px]"
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        {/* Static background blobs on mobile - no animations for performance */}
+        <div className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-teal/15 blur-[100px] opacity-15" />
+        <div className="absolute bottom-1/4 right-0 w-[250px] h-[250px] rounded-full bg-amber/10 blur-[80px] opacity-10" />
 
         <motion.div
           style={{ x }}

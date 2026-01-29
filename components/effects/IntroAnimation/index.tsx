@@ -8,21 +8,30 @@
 // 3. Logo zoomt DOOR je heen (je vliegt erin)
 // 4. Fade naar website
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-// Animation timing (in seconds)
-const TIMING = {
-  logoDrop: 0.6,        // Logo drops in
-  logoHold: 0.4,        // Brief hold
-  logoPulse: 0.5,       // Glow intensifies
-  zoomThrough: 0.8,     // Zoom through the logo
-  fadeOut: 0.5,         // Fade to website
+// Check if mobile - runs once on mount
+const checkIsMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia("(max-width: 768px)").matches || 'ontouchstart' in window;
 };
 
 export function IntroAnimation() {
   const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'fade' | 'done'>('drop');
+
+  // Memoize timing based on mobile detection at mount
+  const TIMING = useMemo(() => {
+    const isMobile = checkIsMobile();
+    return {
+      logoDrop: isMobile ? 0.3 : 0.6,
+      logoHold: isMobile ? 0.2 : 0.4,
+      logoPulse: isMobile ? 0.25 : 0.5,
+      zoomThrough: isMobile ? 0.4 : 0.8,
+      fadeOut: isMobile ? 0.25 : 0.5,
+    };
+  }, []);
 
   useEffect(() => {
     const dropTime = TIMING.logoDrop * 1000;
@@ -31,10 +40,10 @@ export function IntroAnimation() {
     const zoomTime = TIMING.zoomThrough * 1000;
     const fadeTime = TIMING.fadeOut * 1000;
 
-    let t1 = dropTime + holdTime;
-    let t2 = t1 + pulseTime;
-    let t3 = t2 + zoomTime;
-    let t4 = t3 + fadeTime;
+    const t1 = dropTime + holdTime;
+    const t2 = t1 + pulseTime;
+    const t3 = t2 + zoomTime;
+    const t4 = t3 + fadeTime;
 
     const timers = [
       setTimeout(() => setPhase('pulse'), t1),
@@ -44,7 +53,7 @@ export function IntroAnimation() {
     ];
 
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [TIMING]);
 
   if (phase === 'done') {
     return null;

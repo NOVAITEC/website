@@ -819,14 +819,9 @@ function ProblemSectionMobile() {
 
   return (
     <section id="probleem" className="relative bg-midnight">
-      {/* Background effects */}
+      {/* Background effects - static on mobile for performance */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <NoiseOverlay />
-        <motion.div
-          className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-amber/15 blur-[100px]"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        <div className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-amber/15 blur-[100px] opacity-15" />
       </div>
 
       {/* Stacking slides for mobile */}

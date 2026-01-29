@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Linkedin, MapPin, Send, CheckCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
@@ -87,9 +87,10 @@ export function ContactSection() {
     <SectionWrapper className="bg-midnight" id="contact">
       {/* === Background Effects === */}
 
-      {/* Amber glow (rechts, achter formulier) - warmte */}
+      {/* Amber glow - static on mobile, animated on desktop */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[600px] md:h-[600px] rounded-full bg-amber/10 blur-[120px] -z-10 opacity-10 md:hidden" />
       <motion.div
-        className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[600px] md:h-[600px] rounded-full bg-amber/10 blur-[120px] -z-10"
+        className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber/10 blur-[120px] -z-10"
         animate={{
           scale: [1, 1.1, 1],
           opacity: [0.08, 0.15, 0.08],
@@ -101,9 +102,10 @@ export function ContactSection() {
         }}
       />
 
-      {/* Teal accent (links, subtiel) */}
+      {/* Teal accent - static on mobile, animated on desktop */}
+      <div className="absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full bg-teal/5 blur-[100px] -z-10 opacity-[0.07] md:hidden" />
       <motion.div
-        className="absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full bg-teal/5 blur-[100px] -z-10"
+        className="hidden md:block absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full bg-teal/5 blur-[100px] -z-10"
         animate={{
           scale: [1.1, 1, 1.1],
           opacity: [0.05, 0.1, 0.05],

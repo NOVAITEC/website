@@ -9,8 +9,35 @@ interface SmoothScrollProps {
 
 export function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // Disable Lenis on mobile/touch devices for better performance
+    const isMobile = window.matchMedia("(max-width: 768px)").matches ||
+                     'ontouchstart' in window ||
+                     navigator.maxTouchPoints > 0;
+
+    if (isMobile) {
+      // On mobile, just handle anchor clicks with native smooth scroll
+      const handleAnchorClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const anchor = target.closest('a[href^="#"]');
+        if (anchor) {
+          const href = anchor.getAttribute("href");
+          if (href && href !== "#") {
+            const element = document.querySelector(href);
+            if (element) {
+              e.preventDefault();
+              element.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }
+        }
+      };
+      document.addEventListener("click", handleAnchorClick);
+      return () => document.removeEventListener("click", handleAnchorClick);
+    }
+
+    // Desktop: use Lenis for smooth scrolling
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -18,23 +45,18 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
       infinite: false,
-      syncTouch: true,
-      syncTouchLerp: 0.075,
     });
 
     lenisRef.current = lenis;
 
-    // Clean RAF loop - no throttling for maximum smoothness
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafIdRef.current = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafIdRef.current = requestAnimationFrame(raf);
 
-    // Handle anchor link clicks for smooth scrolling
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a[href^="#"]');
@@ -57,6 +79,9 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
       lenis.destroy();
       lenisRef.current = null;
     };
