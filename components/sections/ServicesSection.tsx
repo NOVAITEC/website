@@ -837,10 +837,10 @@ function ServicesSectionDesktop() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollYProgress]);
 
-  // Smooth the scroll progress for buttery animations
+  // Slower, smoother scroll - reduced stiffness for calmer experience
   const smoothScrollProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 25,
+    stiffness: 50,
+    damping: 30,
     restDelta: 0.0001,
   });
 
@@ -851,8 +851,8 @@ function ServicesSectionDesktop() {
 
   // Smooth progress for the progress bar (slightly different feel)
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 60,
+    damping: 35,
     restDelta: 0.001,
   });
 
@@ -860,7 +860,7 @@ function ServicesSectionDesktop() {
     <section
       ref={containerRef}
       id="oplossing"
-      className="relative h-[800vh] bg-midnight"
+      className="relative h-[600vh] bg-midnight"
     >
       {/* Sticky viewport - GPU accelerated */}
       <div className="sticky top-0 h-screen w-full overflow-hidden gpu-accelerated">
