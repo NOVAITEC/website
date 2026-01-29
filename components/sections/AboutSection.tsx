@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Clock, MessageCircle, Heart } from "lucide-react";
+import Image from "next/image";
 
 // Animation variants
 const containerVariants = {
@@ -155,11 +156,12 @@ export default function AboutSection() {
               className="relative w-full max-w-sm aspect-[3/4] rounded-xl overflow-hidden"
             >
               {/* Photo */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/kyan-cordes.jpg"
                 alt="Kyan Cordes - Founder NOVAITEC"
-                className="object-cover w-full h-full"
+                fill
+                className="object-cover"
+                priority
               />
 
               {/* Subtle overlay gradient for depth */}
