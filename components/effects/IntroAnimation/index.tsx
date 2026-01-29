@@ -9,7 +9,7 @@
 // 3. Particles fly outward
 // 4. Overlay fades to reveal the hero section
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
@@ -96,14 +96,14 @@ export function IntroAnimation() {
 
   return (
     <AnimatePresence>
-      {phase !== 'done' && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-midnight"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: phase === 'fadeout' ? 0 : 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: TIMING.fadeOut, ease: 'easeInOut' }}
-        >
+      <motion.div
+        key="intro-overlay"
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-midnight"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: phase === 'fadeout' ? 0 : 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: TIMING.fadeOut, ease: 'easeInOut' }}
+      >
           {/* Logo - grows then disappears */}
           {(phase === 'logo') && (
             <motion.div
@@ -193,8 +193,7 @@ export function IntroAnimation() {
               })}
             </div>
           )}
-        </motion.div>
-      )}
+      </motion.div>
     </AnimatePresence>
   );
 }
