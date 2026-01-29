@@ -297,7 +297,7 @@ function OpportunityMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight">
+    <div className="relative w-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight py-12 sm:py-20">
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/10 blur-[150px]" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/5 blur-[120px]" />
 
@@ -345,12 +345,12 @@ function SlideIntro() {
           transition={{ delay: 0.5 }}
           className="flex items-center justify-center gap-2 sm:gap-3 text-slate-500"
         >
-          <span className="font-inter text-xs sm:text-sm">Scroll om te ontdekken</span>
+          <span className="font-inter text-xs sm:text-sm">Scroll naar beneden</span>
           <motion.div
-            animate={{ x: [0, 8, 0] }}
+            animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.div>
         </motion.div>
       </div>
@@ -364,7 +364,7 @@ function SlideIntro() {
 
 function SlideAdmin() {
   return (
-    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-slate-900/50">
+    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900/50 py-12 sm:py-20">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
@@ -419,7 +419,7 @@ function SlideAdmin() {
 
 function SlideStaff() {
   return (
-    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-slate-900/50">
+    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900/50">
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-red-500/10 blur-[120px]" />
       <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-amber/10 blur-[100px]" />
 
@@ -479,7 +479,7 @@ function SlideStaff() {
 
 function SlideResearch() {
   return (
-    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-slate-800/50">
+    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800/50">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber/5 blur-[150px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
@@ -534,7 +534,7 @@ function SlideResearch() {
 
 function SlideTransition() {
   return (
-    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-slate-800/50">
+    <div className="relative w-full flex items-center py-12 sm:py-20 justify-center rounded-3xl overflow-hidden bg-slate-800/50">
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber/10 to-transparent" />
       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-teal/20 to-transparent" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-teal/20 blur-[150px]" />
@@ -659,21 +659,28 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: CINEMA SCROLL
+// DESKTOP: STACKING SLIDE-UP ANIMATION
 // =============================================================================
 
-function ProblemSectionDesktop() {
-  const containerRef = useRef<HTMLDivElement>(null);
+interface StackingSlideProps {
+  children: React.ReactNode;
+  index: number;
+}
+
+function StackingSlide({ children, index }: StackingSlideProps) {
+  const slideRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
 
   useEffect(() => {
     let ticking = false;
 
     const updateProgress = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
-      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+      if (!slideRef.current) return;
+      const rect = slideRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Calculate progress: 0 = slide at bottom of screen, 1 = slide fully in view
+      const progress = Math.min(Math.max(1 - (rect.top / windowHeight), 0), 1);
       scrollYProgress.set(progress);
       ticking = false;
     };
@@ -690,63 +697,66 @@ function ProblemSectionDesktop() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollYProgress]);
 
-  // Slower, smoother scroll - reduced stiffness for calmer experience
-  const smoothScrollProgress = useSpring(scrollYProgress, {
-    stiffness: 50,
-    damping: 30,
-    restDelta: 0.0001,
-  });
-
-  // 5 slides at ~88vw each + gaps between them
-  const x = useTransform(smoothScrollProgress, [0, 1], ['0%', '-78%']);
-
+  // Smooth spring animation
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 60,
-    damping: 35,
+    damping: 30,
     restDelta: 0.001,
   });
 
-  return (
-    <section
-      ref={containerRef}
-      id="probleem"
-      className="relative h-[500vh] bg-midnight"
-    >
-      <div className="sticky top-0 h-screen w-full overflow-hidden gpu-accelerated">
-        <NoiseOverlay />
+  // Transform: slides come up from bottom (100vh) to their final position (0)
+  const y = useTransform(smoothProgress, [0, 1], ['100vh', '0vh']);
+  const opacity = useTransform(smoothProgress, [0, 0.2, 1], [0, 0.8, 1]);
+  const scale = useTransform(smoothProgress, [0, 1], [0.9, 1]);
 
+  return (
+    <motion.div
+      ref={slideRef}
+      style={{
+        y,
+        opacity,
+        scale,
+        zIndex: 10 + index
+      }}
+      className="sticky top-0 h-screen w-full flex items-center justify-center px-4 sm:px-6"
+    >
+      <div className="w-full max-w-7xl">
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
+function ProblemSectionDesktop() {
+  const slides = [
+    { component: <SlideIntro />, id: 'intro' },
+    { component: <SlideAdmin />, id: 'admin' },
+    { component: <SlideStaff />, id: 'staff' },
+    { component: <SlideResearch />, id: 'research' },
+    { component: <SlideTransition />, id: 'transition' },
+  ];
+
+  return (
+    <section id="probleem" className="relative bg-midnight">
+      {/* Background effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        <NoiseOverlay />
         <motion.div
           className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/15 blur-[150px]"
           animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
-
-        <motion.div
-          style={{ x }}
-          className="flex h-full w-max will-change-transform gap-12 md:gap-16 lg:gap-20 xl:gap-24"
-        >
-          <SlideIntro />
-          <SlideAdmin />
-          <SlideStaff />
-          <SlideResearch />
-          <SlideTransition />
-        </motion.div>
-
-        <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden">
-          <motion.div
-            style={{ scaleX: smoothProgress }}
-            className="h-full bg-gradient-to-r from-amber to-orange-400 origin-left"
-          />
-        </div>
-
-        <div className="hidden md:block">
-          <SlideCounter scrollYProgress={scrollYProgress} />
-        </div>
-
-        <div className="hidden md:block">
-          <SlideIndicators scrollYProgress={scrollYProgress} />
-        </div>
       </div>
+
+      {/* Stacking slides */}
+      {slides.map((slide, index) => (
+        <StackingSlide key={slide.id} index={index}>
+          {slide.component}
+        </StackingSlide>
+      ))}
+
+      {/* Extra spacing at the end */}
+      <div className="h-screen" />
     </section>
   );
 }

@@ -363,9 +363,12 @@ function ChatMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden">
+      {/* Network Animation Background */}
+      <NetworkAnimation />
+
       {/* Content */}
-      <div className="text-center">
+      <div className="relative z-10 text-center max-w-5xl px-4 sm:px-6">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -406,12 +409,12 @@ function SlideIntro() {
           transition={{ delay: 0.5 }}
           className="flex items-center justify-center gap-2 sm:gap-3 text-slate-500"
         >
-          <span className="font-inter text-xs sm:text-sm">Scroll naar beneden</span>
+          <span className="font-inter text-xs sm:text-sm">Scroll om te ontdekken</span>
           <motion.div
-            animate={{ y: [0, 8, 0] }}
+            animate={{ x: [0, 8, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.div>
         </motion.div>
       </div>
@@ -425,7 +428,7 @@ function SlideIntro() {
 
 function SlideAutomation() {
   return (
-    <div className="relative flex-shrink-0 w-full max-w-7xl mx-auto flex items-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -484,7 +487,7 @@ function SlideAutomation() {
 
 function SlideAIAgents() {
   return (
-    <div className="relative flex-shrink-0 w-full max-w-7xl mx-auto flex items-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -545,7 +548,7 @@ function SlideAIAgents() {
 
 function SlideDashboards() {
   return (
-    <div className="relative flex-shrink-0 w-full max-w-7xl mx-auto flex items-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Animated Chart Visual */}
         <motion.div
@@ -605,7 +608,7 @@ function SlideDashboards() {
 
 function SlideOwnership() {
   return (
-    <div className="relative flex-shrink-0 w-full max-w-7xl mx-auto flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
       {/* Centered content */}
       <div className="text-center max-w-3xl px-4 sm:px-6">
         <motion.div
@@ -671,7 +674,7 @@ function SlideOwnership() {
 
 function SlideGrandFinale() {
   return (
-    <div className="relative flex-shrink-0 w-full max-w-7xl mx-auto flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
       {/* Radial glow background */}
       <div
         className="absolute inset-0"
@@ -799,32 +802,21 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: VERTICAL SLIDE-UP ANIMATION
+// DESKTOP: HORIZONTAL CINEMA SCROLL
 // =============================================================================
 
-interface VerticalSlideProps {
-  children: React.ReactNode;
-  index: number;
-  total: number;
-}
-
-function VerticalSlide({ children, index, total }: VerticalSlideProps) {
-  const slideRef = useRef<HTMLDivElement>(null);
+function ServicesSectionDesktop() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
 
   useEffect(() => {
     let ticking = false;
 
     const updateProgress = () => {
-      if (!slideRef.current) return;
-      const rect = slideRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Calculate progress based on slide position
-      // Slide enters from bottom (progress 0) to center (progress 1)
-      const slideCenter = rect.top + rect.height / 2;
-      const progress = Math.min(Math.max((windowHeight - slideCenter) / windowHeight, 0), 1);
-
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
       scrollYProgress.set(progress);
       ticking = false;
     };
@@ -841,63 +833,66 @@ function VerticalSlide({ children, index, total }: VerticalSlideProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollYProgress]);
 
-  // Smooth spring animation
-  const smoothProgress = useSpring(scrollYProgress, {
+  const smoothScrollProgress = useSpring(scrollYProgress, {
     stiffness: 50,
     damping: 30,
+    restDelta: 0.0001,
+  });
+
+  const x = useTransform(smoothScrollProgress, [0, 1], ['0%', '-82%']);
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 60,
+    damping: 35,
     restDelta: 0.001,
   });
 
-  // Transform values: slide up from bottom with fade in
-  const y = useTransform(smoothProgress, [0, 1], [100, 0]);
-  const opacity = useTransform(smoothProgress, [0, 0.3, 1], [0, 0.5, 1]);
-  const scale = useTransform(smoothProgress, [0, 1], [0.95, 1]);
-
   return (
-    <motion.div
-      ref={slideRef}
-      style={{ y, opacity, scale }}
-      className="min-h-screen flex items-center justify-center py-20"
+    <section
+      ref={containerRef}
+      id="oplossing"
+      className="relative h-[600vh] bg-midnight"
     >
-      {children}
-    </motion.div>
-  );
-}
+      <div className="sticky top-0 h-screen w-full overflow-hidden gpu-accelerated">
+        <NoiseOverlay />
 
-function ServicesSectionDesktop() {
-  const slides = [
-    <SlideIntro key="intro" />,
-    <SlideAutomation key="automation" />,
-    <SlideAIAgents key="ai" />,
-    <SlideDashboards key="dashboards" />,
-    <SlideOwnership key="ownership" />,
-    <SlideGrandFinale key="finale" />,
-  ];
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]"
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        />
 
-  return (
-    <section id="oplossing" className="relative bg-midnight overflow-hidden">
-      {/* Noise overlay */}
-      <NoiseOverlay />
+        <motion.div
+          style={{ x }}
+          className="flex h-full w-max will-change-transform gap-12 md:gap-16 lg:gap-20 xl:gap-24"
+        >
+          <SlideIntro />
+          <SlideAutomation />
+          <SlideAIAgents />
+          <SlideDashboards />
+          <SlideOwnership />
+          <SlideGrandFinale />
+        </motion.div>
 
-      {/* Pulsating background blobs */}
-      <motion.div
-        className="fixed top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none z-0"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="fixed bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none z-0"
-        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden">
+          <motion.div
+            style={{ scaleX: smoothProgress }}
+            className="h-full bg-gradient-to-r from-teal to-cyan-400 origin-left"
+          />
+        </div>
 
-      {/* Vertical slides that come up from bottom */}
-      <div className="relative z-10">
-        {slides.map((slide, index) => (
-          <VerticalSlide key={index} index={index} total={slides.length}>
-            {slide}
-          </VerticalSlide>
-        ))}
+        <div className="hidden md:block">
+          <SlideCounter scrollYProgress={scrollYProgress} />
+        </div>
+
+        <div className="hidden md:block">
+          <SlideIndicators scrollYProgress={scrollYProgress} />
+        </div>
       </div>
     </section>
   );
@@ -1172,21 +1167,10 @@ function ServicesSectionMobile() {
 }
 
 // =============================================================================
-// MAIN EXPORT - CSS-based responsive design
+// MAIN EXPORT - Horizontal cinema scroll on ALL screen sizes
 // =============================================================================
 
 export function ServicesSection() {
-  return (
-    <>
-      {/* Desktop/Tablet version: shown on md+ screens (768px+) */}
-      <div className="hidden md:block">
-        <ServicesSectionDesktop />
-      </div>
-
-      {/* Mobile version: shown on screens < md (< 768px) */}
-      <div className="block md:hidden">
-        <ServicesSectionMobile />
-      </div>
-    </>
-  );
+  // Use horizontal cinema scroll on all screen sizes (mobile, tablet, desktop)
+  return <ServicesSectionDesktop />;
 }
