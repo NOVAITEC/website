@@ -9,7 +9,7 @@ const menuLinks = [
   { name: "Home", href: "/" },
   { name: "Over Mij", href: "/#over" },
   { name: "Services", href: "/#oplossing" },
-  { name: "Blog", href: "/#blog" },
+  { name: "FAQ", href: "/#faq" },
 ];
 
 const legalLinks = [

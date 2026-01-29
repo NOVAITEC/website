@@ -1167,10 +1167,20 @@ function ServicesSectionMobile() {
 }
 
 // =============================================================================
-// MAIN EXPORT - Horizontal cinema scroll on ALL screen sizes
+// MAIN EXPORT - Responsive: Mobile vertical stack, Desktop horizontal scroll
 // =============================================================================
 
 export function ServicesSection() {
-  // Use horizontal cinema scroll on all screen sizes (mobile, tablet, desktop)
-  return <ServicesSectionDesktop />;
+  return (
+    <>
+      {/* Mobile: Vertical stack layout (< 1024px) */}
+      <div className="lg:hidden">
+        <ServicesSectionMobile />
+      </div>
+      {/* Desktop: Horizontal cinema scroll (>= 1024px) */}
+      <div className="hidden lg:block">
+        <ServicesSectionDesktop />
+      </div>
+    </>
+  );
 }

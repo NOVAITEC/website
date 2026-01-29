@@ -728,8 +728,8 @@ function ProblemSectionDesktop() {
 
   return (
     <section id="probleem" className="relative bg-midnight">
-      {/* Background effects */}
-      <div className="fixed inset-0 pointer-events-none">
+      {/* Background effects - use absolute to stay within section bounds */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <NoiseOverlay />
         <motion.div
           className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/15 blur-[150px]"
@@ -885,10 +885,20 @@ function ProblemSectionMobile() {
 }
 
 // =============================================================================
-// MAIN EXPORT - Horizontal cinema scroll on ALL screen sizes
+// MAIN EXPORT - Responsive: Mobile vertical stack, Desktop stacking cards
 // =============================================================================
 
 export function ProblemSection() {
-  // Use horizontal cinema scroll on all screen sizes (mobile, tablet, desktop)
-  return <ProblemSectionDesktop />;
+  return (
+    <>
+      {/* Mobile: Vertical stack layout (< 1024px) */}
+      <div className="lg:hidden">
+        <ProblemSectionMobile />
+      </div>
+      {/* Desktop: Stacking cards animation (>= 1024px) */}
+      <div className="hidden lg:block">
+        <ProblemSectionDesktop />
+      </div>
+    </>
+  );
 }
