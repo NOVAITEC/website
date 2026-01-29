@@ -61,9 +61,12 @@ function StackingCard({
       style={{ zIndex: 10 + index * 10 }}
     >
       <motion.div
-        style={{ scale: isLast ? 1 : scale }}
+        style={{
+          scale: isLast ? 1 : scale,
+          willChange: 'transform',
+        }}
         className={cn(
-          'relative h-full w-full overflow-hidden',
+          'relative h-full w-full overflow-hidden gpu-accelerated',
           !isFirst && 'rounded-t-[2rem] md:rounded-t-[3rem] shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.7)]'
         )}
       >
@@ -134,20 +137,11 @@ function AdminMockup() {
               {row}
             </div>
             <div className="flex-1 h-8 bg-slate-800/50 rounded flex items-center px-3 overflow-hidden">
-              <motion.span
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                className="font-mono text-xs text-slate-400 truncate"
-              >
+              <span className="font-mono text-xs text-slate-400 truncate">
                 {['Factuur #2024-0847...', 'Klant: TechBedrijf BV', 'Bedrag: €3.240,00', 'Status: In behandeling'][i]}
-              </motion.span>
+              </span>
             </div>
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
-            >
-              <Copy className="w-4 h-4 text-amber/60" />
-            </motion.div>
+            <Copy className="w-4 h-4 text-amber/60" />
           </motion.div>
         ))}
       </div>
@@ -160,7 +154,7 @@ function AdminMockup() {
         transition={{ delay: 1 }}
         className="mt-4 flex items-center justify-center gap-2 text-amber/80"
       >
-        <RefreshCw className="w-4 h-4 animate-spin" style={{ animationDuration: '3s' }} />
+        <RefreshCw className="w-4 h-4 text-amber/60" />
         <span className="font-mono text-xs">Kopieer... Plak... Herhaal...</span>
       </motion.div>
 
@@ -198,13 +192,9 @@ function StaffMockup() {
           <p className="font-mono text-xs text-slate-500 uppercase tracking-wider">Team Capaciteit</p>
           <p className="font-montserrat font-bold text-lg text-white">Kritiek Niveau</p>
         </div>
-        <motion.div
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 1, repeat: Infinity }}
-          className="bg-red-500/20 border border-red-500/30 rounded-full px-3 py-1"
-        >
+        <div className="bg-red-500/20 border border-red-500/30 rounded-full px-3 py-1">
           <span className="font-mono text-xs text-red-400">OVERBELAST</span>
-        </motion.div>
+        </div>
       </div>
 
       {/* Workload bars */}
@@ -253,12 +243,7 @@ function StaffMockup() {
         transition={{ delay: 0.9, type: 'spring' }}
         className="flex items-center justify-center gap-2 bg-amber/10 border border-amber/30 rounded-xl p-3"
       >
-        <motion.div
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <UserX className="w-5 h-5 text-amber" />
-        </motion.div>
+        <UserX className="w-5 h-5 text-amber" />
         <span className="font-inter text-sm text-amber">2 vacatures al 3+ maanden open</span>
       </motion.div>
     </motion.div>
@@ -295,34 +280,26 @@ function OpportunityMockup() {
         </div>
       </div>
 
-      {/* Floating tools that pass by */}
+      {/* Floating tools - static display for better scroll performance */}
       <div className="relative h-32 mb-4">
         {tools.map((tool, i) => (
           <motion.div
             key={tool.name}
-            initial={{ x: '100%', opacity: 0 }}
-            whileInView={{ x: '-100%', opacity: [0, 1, 1, 0] }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{
-              duration: 4,
-              delay: 0.8 + i * 0.8,
-              ease: 'linear',
-              repeat: Infinity,
-              repeatDelay: 2,
+              duration: 0.5,
+              delay: 0.4 + i * 0.15,
             }}
-            className="absolute top-1/2 -translate-y-1/2 flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-4 py-2"
-            style={{ top: `${20 + i * 35}%` }}
+            className="absolute flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-4 py-2"
+            style={{ top: `${10 + i * 35}%`, left: `${5 + i * 10}%` }}
           >
             <tool.icon className="w-4 h-4 text-teal" />
             <span className="font-inter text-sm text-teal whitespace-nowrap">{tool.name}</span>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full font-mono"
-            >
+            <span className="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full font-mono">
               GEMIST
-            </motion.span>
+            </span>
           </motion.div>
         ))}
       </div>
@@ -423,12 +400,7 @@ function SlideIntro() {
           className="flex flex-col items-center gap-3 text-slate-500"
         >
           <span className="font-inter text-sm">Scroll om je uitdagingen te zien</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ArrowDown className="w-5 h-5" />
-          </motion.div>
+          <ArrowDown className="w-5 h-5 animate-bounce" />
         </motion.div>
       </div>
     </div>
@@ -672,12 +644,7 @@ function SlideTransition() {
             className="group inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold text-base md:text-lg px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-all"
           >
             Ontdek de Oplossing
-            <motion.div
-              animate={{ x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
-            </motion.div>
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
           </motion.a>
         </motion.div>
       </div>
@@ -729,10 +696,11 @@ export function ProblemSection() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollProgress]);
 
-  // Apply spring for ultra-smooth interpolation
+  // Apply spring with high stiffness for responsive, non-laggy scrolling
+  // Higher stiffness = faster response, higher damping = less oscillation
   const smoothProgress = useSpring(scrollProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 400,
+    damping: 50,
     restDelta: 0.001,
   });
 
