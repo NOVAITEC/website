@@ -46,10 +46,10 @@ export default function CookiesPage() {
                   Wat zijn cookies?
                 </h2>
                 <p className="leading-relaxed">
-                  Cookies zijn kleine tekstbestanden die door websites op uw computer, tablet
+                  Cookies zijn kleine tekstbestanden die door websites op je computer, tablet
                   of telefoon worden geplaatst. Deze bestanden bevatten informatie die bij
                   een volgend bezoek aan de website weer kan worden uitgelezen. Cookies zorgen
-                  ervoor dat de website goed functioneert en onthouden bijvoorbeeld uw voorkeuren.
+                  ervoor dat de website goed functioneert en onthouden bijvoorbeeld je voorkeuren.
                 </p>
               </section>
 
@@ -87,7 +87,7 @@ export default function CookiesPage() {
                       <tbody className="text-slate-300">
                         <tr className="border-b border-slate-800">
                           <td className="py-2 font-mono text-xs">cookie_consent</td>
-                          <td className="py-2">Onthoudt uw cookievoorkeuren</td>
+                          <td className="py-2">Onthoudt je cookievoorkeuren</td>
                           <td className="py-2">1 jaar</td>
                         </tr>
                       </tbody>
@@ -137,13 +137,13 @@ export default function CookiesPage() {
 
               <section>
                 <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
-                  Uw toestemming
+                  Jouw toestemming
                 </h2>
                 <p className="leading-relaxed">
-                  Bij uw eerste bezoek aan de website vraag ik uw toestemming voor het
+                  Bij je eerste bezoek aan de website vraag ik je toestemming voor het
                   plaatsen van analytische cookies. Functionele cookies worden altijd geplaatst
-                  omdat deze noodzakelijk zijn voor het functioneren van de website. U kunt
-                  uw toestemming voor analytische cookies op elk moment intrekken.
+                  omdat deze noodzakelijk zijn voor het functioneren van de website. Je kunt
+                  je toestemming voor analytische cookies op elk moment intrekken.
                 </p>
               </section>
 
@@ -152,12 +152,12 @@ export default function CookiesPage() {
                   Voorkeuren wijzigen
                 </h2>
                 <p className="leading-relaxed mb-4">
-                  U kunt uw cookievoorkeuren op de volgende manieren wijzigen:
+                  Je kunt je cookievoorkeuren op de volgende manieren wijzigen:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400">
-                  <li>Via de cookie-banner die verschijnt bij uw bezoek aan de website</li>
-                  <li>Door de cookies in uw browser te verwijderen (zie de helpfunctie van uw browser)</li>
-                  <li>Door uw browserinstellingen aan te passen om cookies te blokkeren</li>
+                  <li>Via de cookie-banner die verschijnt bij je bezoek aan de website</li>
+                  <li>Door de cookies in je browser te verwijderen (zie de helpfunctie van je browser)</li>
+                  <li>Door je browserinstellingen aan te passen om cookies te blokkeren</li>
                 </ul>
                 <p className="leading-relaxed mt-4 text-slate-400">
                   Let op: het blokkeren van functionele cookies kan invloed hebben op de werking

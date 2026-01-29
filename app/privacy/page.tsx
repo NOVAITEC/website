@@ -58,13 +58,13 @@ export default function PrivacyPage() {
                   2. Welke gegevens verzamel ik?
                 </h2>
                 <p className="leading-relaxed mb-4">
-                  Ik verzamel alleen gegevens die u zelf aan mij verstrekt via het contactformulier:
+                  Ik verzamel alleen gegevens die je zelf aan mij verstrekt via het contactformulier:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400">
                   <li>Naam</li>
                   <li>E-mailadres</li>
                   <li>Bedrijfsnaam (optioneel)</li>
-                  <li>Uw bericht of vraag</li>
+                  <li>Je bericht of vraag</li>
                 </ul>
               </section>
 
@@ -73,12 +73,12 @@ export default function PrivacyPage() {
                   3. Doel van gegevensverwerking
                 </h2>
                 <p className="leading-relaxed">
-                  Ik gebruik uw gegevens uitsluitend om:
+                  Ik gebruik je gegevens uitsluitend om:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400 mt-4">
-                  <li>Te reageren op uw contactverzoek of vraag</li>
-                  <li>U te informeren over onze diensten indien u daarom heeft gevraagd</li>
-                  <li>De overeenkomst die ik met u sluit uit te voeren</li>
+                  <li>Te reageren op je contactverzoek of vraag</li>
+                  <li>Je te informeren over mijn diensten indien je daarom hebt gevraagd</li>
+                  <li>De overeenkomst die ik met je sluit uit te voeren</li>
                 </ul>
               </section>
 
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
                 <p className="leading-relaxed">
                   Deze website maakt gebruik van Google Analytics om inzicht te krijgen in
                   bezoekersgedrag. Hierbij worden geanonimiseerde gegevens verzameld over
-                  uw websitebezoek. IP-adressen worden geanonimiseerd voordat ze worden
+                  je websitebezoek. IP-adressen worden geanonimiseerd voordat ze worden
                   opgeslagen. Deze gegevens worden niet gedeeld met derden en kunnen niet
                   worden herleid tot individuele personen.
                 </p>
@@ -100,8 +100,8 @@ export default function PrivacyPage() {
                   5. Bewaartermijn
                 </h2>
                 <p className="leading-relaxed">
-                  Ik bewaar uw persoonsgegevens niet langer dan strikt noodzakelijk is om
-                  de doelen te realiseren waarvoor uw gegevens worden verzameld. Contactgegevens
+                  Ik bewaar je persoonsgegevens niet langer dan strikt noodzakelijk is om
+                  de doelen te realiseren waarvoor je gegevens worden verzameld. Contactgegevens
                   worden maximaal 2 jaar bewaard na het laatste contact, tenzij er een actieve
                   klantrelatie bestaat.
                 </p>
@@ -109,16 +109,16 @@ export default function PrivacyPage() {
 
               <section>
                 <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
-                  6. Uw rechten
+                  6. Jouw rechten
                 </h2>
                 <p className="leading-relaxed mb-4">
-                  Op grond van de Algemene Verordening Gegevensbescherming (AVG) heeft u de volgende rechten:
+                  Op grond van de Algemene Verordening Gegevensbescherming (AVG) heb je de volgende rechten:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400">
-                  <li><strong className="text-slate-300">Recht op inzage:</strong> U kunt opvragen welke gegevens ik van u heb</li>
-                  <li><strong className="text-slate-300">Recht op correctie:</strong> U kunt onjuiste gegevens laten aanpassen</li>
-                  <li><strong className="text-slate-300">Recht op verwijdering:</strong> U kunt verzoeken uw gegevens te verwijderen</li>
-                  <li><strong className="text-slate-300">Recht op bezwaar:</strong> U kunt bezwaar maken tegen de verwerking van uw gegevens</li>
+                  <li><strong className="text-slate-300">Recht op inzage:</strong> Je kunt opvragen welke gegevens ik van je heb</li>
+                  <li><strong className="text-slate-300">Recht op correctie:</strong> Je kunt onjuiste gegevens laten aanpassen</li>
+                  <li><strong className="text-slate-300">Recht op verwijdering:</strong> Je kunt verzoeken je gegevens te verwijderen</li>
+                  <li><strong className="text-slate-300">Recht op bezwaar:</strong> Je kunt bezwaar maken tegen de verwerking van je gegevens</li>
                 </ul>
               </section>
 
@@ -127,9 +127,9 @@ export default function PrivacyPage() {
                   7. Beveiliging
                 </h2>
                 <p className="leading-relaxed">
-                  Ik neem passende technische en organisatorische maatregelen om uw
+                  Ik neem passende technische en organisatorische maatregelen om je
                   persoonsgegevens te beschermen tegen ongeoorloofde toegang, verlies of
-                  diefstal. Onze website maakt gebruik van een SSL-certificaat voor een
+                  diefstal. De website maakt gebruik van een SSL-certificaat voor een
                   beveiligde verbinding.
                 </p>
               </section>
@@ -139,8 +139,8 @@ export default function PrivacyPage() {
                   8. Contact
                 </h2>
                 <p className="leading-relaxed">
-                  Heeft u vragen over deze privacyverklaring of wilt u een beroep doen op
-                  een van uw rechten? Neem dan contact met ons op via{" "}
+                  Heb je vragen over deze privacyverklaring of wil je een beroep doen op
+                  een van je rechten? Neem dan contact met mij op via{" "}
                   <a
                     href="mailto:kyan@novaitec.nl"
                     className="text-teal hover:underline"
