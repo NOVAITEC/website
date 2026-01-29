@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useTransform, MotionValue } from 'framer-motion';
 import {
   ArrowDown,
@@ -752,134 +752,92 @@ function ProblemSectionDesktop() {
 }
 
 // =============================================================================
-// MOBILE: VERTICAL STACK
+// MOBILE: STACKING CARDS ANIMATION (same as desktop but with smaller offsets)
 // =============================================================================
 
-function ProblemSectionMobile() {
+interface StackingSlideMobileProps {
+  children: React.ReactNode;
+  index: number;
+}
+
+function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Smaller offset for mobile screens
+  const topOffset = index * 12;
+
   return (
-    <section id="probleem" className="relative bg-midnight py-16 overflow-hidden">
-      <NoiseOverlay />
-
+    <div
+      ref={cardRef}
+      className="sticky min-h-[100svh] w-full flex items-center justify-center px-3"
+      style={{
+        top: `${topOffset}px`,
+        zIndex: 10 + index,
+      }}
+    >
       <motion.div
-        className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-amber/15 blur-[100px]"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        initial={{ opacity: 0, y: 80, scale: 0.95 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 80, scale: 0.95 }}
+        transition={{
+          duration: 0.5,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="w-full max-w-7xl"
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
 
-      <div className="space-y-16">
-        <div className="relative z-10 container mx-auto px-6 text-center py-16">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-mono text-sm uppercase tracking-wider text-amber mb-4"
-          >
-            HERKENBAAR?
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-montserrat font-extrabold text-3xl md:text-4xl text-white mb-4"
-          >
-            Ondernemen is{' '}
-            <span className="bg-gradient-to-r from-amber to-orange-400 bg-clip-text text-transparent">
-              vrijheid.
-            </span>{' '}
-            Toch?
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="font-inter text-base text-slate-400"
-          >
-            Of voelt het vaker als brandjes blussen en administratie doen?
-          </motion.p>
-        </div>
+function ProblemSectionMobile() {
+  const slides = [
+    { component: <SlideIntro />, id: 'intro-mobile' },
+    { component: <SlideAdmin />, id: 'admin-mobile' },
+    { component: <SlideStaff />, id: 'staff-mobile' },
+    { component: <SlideResearch />, id: 'research-mobile' },
+    { component: <SlideTransition />, id: 'transition-mobile' },
+  ];
 
-        {/* Rest of mobile slides - simplified vertical layout */}
-        <div className="container mx-auto px-6 space-y-12">
-          <div className="text-center space-y-4">
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-4 py-2">
-              <AlertTriangle className="w-4 h-4 text-amber" />
-              <span className="font-mono text-sm text-amber uppercase">Probleem 01</span>
-            </div>
-            <h3 className="font-montserrat font-extrabold text-2xl text-white">
-              De Administratie <span className="text-amber">Molen.</span>
-            </h3>
-            <p className="font-inter text-slate-400 leading-relaxed max-w-lg mx-auto">
-              Je typt data over. Je sleept bestanden. Ondertussen loopt je echte werk achter.
-            </p>
-            <div className="grid grid-cols-3 gap-2 pt-4">
-              <StatCard value="3-5" label="uur/week verloren" />
-              <StatCard value="15%" label="foutenmarge" />
-              <StatCard value="€2.400+" label="per jaar" />
-            </div>
-          </div>
-
-          <div className="text-center space-y-4">
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-4 py-2">
-              <Users className="w-4 h-4 text-amber" />
-              <span className="font-mono text-sm text-amber uppercase">Probleem 02</span>
-            </div>
-            <h3 className="font-montserrat font-extrabold text-2xl text-white">
-              Het Personeel <span className="text-amber">Dilemma.</span>
-            </h3>
-            <p className="font-inter text-slate-400 leading-relaxed max-w-lg mx-auto">
-              Te weinig handen. Te veel werk. En snellere oplossingen? Die kennen ze niet.
-            </p>
-            <div className="grid grid-cols-3 gap-2 pt-4">
-              <StatCard value="71%" label="personeelstekort" />
-              <StatCard value="53%" label="MKB onderbezet" />
-              <StatCard value="29%" label="meer werkdruk" />
-            </div>
-          </div>
-
-          <div className="text-center space-y-4">
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-4 py-2">
-              <Lightbulb className="w-4 h-4 text-amber" />
-              <span className="font-mono text-sm text-amber uppercase">Probleem 03</span>
-            </div>
-            <h3 className="font-montserrat font-extrabold text-2xl text-white">
-              De Research <span className="text-amber">Gap.</span>
-            </h3>
-            <p className="font-inter text-slate-400 leading-relaxed max-w-lg mx-auto">
-              Je weet dat AI kan helpen. Maar wanneer had je voor het laatst tijd om het uit te zoeken?
-            </p>
-            <div className="grid grid-cols-3 gap-2 pt-4">
-              <StatCard value="72%" label="gelooft in AI" />
-              <StatCard value="Weinig" label="geautomatiseerd" />
-              <StatCard value="0 uur" label="voor innovatie" />
-            </div>
-          </div>
-
-          <div className="text-center space-y-6 py-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-teal/10 border border-teal/30">
-              <CheckCircle className="w-10 h-10 text-teal" />
-            </div>
-            <h3 className="font-montserrat font-extrabold text-3xl text-white">
-              Je bent{' '}
-              <span className="bg-gradient-to-r from-teal to-cyan-300 bg-clip-text text-transparent">
-                niet alleen.
-              </span>
-            </h3>
-            <p className="font-inter text-slate-400 max-w-md mx-auto">
-              Duizenden ondernemers zitten in dezelfde situatie.{' '}
-              <span className="text-white font-medium">Er is een uitweg.</span>
-            </p>
-            <a
-              href="#oplossing"
-              className="inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-bold px-8 py-4 rounded-xl shadow-[0_0_40px_-8px_rgba(6,182,212,0.5)]"
-            >
-              Ontdek de Oplossing
-              <ArrowRight className="w-5 h-5" />
-            </a>
-          </div>
-        </div>
+  return (
+    <section id="probleem" className="relative bg-midnight">
+      {/* Background effects */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <NoiseOverlay />
+        <motion.div
+          className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-amber/15 blur-[100px]"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </div>
+
+      {/* Stacking slides for mobile */}
+      {slides.map((slide, index) => (
+        <StackingSlideMobile key={slide.id} index={index}>
+          {slide.component}
+        </StackingSlideMobile>
+      ))}
+
+      {/* Extra spacing at the end */}
+      <div className="h-[100svh]" />
     </section>
   );
 }
