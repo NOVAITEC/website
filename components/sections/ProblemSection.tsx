@@ -297,7 +297,7 @@ function OpportunityMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative w-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight py-12 sm:py-20">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center justify-center rounded-3xl overflow-hidden bg-midnight py-12 sm:py-20">
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/10 blur-[150px]" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/5 blur-[120px]" />
 
@@ -364,7 +364,7 @@ function SlideIntro() {
 
 function SlideAdmin() {
   return (
-    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12 sm:py-20">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12 sm:py-20">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
@@ -419,7 +419,7 @@ function SlideAdmin() {
 
 function SlideStaff() {
   return (
-    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900">
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-red-500/10 blur-[120px]" />
       <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-amber/10 blur-[100px]" />
 
@@ -479,7 +479,7 @@ function SlideStaff() {
 
 function SlideResearch() {
   return (
-    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber/5 blur-[150px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
@@ -534,7 +534,7 @@ function SlideResearch() {
 
 function SlideTransition() {
   return (
-    <div className="relative w-full flex items-center py-12 sm:py-20 justify-center rounded-3xl overflow-hidden bg-slate-800">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 justify-center rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber/10 to-transparent" />
       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-teal/20 to-transparent" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-teal/20 blur-[150px]" />
