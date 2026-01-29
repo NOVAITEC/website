@@ -479,7 +479,7 @@ function SlideStaff() {
 
 function SlideResearch() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber/5 blur-[150px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
