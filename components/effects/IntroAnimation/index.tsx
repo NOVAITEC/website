@@ -6,8 +6,7 @@
 // 1. Logo drops in met bounce
 // 2. Logo pulst en gloeit op
 // 3. Logo zoomt DOOR je heen (je vliegt erin)
-// 4. Lichtflits + radial reveal van de hero
-// 5. Speed lines voor snelheidsgevoel
+// 4. Lichtflits + fade naar hero
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,37 +19,11 @@ const TIMING = {
   logoPulse: 0.5,       // Glow intensifies
   zoomThrough: 0.8,     // Zoom through the logo
   flash: 0.3,           // White flash
-  reveal: 0.5,          // Radial reveal
+  reveal: 0.5,          // Fade to hero
 };
-
-// Speed lines configuration
-const SPEED_LINE_COUNT = 20;
-
-interface SpeedLine {
-  id: number;
-  angle: number;
-  length: number;
-  delay: number;
-  duration: number;
-}
-
-function createSpeedLines(): SpeedLine[] {
-  const lines: SpeedLine[] = [];
-  for (let i = 0; i < SPEED_LINE_COUNT; i++) {
-    lines.push({
-      id: i,
-      angle: (i / SPEED_LINE_COUNT) * 360,
-      length: 100 + Math.random() * 200,
-      delay: Math.random() * 0.2,
-      duration: 0.3 + Math.random() * 0.3,
-    });
-  }
-  return lines;
-}
 
 export function IntroAnimation() {
   const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'flash' | 'reveal' | 'done'>('drop');
-  const [speedLines] = useState<SpeedLine[]>(createSpeedLines);
 
   useEffect(() => {
     const dropTime = TIMING.logoDrop * 1000;
@@ -106,31 +79,6 @@ export function IntroAnimation() {
             }}
             transition={{ duration: TIMING.zoomThrough, ease: 'easeIn' }}
           />
-        )}
-
-        {/* Speed lines during zoom */}
-        {phase === 'zoom' && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            {speedLines.map((line) => (
-              <motion.div
-                key={line.id}
-                className="absolute bg-gradient-to-r from-teal to-transparent"
-                style={{
-                  width: 2,
-                  height: line.length,
-                  transformOrigin: 'center bottom',
-                  rotate: `${line.angle}deg`,
-                }}
-                initial={{ scaleY: 0, opacity: 0 }}
-                animate={{ scaleY: 1, opacity: [0, 0.8, 0] }}
-                transition={{
-                  duration: line.duration,
-                  delay: line.delay,
-                  ease: 'easeOut',
-                }}
-              />
-            ))}
-          </div>
         )}
 
         {/* White flash */}
@@ -251,28 +199,6 @@ export function IntroAnimation() {
             </motion.div>
           )}
 
-          {/* Ring burst during flash */}
-          {phase === 'flash' && (
-            <>
-              {[0, 1, 2].map((i) => (
-                <motion.div
-                  key={i}
-                  className="absolute border-2 border-teal rounded-full"
-                  style={{
-                    width: 100,
-                    height: 100,
-                  }}
-                  initial={{ scale: 1, opacity: 0.8 }}
-                  animate={{ scale: 20, opacity: 0 }}
-                  transition={{
-                    duration: TIMING.flash + 0.3,
-                    delay: i * 0.1,
-                    ease: 'easeOut',
-                  }}
-                />
-              ))}
-            </>
-          )}
         </div>
       </motion.div>
     </AnimatePresence>
