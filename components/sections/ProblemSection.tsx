@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion';
 import {
   ArrowDown,
   Clock,
@@ -21,57 +21,49 @@ import {
 import { cn } from '@/lib/utils';
 
 // =============================================================================
-// STACKING CARD WRAPPER
+// STACKING CARD WRAPPER - Optimized with shared scroll context
 // =============================================================================
 
 interface StackingCardProps {
   children: React.ReactNode;
   index: number;
+  totalCards: number;
+  scrollProgress: MotionValue<number>;
   isFirst?: boolean;
   isLast?: boolean;
   className?: string;
 }
 
-// Spring config for smoother animations
-const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+function StackingCard({
+  children,
+  index,
+  totalCards,
+  scrollProgress,
+  isFirst,
+  isLast,
+  className
+}: StackingCardProps) {
+  // Calculate this card's individual progress from the shared scroll progress
+  // Each card takes 1/totalCards of the total scroll
+  const cardStart = index / totalCards;
+  const cardEnd = (index + 1) / totalCards;
 
-function StackingCard({ children, index, isFirst, isLast, className }: StackingCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  // Track this card's scroll progress
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'start start'],
-  });
-
-  // Apply spring for smoother interpolation
-  const smoothProgress = useSpring(scrollYProgress, springConfig);
-
-  // Cards get a slight scale up as they scroll into view
-  const scale = useTransform(smoothProgress, [0, 1], [0.95, 1]);
-
-  // Memoize the style object to prevent unnecessary re-renders
-  const cardStyle = useMemo(() => ({
-    zIndex: 10 + index * 10,
-    willChange: 'transform' as const,
-    transform: 'translateZ(0)', // Force GPU layer
-  }), [index]);
-
-  const innerStyle = useMemo(() => ({
-    scale: isLast ? 1 : scale,
-    willChange: 'transform' as const,
-  }), [isLast, scale]);
+  // Map the section's scroll progress to this card's scale
+  const scale = useTransform(
+    scrollProgress,
+    [cardStart, cardEnd],
+    [0.92, 1]
+  );
 
   return (
     <div
-      ref={cardRef}
-      className={cn('sticky top-0 h-screen w-full', className)}
-      style={cardStyle}
+      className={cn('sticky top-0 h-screen w-full gpu-accelerated', className)}
+      style={{ zIndex: 10 + index * 10 }}
     >
       <motion.div
-        style={innerStyle}
+        style={{ scale: isLast ? 1 : scale }}
         className={cn(
-          'relative h-full w-full overflow-hidden backface-hidden',
+          'relative h-full w-full overflow-hidden',
           !isFirst && 'rounded-t-[2rem] md:rounded-t-[3rem] shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.7)]'
         )}
       >
@@ -697,31 +689,77 @@ function SlideTransition() {
 // MAIN EXPORT
 // =============================================================================
 
+const TOTAL_CARDS = 5;
+
 export function ProblemSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollProgress = useMotionValue(0);
+
+  // Single scroll listener for the entire section
+  useEffect(() => {
+    let ticking = false;
+
+    const updateProgress = () => {
+      if (!sectionRef.current) return;
+
+      const rect = sectionRef.current.getBoundingClientRect();
+      const sectionHeight = sectionRef.current.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate progress: 0 when section top hits viewport bottom, 1 when section bottom hits viewport top
+      const scrollableDistance = sectionHeight - viewportHeight;
+      const scrolled = -rect.top;
+      const progress = Math.min(Math.max(scrolled / scrollableDistance, 0), 1);
+
+      scrollProgress.set(progress);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    };
+
+    // Initial calculation
+    updateProgress();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrollProgress]);
+
+  // Apply spring for ultra-smooth interpolation
+  const smoothProgress = useSpring(scrollProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   return (
-    <section id="probleem" className="relative bg-midnight">
+    <section ref={sectionRef} id="probleem" className="relative bg-midnight">
       {/* Card 1: Intro */}
-      <StackingCard index={0} isFirst>
+      <StackingCard index={0} totalCards={TOTAL_CARDS} scrollProgress={smoothProgress} isFirst>
         <SlideIntro />
       </StackingCard>
 
       {/* Card 2: Admin */}
-      <StackingCard index={1}>
+      <StackingCard index={1} totalCards={TOTAL_CARDS} scrollProgress={smoothProgress}>
         <SlideAdmin />
       </StackingCard>
 
       {/* Card 3: Staff */}
-      <StackingCard index={2}>
+      <StackingCard index={2} totalCards={TOTAL_CARDS} scrollProgress={smoothProgress}>
         <SlideStaff />
       </StackingCard>
 
       {/* Card 4: Research */}
-      <StackingCard index={3}>
+      <StackingCard index={3} totalCards={TOTAL_CARDS} scrollProgress={smoothProgress}>
         <SlideResearch />
       </StackingCard>
 
       {/* Card 5: Transition */}
-      <StackingCard index={4} isLast>
+      <StackingCard index={4} totalCards={TOTAL_CARDS} scrollProgress={smoothProgress} isLast>
         <SlideTransition />
       </StackingCard>
     </section>

@@ -12,33 +12,27 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.8,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
       infinite: false,
-      autoResize: true,
+      syncTouch: true,
+      syncTouchLerp: 0.075,
     });
 
     lenisRef.current = lenis;
 
-    // Optimized RAF loop with proper timing
-    let rafId: number;
-    let lastTime = 0;
-
+    // Clean RAF loop - no throttling for maximum smoothness
     function raf(time: number) {
-      // Throttle to ~120fps max for smoother interpolation
-      if (time - lastTime >= 8) {
-        lenis.raf(time);
-        lastTime = time;
-      }
-      rafId = requestAnimationFrame(raf);
+      lenis.raf(time);
+      requestAnimationFrame(raf);
     }
 
-    rafId = requestAnimationFrame(raf);
+    requestAnimationFrame(raf);
 
     // Handle anchor link clicks for smooth scrolling
     const handleAnchorClick = (e: MouseEvent) => {
@@ -62,7 +56,6 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     document.addEventListener("click", handleAnchorClick);
 
     return () => {
-      cancelAnimationFrame(rafId);
       document.removeEventListener("click", handleAnchorClick);
       lenis.destroy();
       lenisRef.current = null;
