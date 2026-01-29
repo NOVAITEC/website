@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | NOVAITEC",
   },
   description:
-    "Ik verkoop geen AI. Ik verkoop rust en resultaat. NOVAITEC helpt MKB-ondernemers met slimme automatisering: workflow automation, AI agents en dashboards. Bespaar tijd, krijg overzicht.",
+    "De motor achter jouw ambitie. Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
   keywords: [
     "AI automatisering",
     "MKB automatisering",
@@ -40,19 +40,19 @@ export const metadata: Metadata = {
 
   // Open Graph (Facebook, LinkedIn, etc.)
   openGraph: {
-    title: "NOVAITEC | AI-gedreven Automatisering voor MKB",
+    title: "NOVAITEC | De motor achter jouw ambitie",
     description:
-      "Ik verkoop geen AI. Ik verkoop rust en resultaat. Workflow automatisering, AI agents en slimme dashboards voor MKB-ondernemers.",
+      "Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
     url: baseUrl,
     siteName: "NOVAITEC",
     locale: "nl_NL",
     type: "website",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: `${baseUrl}/images/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "NOVAITEC - AI-Driven Automation voor MKB-ondernemers",
+        alt: "NOVAITEC - De motor achter jouw ambitie",
       },
     ],
   },
@@ -60,10 +60,10 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "NOVAITEC | AI-gedreven Automatisering voor MKB",
+    title: "NOVAITEC | De motor achter jouw ambitie",
     description:
-      "Ik verkoop geen AI. Ik verkoop rust en resultaat. Workflow automatisering, AI agents en slimme dashboards.",
-    images: ["/images/og-image.jpg"],
+      "Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
+    images: [`${baseUrl}/images/og-image.jpg`],
     creator: "@kyancordes",
   },
 

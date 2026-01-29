@@ -18,8 +18,8 @@ const organizationSchema = {
   },
   image: "https://novaitec.nl/images/og-image.jpg",
   description:
-    "NOVAITEC helpt MKB-ondernemers met AI-gedreven automatisering. Wij verkopen geen AI, wij verkopen rust en resultaat. Workflow automatisering, AI agents en slimme dashboards.",
-  slogan: "AI-Driven Automation",
+    "De motor achter jouw ambitie. Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
+  slogan: "De motor achter jouw ambitie",
   foundingDate: "2025",
   founder: {
     "@id": "https://novaitec.nl/#kyan-cordes",
