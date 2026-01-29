@@ -125,7 +125,7 @@ export function ContactSection() {
       />
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
 
         {/* Links: De Uitnodiging */}
         <motion.div
@@ -152,7 +152,7 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-montserrat font-extrabold text-4xl md:text-5xl lg:text-6xl text-white leading-tight"
+            className="font-montserrat font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-tight"
           >
             Klaar voor{' '}
             <span className="bg-gradient-to-r from-teal via-cyan-300 to-white bg-clip-text text-transparent">
@@ -167,7 +167,7 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-inter text-lg md:text-xl text-slate-400 leading-relaxed"
+            className="font-inter text-base sm:text-lg md:text-xl text-slate-400 leading-relaxed"
           >
             Ik geloof in korte lijnen en heldere afspraken. Ik kijk graag met je mee naar waar voor jou de winst ligt.
           </motion.p>
@@ -217,7 +217,7 @@ export function ContactSection() {
           transition={{ duration: 0.7, delay: 0.2 }}
         >
           {/* Glass Card Container */}
-          <div className="relative bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-10 shadow-2xl">
+          <div className="relative bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl">
             {/* Tech corner accents */}
             <div className="absolute top-4 left-4 font-mono text-[10px] text-slate-600 opacity-50">
               [
@@ -280,7 +280,7 @@ export function ContactSection() {
                     value={formData.naam}
                     onChange={handleChange}
                     placeholder="Je naam"
-                    className={`w-full bg-midnight/50 border rounded-lg px-4 py-3 text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 ${
+                    className={`w-full bg-midnight/50 border rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 ${
                       errors.naam ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal'
                     }`}
                   />
@@ -306,7 +306,7 @@ export function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="je@email.nl"
-                    className={`w-full bg-midnight/50 border rounded-lg px-4 py-3 text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 ${
+                    className={`w-full bg-midnight/50 border rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 ${
                       errors.email ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal'
                     }`}
                   />
@@ -332,7 +332,7 @@ export function ContactSection() {
                     value={formData.bedrijf}
                     onChange={handleChange}
                     placeholder="Je bedrijf"
-                    className="w-full bg-midnight/50 border border-slate-700 rounded-lg px-4 py-3 text-paper placeholder-slate-500 focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300"
+                    className="w-full bg-midnight/50 border border-slate-700 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300"
                   />
                 </motion.div>
 
@@ -353,7 +353,7 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder="Waar kan ik je mee helpen?"
                     rows={4}
-                    className={`w-full bg-midnight/50 border rounded-lg px-4 py-3 text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 resize-none ${
+                    className={`w-full bg-midnight/50 border rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 resize-none ${
                       errors.bericht ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal'
                     }`}
                   />
@@ -372,7 +372,7 @@ export function ContactSection() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-teal to-cyan-400 text-midnight font-montserrat font-semibold py-4 rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center gap-3"
+                    className="w-full bg-gradient-to-r from-teal to-cyan-400 text-midnight font-montserrat font-semibold py-3 sm:py-4 text-sm sm:text-base rounded-xl hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center gap-3"
                   >
                     {isSubmitting ? (
                       <>

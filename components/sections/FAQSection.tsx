@@ -61,10 +61,10 @@ function FAQItem({
     >
       <button
         onClick={onToggle}
-        className="w-full py-6 flex items-center justify-between text-left group"
+        className="w-full py-4 sm:py-5 md:py-6 flex items-center justify-between text-left group"
         aria-expanded={isOpen}
       >
-        <span className="font-montserrat font-semibold text-lg text-paper group-hover:text-teal transition-colors pr-8">
+        <span className="font-montserrat font-semibold text-base sm:text-lg text-paper group-hover:text-teal transition-colors pr-6 sm:pr-8">
           {question}
         </span>
         <motion.div
@@ -89,7 +89,7 @@ function FAQItem({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <p className="pb-6 text-slate-400 font-inter leading-relaxed pr-12">
+            <p className="pb-4 sm:pb-6 text-sm sm:text-base text-slate-400 font-inter leading-relaxed pr-8 sm:pr-12">
               {answer}
             </p>
           </motion.div>
@@ -103,11 +103,11 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative bg-paper py-24 md:py-32">
+    <section id="faq" className="relative bg-paper py-16 sm:py-20 md:py-24 lg:py-32">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-teal/5 rounded-bl-[100px] blur-3xl" />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <motion.div
@@ -122,16 +122,16 @@ export function FAQSection() {
                 Veelgestelde Vragen
               </span>
             </div>
-            <h2 className="font-montserrat font-bold text-3xl md:text-4xl lg:text-5xl text-midnight mb-4">
+            <h2 className="font-montserrat font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-midnight mb-4">
               Heb je nog vragen?
             </h2>
-            <p className="font-inter text-slate-text text-lg">
+            <p className="font-inter text-slate-text text-base sm:text-lg">
               Hier vind je antwoorden op de meest gestelde vragen over NOVAITEC.
             </p>
           </motion.div>
 
           {/* FAQ Items */}
-          <div className="bg-midnight rounded-2xl p-6 md:p-8">
+          <div className="bg-midnight rounded-2xl p-4 sm:p-6 md:p-8">
             {faqs.map((faq, index) => (
               <FAQItem
                 key={index}

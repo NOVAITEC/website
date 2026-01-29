@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   ArrowRight,
@@ -1179,7 +1179,25 @@ function ServicesSectionMobile() {
 // =============================================================================
 
 export function ServicesSection() {
-  // Always use cinema scroll - works on all devices
-  // Apple-style horizontal scroll experience
-  return <ServicesSectionDesktop />;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check initial viewport
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+
+    checkMobile();
+
+    // Add resize listener
+    const handleResize = () => {
+      checkMobile();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Use mobile version below lg breakpoint (1024px)
+  return isMobile ? <ServicesSectionMobile /> : <ServicesSectionDesktop />;
 }

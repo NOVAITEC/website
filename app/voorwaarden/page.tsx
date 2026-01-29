@@ -9,8 +9,8 @@ export default function VoorwaardenPage() {
   return (
     <>
       <Header />
-      <main className="bg-midnight min-h-screen pt-24 pb-16">
-        <div className="container mx-auto px-6 max-w-4xl">
+      <main className="bg-midnight min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ export default function VoorwaardenPage() {
               <div className="p-3 rounded-xl bg-teal/10 border border-teal/20">
                 <FileText className="w-6 h-6 text-teal" strokeWidth={1.5} />
               </div>
-              <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-paper">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-montserrat font-bold text-paper">
                 Algemene Voorwaarden
               </h1>
             </div>
@@ -42,13 +42,13 @@ export default function VoorwaardenPage() {
             {/* Content */}
             <div className="space-y-10 text-slate-300 font-inter">
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 1 - Definities
                 </h2>
-                <p className="leading-relaxed mb-4">
+                <p className="text-sm sm:text-base leading-relaxed mb-4">
                   In deze algemene voorwaarden wordt verstaan onder:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-slate-400">
+                <ul className="list-disc list-inside space-y-2 text-sm sm:text-base text-slate-400">
                   <li><strong className="text-slate-300">NOVAITEC:</strong> De eenmanszaak NOVAITEC, ingeschreven bij de KvK onder nummer 99541807, hierna te noemen &quot;Opdrachtnemer&quot;.</li>
                   <li><strong className="text-slate-300">Opdrachtgever:</strong> De natuurlijke of rechtspersoon die met NOVAITEC een overeenkomst aangaat.</li>
                   <li><strong className="text-slate-300">Overeenkomst:</strong> De overeenkomst tussen Opdrachtgever en NOVAITEC.</li>
@@ -57,7 +57,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 2 - Toepasselijkheid
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -68,7 +68,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 3 - Offertes en Aanbiedingen
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -79,7 +79,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 4 - Uitvoering van de Overeenkomst
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -91,7 +91,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 5 - Facturering en Betaling
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -103,7 +103,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 6 - Intellectueel Eigendom
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -114,7 +114,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 7 - Aansprakelijkheid
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -125,7 +125,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 8 - Overmacht
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -135,7 +135,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 9 - Geheimhouding
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
@@ -145,7 +145,7 @@ export default function VoorwaardenPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Artikel 10 - Toepasselijk Recht en Geschillen
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">

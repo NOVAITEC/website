@@ -9,8 +9,8 @@ export default function PrivacyPage() {
   return (
     <>
       <Header />
-      <main className="bg-midnight min-h-screen pt-24 pb-16">
-        <div className="container mx-auto px-6 max-w-4xl">
+      <main className="bg-midnight min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
               <div className="p-3 rounded-xl bg-teal/10 border border-teal/20">
                 <Shield className="w-6 h-6 text-teal" strokeWidth={1.5} />
               </div>
-              <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-paper">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-montserrat font-bold text-paper">
                 Privacy Policy
               </h1>
             </div>
@@ -42,10 +42,10 @@ export default function PrivacyPage() {
             {/* Content */}
             <div className="space-y-10 text-slate-300 font-inter">
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   1. Inleiding
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   NOVAITEC, gevestigd in Nederland en ingeschreven bij de Kamer van Koophandel
                   onder nummer 99541807, respecteert de privacy van alle bezoekers van deze website.
                   Ik draag er zorg voor dat de persoonlijke informatie die u mij verschaft
@@ -54,13 +54,13 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   2. Welke gegevens verzamel ik?
                 </h2>
-                <p className="leading-relaxed mb-4">
+                <p className="text-sm sm:text-base leading-relaxed mb-4">
                   Ik verzamel alleen gegevens die je zelf aan mij verstrekt via het contactformulier:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-slate-400">
+                <ul className="list-disc list-inside space-y-2 text-sm sm:text-base text-slate-400">
                   <li>Naam</li>
                   <li>E-mailadres</li>
                   <li>Bedrijfsnaam (optioneel)</li>
@@ -69,10 +69,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   3. Doel van gegevensverwerking
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Ik gebruik je gegevens uitsluitend om:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-slate-400 mt-4">
@@ -83,10 +83,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   4. Google Analytics
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Deze website maakt gebruik van Google Analytics om inzicht te krijgen in
                   bezoekersgedrag. Hierbij worden geanonimiseerde gegevens verzameld over
                   je websitebezoek. IP-adressen worden geanonimiseerd voordat ze worden
@@ -96,10 +96,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   5. Bewaartermijn
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Ik bewaar je persoonsgegevens niet langer dan strikt noodzakelijk is om
                   de doelen te realiseren waarvoor je gegevens worden verzameld. Contactgegevens
                   worden maximaal 2 jaar bewaard na het laatste contact, tenzij er een actieve
@@ -108,13 +108,13 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   6. Jouw rechten
                 </h2>
-                <p className="leading-relaxed mb-4">
+                <p className="text-sm sm:text-base leading-relaxed mb-4">
                   Op grond van de Algemene Verordening Gegevensbescherming (AVG) heb je de volgende rechten:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-slate-400">
+                <ul className="list-disc list-inside space-y-2 text-sm sm:text-base text-slate-400">
                   <li><strong className="text-slate-300">Recht op inzage:</strong> Je kunt opvragen welke gegevens ik van je heb</li>
                   <li><strong className="text-slate-300">Recht op correctie:</strong> Je kunt onjuiste gegevens laten aanpassen</li>
                   <li><strong className="text-slate-300">Recht op verwijdering:</strong> Je kunt verzoeken je gegevens te verwijderen</li>
@@ -123,10 +123,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   7. Beveiliging
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Ik neem passende technische en organisatorische maatregelen om je
                   persoonsgegevens te beschermen tegen ongeoorloofde toegang, verlies of
                   diefstal. De website maakt gebruik van een SSL-certificaat voor een
@@ -135,10 +135,10 @@ export default function PrivacyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   8. Contact
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Heb je vragen over deze privacyverklaring of wil je een beroep doen op
                   een van je rechten? Neem dan contact met mij op via{" "}
                   <a

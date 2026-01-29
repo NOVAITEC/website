@@ -47,19 +47,19 @@ export function Header() {
             : "bg-transparent"
         }`}
       >
-        <nav className="container mx-auto px-6 py-4">
+        <nav className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                 <Image
                   src="/images/novaitec_beeldmerk_transparant_wit.png"
                   alt="NOVAITEC Icon"
                   width={56}
                   height={56}
-                  className="w-14 h-14"
+                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
                 />
-                <span className="text-3xl font-montserrat font-bold text-paper tracking-tight">
+                <span className="text-xl sm:text-2xl md:text-3xl font-montserrat font-bold text-paper tracking-tight">
                   NOVAITEC<span className="text-teal">.</span>
                 </span>
               </div>

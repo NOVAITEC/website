@@ -9,8 +9,8 @@ export default function CookiesPage() {
   return (
     <>
       <Header />
-      <main className="bg-midnight min-h-screen pt-24 pb-16">
-        <div className="container mx-auto px-6 max-w-4xl">
+      <main className="bg-midnight min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ export default function CookiesPage() {
               <div className="p-3 rounded-xl bg-teal/10 border border-teal/20">
                 <Cookie className="w-6 h-6 text-teal" strokeWidth={1.5} />
               </div>
-              <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-paper">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-montserrat font-bold text-paper">
                 Cookie Policy
               </h1>
             </div>
@@ -42,10 +42,10 @@ export default function CookiesPage() {
             {/* Content */}
             <div className="space-y-10 text-slate-300 font-inter">
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Wat zijn cookies?
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Cookies zijn kleine tekstbestanden die door websites op je computer, tablet
                   of telefoon worden geplaatst. Deze bestanden bevatten informatie die bij
                   een volgend bezoek aan de website weer kan worden uitgelezen. Cookies zorgen
@@ -54,7 +54,7 @@ export default function CookiesPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Welke cookies gebruik ik?
                 </h2>
                 <p className="leading-relaxed mb-6">
@@ -136,10 +136,10 @@ export default function CookiesPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Jouw toestemming
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Bij je eerste bezoek aan de website vraag ik je toestemming voor het
                   plaatsen van analytische cookies. Functionele cookies worden altijd geplaatst
                   omdat deze noodzakelijk zijn voor het functioneren van de website. Je kunt
@@ -148,13 +148,13 @@ export default function CookiesPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Voorkeuren wijzigen
                 </h2>
-                <p className="leading-relaxed mb-4">
+                <p className="text-sm sm:text-base leading-relaxed mb-4">
                   Je kunt je cookievoorkeuren op de volgende manieren wijzigen:
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-slate-400">
+                <ul className="list-disc list-inside space-y-2 text-sm sm:text-base text-slate-400">
                   <li>Via de cookie-banner die verschijnt bij je bezoek aan de website</li>
                   <li>Door de cookies in je browser te verwijderen (zie de helpfunctie van je browser)</li>
                   <li>Door je browserinstellingen aan te passen om cookies te blokkeren</li>
@@ -166,10 +166,10 @@ export default function CookiesPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Cookies van derden
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   De analytische cookies van Google Analytics worden geplaatst door Google LLC.
                   Google kan deze informatie aan derden verstrekken indien Google hiertoe
                   wettelijk wordt verplicht, of voor zover derden de informatie namens Google
@@ -187,10 +187,10 @@ export default function CookiesPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-montserrat font-semibold text-paper mb-4">
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Contact
                 </h2>
-                <p className="leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed">
                   Heeft u vragen over ons cookiebeleid? Neem dan contact met ons op via{" "}
                   <a
                     href="mailto:kyan@novaitec.nl"

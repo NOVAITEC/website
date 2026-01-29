@@ -63,7 +63,7 @@ export default function AboutSection() {
   return (
     <section
       id="over"
-      className="relative bg-midnight overflow-hidden py-24 md:py-32"
+      className="relative bg-midnight overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32"
     >
       {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-teal/5 rounded-full blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2" />
@@ -79,7 +79,7 @@ export default function AboutSection() {
       />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -94,27 +94,27 @@ export default function AboutSection() {
               <p className="font-mono text-sm text-teal tracking-wide uppercase">
                 Waarom ik doe wat ik doe
               </p>
-              <h2 className="font-montserrat font-bold text-4xl md:text-5xl lg:text-6xl text-paper leading-tight">
+              <h2 className="font-montserrat font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-paper leading-tight">
                 De mens achter de techniek.
               </h2>
             </div>
 
             {/* Body Paragraphs */}
             <motion.div variants={fadeInUp} className="space-y-6">
-              <p className="font-inter text-lg text-slate-300 leading-relaxed">
+              <p className="font-inter text-base sm:text-lg text-slate-300 leading-relaxed">
                 Ik zie ondernemers elke dag worstelen met hun tijd. Facturen die
                 stapelen, handmatige taken die energie vreten, en avonden die
                 opgaan aan administratie in plaats van gezin of hobby.
               </p>
 
-              <p className="font-inter text-lg text-slate-300 leading-relaxed">
+              <p className="font-inter text-base sm:text-lg text-slate-300 leading-relaxed">
                 Techniek vind ik mooi, maar het gaat er niet om wat ik kan bouwen.
                 Het gaat erom dat het <span className="text-teal">jou</span> helpt.
                 Ik sta naast je, niet boven je. Net zoals ik al jaren als coach op
                 het sportveld sta: samen kijken wat werkt, en dan gewoon doen.
               </p>
 
-              <p className="font-inter text-lg text-slate-300 leading-relaxed">
+              <p className="font-inter text-base sm:text-lg text-slate-300 leading-relaxed">
                 Geen ingewikkelde verhalen, geen uurtje-factuurtje. Gewoon eerlijk
                 kijken naar wat jouw dag lichter maakt, en dat bouwen.
               </p>

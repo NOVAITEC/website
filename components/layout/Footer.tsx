@@ -50,7 +50,7 @@ export function Footer() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="container mx-auto px-6 py-16 md:py-20"
+        className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20"
       >
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
@@ -62,10 +62,10 @@ export function Footer() {
                 alt="NOVAITEC Logo"
                 width={160}
                 height={40}
-                className="h-10 w-auto"
+                className="h-8 sm:h-10 w-auto"
               />
             </Link>
-            <p className="text-sm text-slate-400 font-inter">
+            <p className="text-xs sm:text-sm text-slate-400 font-inter">
               AI-Driven Automation
             </p>
           </motion.div>
@@ -80,7 +80,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-teal transition-colors duration-200 font-inter"
+                    className="text-xs sm:text-sm text-slate-400 hover:text-teal transition-colors duration-200 font-inter"
                   >
                     {link.name}
                   </Link>
@@ -99,7 +99,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-teal transition-colors duration-200 font-inter"
+                    className="text-xs sm:text-sm text-slate-400 hover:text-teal transition-colors duration-200 font-inter"
                   >
                     {link.name}
                   </Link>
