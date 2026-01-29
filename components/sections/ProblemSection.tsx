@@ -419,7 +419,7 @@ function SlideAdmin() {
 
 function SlideStaff() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900">
+    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-red-500/10 blur-[120px]" />
       <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-amber/10 blur-[100px]" />
 
