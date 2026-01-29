@@ -1,7 +1,7 @@
 // =============================================================================
 // FLYING LOGO PARTICLE SYSTEM - TYPE DEFINITIONS
 // =============================================================================
-// Simplified, elegant version focused on calm, ambient movement
+// Functional animation that guides user attention to key content
 
 export type ParticleType = 'node' | 'accent' | 'trail';
 
@@ -10,25 +10,37 @@ export interface Particle {
   type: ParticleType;
 
   // Visual properties
-  size: number;           // Particle size in px
-  color: string;          // Hex color
-  opacity: number;        // Base opacity 0-1
-  glowIntensity: number;  // Glow strength 0-1
+  size: number;
+  color: string;
+  opacity: number;
+  glowIntensity: number;
 
-  // Position
-  x: number;              // Current x position (viewport %)
-  y: number;              // Current y position (viewport %)
+  // Starting position (percentage of viewport)
+  startX: number;
+  startY: number;
 
-  // Gentle floating movement
-  floatSpeed: number;     // How fast this particle floats (0.5-1.5)
-  floatPhase: number;     // Phase offset for floating motion (0-2π)
-  floatRadius: number;    // How far it moves from base position (20-60px)
+  // Movement characteristics
+  floatSpeed: number;     // Base floating speed
+  floatPhase: number;     // Phase offset for organic motion
+  attractionStrength: number; // How strongly attracted to focus points (0.5-1.5)
 
-  // Vertical drift with scroll
-  driftSpeed: number;     // How fast it drifts down with scroll
+  // Entrance
+  entranceDelay: number;
+}
 
-  // Entrance animation
-  entranceDelay: number;  // Delay before particle appears (0-2 seconds)
+// Focus points - where particles are attracted to guide user attention
+export interface FocusPoint {
+  x: number;  // Percentage of viewport width (0-100)
+  y: number;  // Percentage of viewport height (0-100)
+  radius: number; // How close particles get (in px)
+  strength: number; // Attraction strength multiplier
+}
+
+// Section focus configuration
+export interface SectionFocus {
+  start: number;  // Scroll progress start (0-1)
+  end: number;    // Scroll progress end (0-1)
+  points: FocusPoint[];
 }
 
 export interface ParticleConfig {
@@ -38,9 +50,9 @@ export interface ParticleConfig {
     mobile: number;
   };
   colors: {
-    primary: string;    // Teal
-    accent: string;     // Amber
-    neutral: string;    // White/subtle
+    primary: string;
+    accent: string;
+    neutral: string;
   };
   sizes: {
     node: { min: number; max: number };
@@ -59,26 +71,79 @@ export interface CanvasSize {
   height: number;
 }
 
-// Default particle configuration - simplified and calmer
+// =============================================================================
+// FOCUS POINTS CONFIGURATION
+// These guide where particles cluster to draw attention
+// =============================================================================
+
+export const SECTION_FOCUS: SectionFocus[] = [
+  // HERO (0-12%): Guide attention to CTA button (center-right area)
+  {
+    start: 0,
+    end: 0.12,
+    points: [
+      { x: 50, y: 65, radius: 150, strength: 1.2 },  // Around CTA button
+      { x: 30, y: 40, radius: 100, strength: 0.6 },  // Near headline
+    ],
+  },
+  // ABOUT (12-25%): Focus on the "Over Mij" content
+  {
+    start: 0.12,
+    end: 0.25,
+    points: [
+      { x: 35, y: 50, radius: 180, strength: 1.0 },  // Left side content
+      { x: 70, y: 50, radius: 120, strength: 0.7 },  // Image area
+    ],
+  },
+  // PROBLEM (25-55%): Scattered around the pain points
+  {
+    start: 0.25,
+    end: 0.55,
+    points: [
+      { x: 50, y: 45, radius: 200, strength: 0.8 },  // Center - main text
+      { x: 75, y: 55, radius: 150, strength: 0.9 },  // Right - mockups
+    ],
+  },
+  // SERVICES (55-80%): Highlight the service cards
+  {
+    start: 0.55,
+    end: 0.80,
+    points: [
+      { x: 25, y: 50, radius: 140, strength: 1.0 },  // Left card
+      { x: 50, y: 50, radius: 140, strength: 1.0 },  // Center card
+      { x: 75, y: 50, radius: 140, strength: 1.0 },  // Right card
+    ],
+  },
+  // CONTACT (80-100%): Converge toward contact form/CTA
+  {
+    start: 0.80,
+    end: 1.0,
+    points: [
+      { x: 50, y: 50, radius: 100, strength: 1.5 },  // Contact form center
+    ],
+  },
+];
+
+// Default particle configuration
 export const DEFAULT_CONFIG: ParticleConfig = {
   count: {
-    desktop: 18,    // Reduced from 60
-    tablet: 12,     // Reduced from 40
-    mobile: 8,      // Reduced from 24
+    desktop: 20,
+    tablet: 14,
+    mobile: 10,
   },
   colors: {
     primary: '#06B6D4',   // Vibrant Teal
-    accent: '#F59E0B',    // Amber Gold (very few)
-    neutral: '#94A3B8',   // Slate-400 (subtle)
+    accent: '#F59E0B',    // Amber Gold
+    neutral: '#94A3B8',   // Slate-400
   },
   sizes: {
-    node: { min: 3, max: 6 },       // Smaller, more subtle
-    accent: { min: 4, max: 8 },     // Smaller accents
-    trail: { min: 2, max: 4 },      // Small trails
+    node: { min: 3, max: 6 },
+    accent: { min: 4, max: 7 },
+    trail: { min: 2, max: 4 },
   },
   opacity: {
-    node: { min: 0.3, max: 0.5 },     // More subtle
-    accent: { min: 0.35, max: 0.6 },  // Subtle but visible
-    trail: { min: 0.15, max: 0.25 },  // Very subtle
+    node: { min: 0.35, max: 0.55 },
+    accent: { min: 0.4, max: 0.65 },
+    trail: { min: 0.15, max: 0.3 },
   },
 };

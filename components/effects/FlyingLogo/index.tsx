@@ -4,28 +4,29 @@
 // FLYING LOGO PARTICLE SYSTEM - MAIN EXPORT
 // =============================================================================
 //
-// A subtle, ambient particle system that creates a calm, professional atmosphere.
-// Particles gently float through the page, supporting the content without
-// distracting from it.
+// A FUNCTIONAL particle system that guides user attention to key content.
+// Particles are attracted to focus points on the page, subtly directing
+// the viewer's eyes to important elements.
+//
+// HOW IT WORKS:
+// - Particles start from the edges and drift toward "focus points"
+// - Each section has different focus points (CTA, content, cards)
+// - As you scroll, particles reposition to highlight the new section
+//
+// FOCUS POINTS PER SECTION:
+// - Hero (0-12%): Around the CTA button and headline
+// - About (12-25%): Left content area and image
+// - Problem (25-55%): Center text and mockup areas
+// - Services (55-80%): Around each service card
+// - Contact (80-100%): Converge on contact form
 //
 // DESIGN PHILOSOPHY:
-// - Rust (Calm) over chaos
-// - Subtle enhancement, not attention-grabbing
-// - Professional and elegant
-//
-// ANIMATION BEHAVIOR:
-// - On page load: Particles gently fade in one by one over ~2.5 seconds
-// - Continuous: Soft floating motion (Lissajous patterns)
-// - On scroll: Particles drift gently with the page
-// - Very subtle connections between nearby particles
-//
-// PARTICLE COUNTS (reduced for subtlety):
-// - Desktop: 18 particles
-// - Tablet: 12 particles
-// - Mobile: 8 particles
+// - Particles add VALUE by guiding attention
+// - Subtle but purposeful movement
+// - Professional and supportive, never distracting
 //
 // USAGE:
-// Import and place in layout.tsx inside SmoothScroll but before main content:
+// Place in layout.tsx inside SmoothScroll but before main content:
 //
 //   <SmoothScroll>
 //     <FlyingLogo />
@@ -33,16 +34,6 @@
 //     <main>{children}</main>
 //     <Footer />
 //   </SmoothScroll>
-//
-// ACCESSIBILITY:
-// - Respects `prefers-reduced-motion` - disabled when user prefers reduced motion
-// - Canvas is marked `aria-hidden="true"` for screen readers
-//
-// PERFORMANCE:
-// - Uses Canvas 2D for smooth 60fps
-// - Limited particle count for subtle effect
-// - Passive scroll listeners
-// - RequestAnimationFrame for efficient rendering
 //
 // =============================================================================
 
@@ -52,7 +43,6 @@ export function FlyingLogo() {
   return <FlyingLogoCanvas />;
 }
 
-// Re-export components and utilities for advanced usage
 export { FlyingLogoCanvas } from './FlyingLogoCanvas';
 export { useParticleSystem } from './useParticleSystem';
 export * from './types';

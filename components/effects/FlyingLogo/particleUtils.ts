@@ -1,9 +1,16 @@
 // =============================================================================
 // FLYING LOGO PARTICLE SYSTEM - UTILITY FUNCTIONS
 // =============================================================================
-// Calm, ambient animation - particles float gently through the page
+// Particles are attracted to focus points to guide user attention
 
-import { Particle, ParticleType, ParticleConfig, DEFAULT_CONFIG } from './types';
+import {
+  Particle,
+  ParticleType,
+  ParticleConfig,
+  FocusPoint,
+  SECTION_FOCUS,
+  DEFAULT_CONFIG,
+} from './types';
 
 // =============================================================================
 // RANDOM UTILITIES
@@ -13,9 +20,12 @@ function randomRange(min: number, max: number): number {
   return min + Math.random() * (max - min);
 }
 
-// Smooth easing for gentle transitions
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
+}
+
+function easeInOutQuad(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
 
 // =============================================================================
@@ -39,22 +49,19 @@ export function createParticles(
 ): Particle[] {
   const particles: Particle[] = [];
 
-  // Distribution: 60% nodes, 25% trails, 15% accents (very few amber)
+  // Distribution: 60% nodes (teal), 25% trails (subtle), 15% accents (amber)
   const nodeCount = Math.floor(count * 0.6);
   const trailCount = Math.floor(count * 0.25);
   const accentCount = count - nodeCount - trailCount;
 
-  // Create nodes (primary teal particles)
   for (let i = 0; i < nodeCount; i++) {
     particles.push(createParticle('node', i, config));
   }
 
-  // Create trails (subtle particles)
   for (let i = 0; i < trailCount; i++) {
     particles.push(createParticle('trail', nodeCount + i, config));
   }
 
-  // Create accents (amber - very few)
   for (let i = 0; i < accentCount; i++) {
     particles.push(createParticle('accent', nodeCount + trailCount + i, config));
   }
@@ -70,7 +77,6 @@ function createParticle(
   const sizeRange = config.sizes[type];
   const opacityRange = config.opacity[type];
 
-  // Color based on type
   let color: string;
   switch (type) {
     case 'accent':
@@ -83,10 +89,37 @@ function createParticle(
       color = config.colors.primary;
   }
 
-  // Distribute particles across the viewport
-  // Start from random positions - scattered throughout the page
-  const x = randomRange(5, 95);
-  const y = randomRange(5, 95);
+  // Distribute starting positions across the viewport
+  // Bias toward edges so they can "flow" toward focus points
+  const edgeBias = Math.random() < 0.6;
+  let startX: number;
+  let startY: number;
+
+  if (edgeBias) {
+    // Start from edges
+    const side = Math.floor(Math.random() * 4);
+    switch (side) {
+      case 0: // Top
+        startX = randomRange(10, 90);
+        startY = randomRange(-5, 15);
+        break;
+      case 1: // Right
+        startX = randomRange(85, 105);
+        startY = randomRange(10, 90);
+        break;
+      case 2: // Bottom
+        startX = randomRange(10, 90);
+        startY = randomRange(85, 105);
+        break;
+      default: // Left
+        startX = randomRange(-5, 15);
+        startY = randomRange(10, 90);
+    }
+  } else {
+    // Some particles start scattered throughout
+    startX = randomRange(10, 90);
+    startY = randomRange(10, 90);
+  }
 
   return {
     id: `particle-${type}-${index}`,
@@ -95,17 +128,38 @@ function createParticle(
     color,
     opacity: randomRange(opacityRange.min, opacityRange.max),
     glowIntensity: type === 'accent' ? randomRange(0.5, 0.7) : randomRange(0.3, 0.5),
-    x,
-    y,
-    // Gentle floating - different speeds and phases for organic feel
-    floatSpeed: randomRange(0.3, 0.8),
+    startX,
+    startY,
+    floatSpeed: randomRange(0.3, 0.7),
     floatPhase: randomRange(0, Math.PI * 2),
-    floatRadius: randomRange(15, 40),
-    // Drift with scroll
-    driftSpeed: randomRange(0.8, 1.2),
-    // Staggered entrance - particles fade in one by one
-    entranceDelay: randomRange(0, 2.5),
+    attractionStrength: randomRange(0.7, 1.3),
+    entranceDelay: randomRange(0, 2),
   };
+}
+
+// =============================================================================
+// FOCUS POINT CALCULATIONS
+// =============================================================================
+
+function getBlendedFocusPoints(scrollProgress: number): { points: FocusPoint[]; blend: number } {
+  // Find current and next section for smooth transitions
+  for (let i = 0; i < SECTION_FOCUS.length; i++) {
+    const section = SECTION_FOCUS[i];
+    if (scrollProgress >= section.start && scrollProgress < section.end) {
+      // Calculate blend factor for transition (last 20% of section blends to next)
+      const sectionProgress = (scrollProgress - section.start) / (section.end - section.start);
+      const transitionStart = 0.8;
+
+      if (sectionProgress > transitionStart && i < SECTION_FOCUS.length - 1) {
+        const blend = (sectionProgress - transitionStart) / (1 - transitionStart);
+        return { points: section.points, blend: easeInOutQuad(blend) };
+      }
+
+      return { points: section.points, blend: 0 };
+    }
+  }
+
+  return { points: SECTION_FOCUS[SECTION_FOCUS.length - 1].points, blend: 0 };
 }
 
 // =============================================================================
@@ -119,70 +173,115 @@ export function calculateParticlePosition(
   canvasHeight: number,
   time: number = 0
 ): { x: number; y: number; opacity: number; scale: number } {
-  // Base position (percentage to pixels)
-  let x = (particle.x / 100) * canvasWidth;
-  let y = (particle.y / 100) * canvasHeight;
-
   // =========================================================================
   // 1. ENTRANCE ANIMATION
-  // Particles gently fade in and drift from slightly above their position
   // =========================================================================
-  const entranceProgress = Math.max(0, Math.min(1, (time - particle.entranceDelay) / 1.5));
+  const entranceProgress = Math.max(0, Math.min(1, (time - particle.entranceDelay) / 1.2));
   const entranceEased = easeOutCubic(entranceProgress);
 
-  // Before entrance is complete, offset position slightly upward
-  const entranceOffsetY = (1 - entranceEased) * -30;
-  y += entranceOffsetY;
+  if (entranceProgress <= 0) {
+    return { x: -100, y: -100, opacity: 0, scale: 0 };
+  }
 
   // =========================================================================
-  // 2. GENTLE FLOATING MOTION (constant, subtle)
-  // Creates a soft, organic hovering effect
+  // 2. GET CURRENT FOCUS POINTS
+  // =========================================================================
+  const { points: focusPoints } = getBlendedFocusPoints(scrollProgress);
+
+  // Convert starting position to pixels
+  let x = (particle.startX / 100) * canvasWidth;
+  let y = (particle.startY / 100) * canvasHeight;
+
+  // =========================================================================
+  // 3. ATTRACTION TO FOCUS POINTS
+  // Particles are pulled toward the nearest/strongest focus point
+  // =========================================================================
+  if (focusPoints.length > 0) {
+    // Find the focus point with strongest pull on this particle
+    let totalPullX = 0;
+    let totalPullY = 0;
+    let totalWeight = 0;
+
+    focusPoints.forEach((point, index) => {
+      // Convert focus point to pixels
+      const focusX = (point.x / 100) * canvasWidth;
+      const focusY = (point.y / 100) * canvasHeight;
+
+      // Distance from particle start to focus point
+      const dx = focusX - x;
+      const dy = focusY - y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Weight based on distance and point strength
+      // Closer points have more influence
+      const weight = point.strength / (1 + distance / 500);
+
+      // Target position is around the focus point at its radius
+      // Use particle's phase to distribute around the point
+      const angle = particle.floatPhase + index * 1.5 + time * 0.1 * particle.floatSpeed;
+      const targetX = focusX + Math.cos(angle) * point.radius * (0.5 + Math.random() * 0.5);
+      const targetY = focusY + Math.sin(angle) * point.radius * (0.5 + Math.random() * 0.5);
+
+      totalPullX += (targetX - x) * weight;
+      totalPullY += (targetY - y) * weight;
+      totalWeight += weight;
+    });
+
+    if (totalWeight > 0) {
+      // Apply attraction with particle's individual strength
+      const attractionFactor = 0.7 * particle.attractionStrength * entranceEased;
+      x += (totalPullX / totalWeight) * attractionFactor;
+      y += (totalPullY / totalWeight) * attractionFactor;
+    }
+  }
+
+  // =========================================================================
+  // 4. GENTLE FLOATING MOTION
+  // Subtle organic movement around the attracted position
   // =========================================================================
   const floatTime = time * particle.floatSpeed;
-
-  // Lissajous-like pattern for smooth, non-repetitive motion
-  const floatX = Math.sin(floatTime + particle.floatPhase) * particle.floatRadius;
-  const floatY = Math.cos(floatTime * 0.7 + particle.floatPhase) * particle.floatRadius * 0.6;
+  const floatX = Math.sin(floatTime + particle.floatPhase) * 20;
+  const floatY = Math.cos(floatTime * 0.8 + particle.floatPhase) * 15;
 
   x += floatX;
   y += floatY;
 
   // =========================================================================
-  // 3. SCROLL-BASED DRIFT
-  // Particles gently drift with the page as you scroll
+  // 5. ENTRANCE OFFSET
+  // Particles drift in from their starting position
   // =========================================================================
-  const scrollDrift = scrollProgress * canvasHeight * 0.3 * particle.driftSpeed;
-  y += scrollDrift;
+  const startPosX = (particle.startX / 100) * canvasWidth;
+  const startPosY = (particle.startY / 100) * canvasHeight;
+
+  // Blend from start position to calculated position during entrance
+  x = startPosX + (x - startPosX) * entranceEased;
+  y = startPosY + (y - startPosY) * entranceEased;
 
   // =========================================================================
-  // 4. OPACITY
-  // Entrance fade + slight breathing effect
+  // 6. OPACITY & SCALE
   // =========================================================================
   let opacity = particle.opacity * entranceEased;
 
-  // Subtle breathing - particles gently pulse
-  const breathe = 1 + Math.sin(time * 0.5 + particle.floatPhase) * 0.1;
-  opacity *= breathe;
+  // Subtle breathing
+  opacity *= 1 + Math.sin(time * 0.4 + particle.floatPhase) * 0.1;
 
-  // Fade out particles that have drifted too far down
-  const yPercent = y / canvasHeight;
-  if (yPercent > 1.2) {
-    opacity *= Math.max(0, 1 - (yPercent - 1.2) * 5);
-  }
-  if (yPercent < -0.2) {
-    opacity *= Math.max(0, 1 - (-0.2 - yPercent) * 5);
-  }
+  // Fade particles near edges
+  const edgeFadeX = Math.min(x / 100, (canvasWidth - x) / 100, 1);
+  const edgeFadeY = Math.min(y / 100, (canvasHeight - y) / 100, 1);
+  opacity *= Math.min(edgeFadeX, edgeFadeY);
 
-  // =========================================================================
-  // 5. SCALE
-  // Subtle scale variation for depth
-  // =========================================================================
-  const scale = 0.9 + entranceEased * 0.1 + Math.sin(time * 0.3 + particle.floatPhase) * 0.05;
+  const scale = 0.9 + entranceEased * 0.1;
 
-  // Keep particles somewhat in bounds (with generous padding)
-  x = Math.max(-50, Math.min(canvasWidth + 50, x));
+  // Keep in bounds
+  x = Math.max(-30, Math.min(canvasWidth + 30, x));
+  y = Math.max(-30, Math.min(canvasHeight + 30, y));
 
-  return { x, y, opacity: Math.max(0, Math.min(1, opacity)), scale };
+  return {
+    x,
+    y,
+    opacity: Math.max(0, Math.min(1, opacity)),
+    scale,
+  };
 }
 
 // =============================================================================
@@ -204,18 +303,17 @@ export function prefersReducedMotion(): boolean {
 }
 
 // =============================================================================
-// CONNECTION LINE UTILITIES
-// Subtle connections between nearby particles
+// CONNECTION LINES
+// Connect particles that are near the same focus point
 // =============================================================================
 
 export function getParticleConnections(
   particles: Array<{ x: number; y: number; opacity: number }>,
-  maxDistance: number = 120
+  maxDistance: number = 100
 ): Array<{ x1: number; y1: number; x2: number; y2: number; opacity: number }> {
   const connections: Array<{ x1: number; y1: number; x2: number; y2: number; opacity: number }> = [];
 
-  // Limit connections - very few for subtlety
-  const maxConnections = 10;
+  const maxConnections = 12;
   let connectionCount = 0;
 
   for (let i = 0; i < particles.length && connectionCount < maxConnections; i++) {
@@ -225,8 +323,7 @@ export function getParticleConnections(
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (distance < maxDistance) {
-        // Very subtle connection lines
-        const opacity = (1 - distance / maxDistance) * 0.08 *
+        const opacity = (1 - distance / maxDistance) * 0.1 *
           Math.min(particles[i].opacity, particles[j].opacity);
 
         if (opacity > 0.01) {
