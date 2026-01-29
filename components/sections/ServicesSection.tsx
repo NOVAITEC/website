@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   ArrowRight,
@@ -895,387 +895,49 @@ function ServicesSectionDesktop() {
 }
 
 // =============================================================================
-// MOBILE: STACKING CARDS ANIMATION
+// MOBILE: HORIZONTAL CINEMA SCROLL (same as desktop)
 // =============================================================================
 
-interface StackingSlideMobileProps {
-  children: React.ReactNode;
-  index: number;
-}
-
-function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
+function ServicesSectionMobile() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollYProgress = useMotionValue(0);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
+    let ticking = false;
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
+    const updateProgress = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+      scrollYProgress.set(progress);
+      ticking = false;
+    };
 
-    return () => observer.disconnect();
-  }, []);
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    };
 
-  // Smaller offset for mobile screens
-  const topOffset = index * 12;
+    updateProgress();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrollYProgress]);
+
+  // Direct 1:1 mapping - no spring for immediate response to scroll
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-82%']);
 
   return (
-    <div
-      ref={cardRef}
-      className="sticky h-[100svh] w-full flex items-center justify-center px-3"
-      style={{
-        top: `${topOffset}px`,
-        zIndex: 10 + index,
-      }}
+    <section
+      ref={containerRef}
+      id="oplossing"
+      className="relative h-[600vh] bg-midnight"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.98 }}
-        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.98 }}
-        transition={{
-          duration: 0.3,
-          ease: 'easeOut',
-        }}
-        className="w-full max-w-7xl h-full flex items-center justify-center"
-      >
-        {children}
-      </motion.div>
-    </div>
-  );
-}
-
-// Mobile-optimized slide components
-function MobileSlideIntro() {
-  return (
-    <div className="relative w-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight py-12">
-      <NetworkAnimation />
-      <div className="relative z-10 text-center max-w-4xl px-4">
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-xs uppercase tracking-wider text-teal mb-3"
-        >
-          DE OPLOSSING
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-montserrat font-extrabold text-3xl sm:text-4xl text-white mb-4 leading-tight"
-        >
-          Ik bouw jouw{' '}
-          <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
-            digitale motor.
-          </span>
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="font-inter text-sm sm:text-base text-slate-400 mb-8"
-        >
-          Stop met handmatig werk. Start met schalen.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="flex items-center justify-center gap-2 text-slate-500"
-        >
-          <span className="font-inter text-xs">Scroll naar beneden</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ArrowDown className="w-4 h-4" />
-          </motion.div>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-function MobileSlideAutomation() {
-  return (
-    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col gap-6 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-4 text-center"
-          >
-            <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5">
-              <Bot className="w-3 h-3 text-teal" />
-              <span className="font-mono text-xs text-teal uppercase tracking-wide">Workflow Automatisering</span>
-            </div>
-            <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white leading-tight">
-              De &apos;Busy Work&apos; <span className="text-teal">Killer.</span>
-            </h3>
-            <p className="font-inter text-sm text-slate-400 leading-relaxed max-w-lg mx-auto">
-              Je typt data over. Je sleept bestanden. Stop daarmee. Ik koppel je systemen aan elkaar.
-            </p>
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-4 py-2 rounded-xl"
-            >
-              Bekijk Cases
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="w-full scale-90"
-          >
-            <WorkflowMockup />
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MobileSlideAIAgents() {
-  return (
-    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col gap-6 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-4 text-center"
-          >
-            <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5">
-              <MessageSquare className="w-3 h-3 text-teal" />
-              <span className="font-mono text-xs text-teal uppercase tracking-wide">AI Agents</span>
-            </div>
-            <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white leading-tight">
-              Jouw{' '}
-              <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
-                Tweede Brein.
-              </span>
-            </h3>
-            <p className="font-inter text-sm text-slate-400 leading-relaxed max-w-lg mx-auto">
-              AI die met je meedenkt. Mailtjes beantwoorden, offertes voorbereiden of samenvattingen maken.
-            </p>
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-4 py-2 rounded-xl"
-            >
-              Ontdek AI
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="w-full scale-90"
-          >
-            <ChatMockup />
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MobileSlideDashboards() {
-  return (
-    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col gap-6 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-4 text-center"
-          >
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5">
-              <LayoutDashboard className="w-3 h-3 text-amber" />
-              <span className="font-mono text-xs text-amber uppercase tracking-wide">Slimme Dashboards</span>
-            </div>
-            <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white leading-tight">
-              Stuur op <span className="text-amber">Data</span>, niet op gevoel.
-            </h3>
-            <p className="font-inter text-sm text-slate-400 leading-relaxed max-w-lg mx-auto">
-              Real-time inzichten. Custom dashboards die je écht begrijpt.
-            </p>
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 border-2 border-amber text-amber font-inter font-semibold text-sm px-4 py-2 rounded-xl"
-            >
-              Zie Voorbeeld
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="w-full scale-90"
-          >
-            <AnimatedChart />
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MobileSlideOwnership() {
-  return (
-    <div className="relative w-full flex items-center justify-center rounded-3xl overflow-hidden bg-slate-800 py-12">
-      <div className="text-center max-w-3xl px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="mb-4"
-        >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber/10 border border-amber/30">
-            <ShieldCheck className="w-8 h-8 text-amber drop-shadow-[0_0_20px_rgba(245,158,11,0.5)]" strokeWidth={1.5} />
-          </div>
-        </motion.div>
-        <motion.h3
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white mb-3 leading-tight"
-        >
-          Geen <span className="text-amber">Gijzeling.</span>
-        </motion.h3>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="font-inter text-sm text-slate-400 mb-6 max-w-md mx-auto"
-        >
-          Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
-        </motion.p>
-        <motion.a
-          href="#contact"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-semibold text-sm px-6 py-3 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.6)]"
-        >
-          Start Samenwerking
-          <ArrowRight className="w-4 h-4" />
-        </motion.a>
-      </div>
-    </div>
-  );
-}
-
-function MobileSlideGrandFinale() {
-  return (
-    <div className="relative w-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight py-12">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(6,182,212,0.15) 0%, transparent 60%)',
-        }}
-      />
-      <div className="relative z-10 text-center max-w-4xl px-4">
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-mono text-xs uppercase tracking-wider text-teal mb-3"
-        >
-          READY?
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white mb-3 leading-tight"
-        >
-          Genoeg{' '}
-          <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
-            gezien?
-          </span>
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="font-inter text-sm text-slate-400 mb-8 max-w-md mx-auto"
-        >
-          Je weet nu wat er kan. De enige vraag is:{' '}
-          <span className="text-white font-medium">wanneer start jij?</span>
-        </motion.p>
-        <motion.a
-          href="#contact"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          whileHover={{ scale: 1.05, boxShadow: '0 0 80px -10px rgba(6,182,212,0.8)' }}
-          whileTap={{ scale: 0.95 }}
-          className="group inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-bold text-sm px-6 py-3 rounded-xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.6)] transition-all"
-        >
-          <Calendar className="w-4 h-4" />
-          Plan je Strategie Sessie
-          <motion.div
-            animate={{ x: [0, 4, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ArrowRight className="w-4 h-4" />
-          </motion.div>
-        </motion.a>
-      </div>
-    </div>
-  );
-}
-
-function ServicesSectionMobile() {
-  const slides = [
-    { component: <MobileSlideIntro />, id: 'services-intro-mobile' },
-    { component: <MobileSlideAutomation />, id: 'services-automation-mobile' },
-    { component: <MobileSlideAIAgents />, id: 'services-ai-mobile' },
-    { component: <MobileSlideDashboards />, id: 'services-dashboards-mobile' },
-    { component: <MobileSlideOwnership />, id: 'services-ownership-mobile' },
-    { component: <MobileSlideGrandFinale />, id: 'services-finale-mobile' },
-  ];
-
-  return (
-    <section id="oplossing" className="relative bg-midnight">
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
         <NoiseOverlay />
+
         <motion.div
           className="absolute top-1/4 left-0 w-[300px] h-[300px] rounded-full bg-teal/15 blur-[100px]"
           animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
@@ -1286,17 +948,19 @@ function ServicesSectionMobile() {
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         />
+
+        <motion.div
+          style={{ x }}
+          className="flex h-full w-max will-change-transform gap-6"
+        >
+          <SlideIntro />
+          <SlideAutomation />
+          <SlideAIAgents />
+          <SlideDashboards />
+          <SlideOwnership />
+          <SlideGrandFinale />
+        </motion.div>
       </div>
-
-      {/* Stacking slides for mobile */}
-      {slides.map((slide, index) => (
-        <StackingSlideMobile key={slide.id} index={index}>
-          {slide.component}
-        </StackingSlideMobile>
-      ))}
-
-      {/* Extra spacing at the end */}
-      <div className="h-[100svh]" />
     </section>
   );
 }
