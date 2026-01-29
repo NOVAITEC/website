@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Clock, MessageCircle, Heart, User } from "lucide-react";
+import { Clock, MessageCircle, Heart } from "lucide-react";
+import Image from "next/image";
 
 // Animation variants
 const containerVariants = {
@@ -148,27 +149,27 @@ export default function AboutSection() {
 
           {/* Right Column: Photo */}
           <motion.div variants={fadeInRight} className="flex justify-center lg:justify-end">
-            {/* Photo Placeholder - Portrait aspect ratio */}
+            {/* Kyan Cordes Portrait - Portrait aspect ratio */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
               className="relative w-full max-w-sm aspect-[3/4] rounded-xl overflow-hidden"
             >
-              {/* Subtle background */}
-              <div className="absolute inset-0 bg-slate-800/50 border border-slate-700 rounded-xl" />
+              {/* Photo */}
+              <Image
+                src="/images/kyan-cordes.JPG"
+                alt="Kyan Cordes - Founder NOVAITEC"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 384px"
+                priority
+              />
 
-              {/* Placeholder content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center">
-                  <User className="w-10 h-10 text-slate-500" />
-                </div>
-                <p className="font-mono text-sm text-slate-500">
-                  Foto Kyan Cordes
-                </p>
-              </div>
+              {/* Subtle overlay gradient for depth */}
+              <div className="absolute inset-0 bg-gradient-to-t from-midnight/30 via-transparent to-transparent" />
 
               {/* Subtle corner accent */}
-              <div className="absolute top-4 right-4 w-12 h-12 border-t border-r border-slate-600 rounded-tr-lg" />
+              <div className="absolute top-4 right-4 w-12 h-12 border-t border-r border-teal/30 rounded-tr-lg" />
             </motion.div>
           </motion.div>
         </motion.div>

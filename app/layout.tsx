@@ -95,6 +95,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 
+  // Web App Manifest
+  manifest: "/site.webmanifest",
+
   // Overig
   category: "technology",
 };

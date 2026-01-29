@@ -56,7 +56,7 @@ const personSchema = {
   description:
     "Founder van NOVAITEC. Helpt MKB-ondernemers met AI-gedreven automatisering. Combineert technische expertise met een coachende aanpak.",
   url: "https://novaitec.nl",
-  image: "https://novaitec.nl/images/kyan-cordes.jpg",
+  image: "https://novaitec.nl/images/kyan-cordes.JPG",
   worksFor: {
     "@id": "https://novaitec.nl/#organization",
   },
