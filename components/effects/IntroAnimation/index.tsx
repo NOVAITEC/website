@@ -6,7 +6,7 @@
 // 1. Logo drops in met bounce
 // 2. Logo pulst en gloeit op
 // 3. Logo zoomt DOOR je heen (je vliegt erin)
-// 4. Lichtflits en klaar
+// 4. Fade naar website
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,28 +18,28 @@ const TIMING = {
   logoHold: 0.4,        // Brief hold
   logoPulse: 0.5,       // Glow intensifies
   zoomThrough: 0.8,     // Zoom through the logo
-  flash: 0.3,           // White flash
+  fadeOut: 0.5,         // Fade to website
 };
 
 export function IntroAnimation() {
-  const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'flash' | 'done'>('drop');
+  const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'fade' | 'done'>('drop');
 
   useEffect(() => {
     const dropTime = TIMING.logoDrop * 1000;
     const holdTime = TIMING.logoHold * 1000;
     const pulseTime = TIMING.logoPulse * 1000;
     const zoomTime = TIMING.zoomThrough * 1000;
-    const flashTime = TIMING.flash * 1000;
+    const fadeTime = TIMING.fadeOut * 1000;
 
     let t1 = dropTime + holdTime;
     let t2 = t1 + pulseTime;
     let t3 = t2 + zoomTime;
-    let t4 = t3 + flashTime;
+    let t4 = t3 + fadeTime;
 
     const timers = [
       setTimeout(() => setPhase('pulse'), t1),
       setTimeout(() => setPhase('zoom'), t2),
-      setTimeout(() => setPhase('flash'), t3),
+      setTimeout(() => setPhase('fade'), t3),
       setTimeout(() => setPhase('done'), t4),
     ];
 
@@ -55,12 +55,19 @@ export function IntroAnimation() {
       <motion.div
         key="intro-overlay"
         className="fixed inset-0 z-[100] overflow-hidden"
+        animate={{
+          opacity: phase === 'fade' ? 0 : 1
+        }}
+        transition={{
+          duration: TIMING.fadeOut,
+          ease: 'easeOut'
+        }}
       >
         {/* Background */}
         <div className="absolute inset-0 bg-midnight" />
 
         {/* Radial gradient that expands during zoom */}
-        {(phase === 'zoom' || phase === 'flash') && (
+        {phase === 'zoom' && (
           <motion.div
             className="absolute inset-0"
             initial={{
@@ -70,16 +77,6 @@ export function IntroAnimation() {
               background: 'radial-gradient(circle at center, rgba(6,182,212,0.3) 0%, rgba(11,28,46,1) 70%)'
             }}
             transition={{ duration: TIMING.zoomThrough, ease: 'easeIn' }}
-          />
-        )}
-
-        {/* White flash - fades to transparent revealing hero */}
-        {phase === 'flash' && (
-          <motion.div
-            className="absolute inset-0 bg-white"
-            initial={{ opacity: 0.9 }}
-            animate={{ opacity: 0 }}
-            transition={{ duration: TIMING.flash, ease: 'easeOut' }}
           />
         )}
 
