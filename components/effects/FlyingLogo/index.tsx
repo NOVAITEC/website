@@ -4,9 +4,25 @@
 // FLYING LOGO PARTICLE SYSTEM - MAIN EXPORT
 // =============================================================================
 //
-// A particle system that extracts visual elements from the NOVAITEC beeldmerk
-// and animates them through the entire website, creating an immersive
-// "flying through the page" experience.
+// A subtle, ambient particle system that creates a calm, professional atmosphere.
+// Particles gently float through the page, supporting the content without
+// distracting from it.
+//
+// DESIGN PHILOSOPHY:
+// - Rust (Calm) over chaos
+// - Subtle enhancement, not attention-grabbing
+// - Professional and elegant
+//
+// ANIMATION BEHAVIOR:
+// - On page load: Particles gently fade in one by one over ~2.5 seconds
+// - Continuous: Soft floating motion (Lissajous patterns)
+// - On scroll: Particles drift gently with the page
+// - Very subtle connections between nearby particles
+//
+// PARTICLE COUNTS (reduced for subtlety):
+// - Desktop: 18 particles
+// - Tablet: 12 particles
+// - Mobile: 8 particles
 //
 // USAGE:
 // Import and place in layout.tsx inside SmoothScroll but before main content:
@@ -18,37 +34,15 @@
 //     <Footer />
 //   </SmoothScroll>
 //
-// SCROLL ZONES & ANIMATIONS:
-// - Hero (0-8%): EXPLOSION from center - particles burst outward dramatically
-// - About (8-15%): Drift and float with organic motion
-// - Problem Intro (15-22%): "Herkenbaar?" - Swirl around screen edges
-// - Problem Admin (22-32%): Cascade down like falling papers
-// - Problem Staff (32-42%): Split into groups, then reform
-// - Problem Research (42-52%): Orbit and scatter like unfinished ideas
-// - Problem Transition (52-60%): Gather and pulse with hope
-// - Services (60-85%): Horizontal chaotic flow with waves
-// - Contact (85-100%): GRAND FINALE - 3-phase spectacular convergence:
-//   - Phase 1: Spiral inward from edges
-//   - Phase 2: Form pulsing ring
-//   - Phase 3: Star burst then final convergence
-//
-// FEATURES:
-// - Time-based continuous animation (particles always move slightly)
-// - Chaos factors for unpredictable, organic movement
-// - Scale animations (particles grow/shrink based on section)
-// - Improved particle connections with gradients
-// - High-DPI canvas rendering for sharp visuals
-//
 // ACCESSIBILITY:
 // - Respects `prefers-reduced-motion` - disabled when user prefers reduced motion
 // - Canvas is marked `aria-hidden="true"` for screen readers
 //
 // PERFORMANCE:
-// - Uses Canvas 2D for smooth 60fps with 60 particles
-// - Particle count adapts to device: Desktop (60), Tablet (40), Mobile (24)
-// - Uses `requestAnimationFrame` for efficient rendering
-// - Passive scroll listeners for smooth scrolling
-// - Connection limit (80 max) for performance
+// - Uses Canvas 2D for smooth 60fps
+// - Limited particle count for subtle effect
+// - Passive scroll listeners
+// - RequestAnimationFrame for efficient rendering
 //
 // =============================================================================
 

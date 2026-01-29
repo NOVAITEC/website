@@ -3,6 +3,7 @@
 // =============================================================================
 // FLYING LOGO PARTICLE SYSTEM - CANVAS RENDERER
 // =============================================================================
+// Renders particles with subtle glow effects on a canvas overlay
 
 import { useRef, useEffect, useCallback } from 'react';
 import { useParticleSystem } from './useParticleSystem';
@@ -14,7 +15,6 @@ export function FlyingLogoCanvas() {
   const animationRef = useRef<number | null>(null);
 
   const {
-    scrollProgress,
     canvasSize,
     getParticlePositions,
     getConnections,
@@ -22,7 +22,7 @@ export function FlyingLogoCanvas() {
     time,
   } = useParticleSystem();
 
-  // Draw a single particle with glow effect and scale
+  // Draw a single particle with subtle glow effect
   const drawParticle = useCallback(
     (
       ctx: CanvasRenderingContext2D,
@@ -38,42 +38,28 @@ export function FlyingLogoCanvas() {
 
       const scaledSize = size * scale;
 
-      // Outer glow (largest, most transparent)
-      ctx.beginPath();
-      ctx.arc(x, y, scaledSize * 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity * 0.08 * glowIntensity * scale);
-      ctx.fill();
-
-      // Middle glow
+      // Subtle outer glow
       ctx.beginPath();
       ctx.arc(x, y, scaledSize * 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity * 0.15 * glowIntensity * scale);
+      ctx.fillStyle = hexToRgba(color, opacity * 0.06 * glowIntensity);
       ctx.fill();
 
       // Inner glow
       ctx.beginPath();
-      ctx.arc(x, y, scaledSize * 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity * 0.35 * glowIntensity);
+      ctx.arc(x, y, scaledSize * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = hexToRgba(color, opacity * 0.15 * glowIntensity);
       ctx.fill();
 
-      // Core (solid)
+      // Core (main particle)
       ctx.beginPath();
       ctx.arc(x, y, scaledSize, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity);
+      ctx.fillStyle = hexToRgba(color, opacity * 0.9);
       ctx.fill();
-
-      // Bright center highlight for accent particles
-      if (glowIntensity > 0.6 && scale > 0.8) {
-        ctx.beginPath();
-        ctx.arc(x, y, scaledSize * 0.4, 0, Math.PI * 2);
-        ctx.fillStyle = hexToRgba('#FFFFFF', opacity * 0.6);
-        ctx.fill();
-      }
     },
     []
   );
 
-  // Draw connection lines with gradient effect
+  // Draw subtle connection lines
   const drawConnections = useCallback(
     (
       ctx: CanvasRenderingContext2D,
@@ -86,19 +72,13 @@ export function FlyingLogoCanvas() {
       }>
     ) => {
       connections.forEach(({ x1, y1, x2, y2, opacity }) => {
-        if (opacity <= 0.01) return;
-
-        // Create gradient for each connection
-        const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-        gradient.addColorStop(0, hexToRgba(DEFAULT_CONFIG.colors.primary, opacity));
-        gradient.addColorStop(0.5, hexToRgba(DEFAULT_CONFIG.colors.primary, opacity * 1.2));
-        gradient.addColorStop(1, hexToRgba(DEFAULT_CONFIG.colors.primary, opacity));
+        if (opacity <= 0.005) return;
 
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = hexToRgba(DEFAULT_CONFIG.colors.primary, opacity);
+        ctx.lineWidth = 1;
         ctx.stroke();
       });
     },
@@ -164,12 +144,12 @@ export function FlyingLogoCanvas() {
     };
   }, [canvasSize, render, isReducedMotion]);
 
-  // Re-render on scroll or time change
+  // Re-render on time change
   useEffect(() => {
     if (!isReducedMotion && animationRef.current === null) {
       animationRef.current = requestAnimationFrame(render);
     }
-  }, [scrollProgress, time, render, isReducedMotion]);
+  }, [time, render, isReducedMotion]);
 
   // Don't render if reduced motion is preferred
   if (isReducedMotion) {

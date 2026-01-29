@@ -3,6 +3,7 @@
 // =============================================================================
 // FLYING LOGO PARTICLE SYSTEM - CUSTOM HOOK
 // =============================================================================
+// Manages particle state, scroll tracking, and position calculations
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Particle, DEFAULT_CONFIG, CanvasSize } from './types';
@@ -169,7 +170,7 @@ export function useParticleSystem(): UseParticleSystemReturn {
     const positions = getParticlePositions();
     return getParticleConnections(
       positions.map((p) => ({ x: p.x, y: p.y, opacity: p.opacity })),
-      150 // max distance for connections
+      120 // max distance for connections
     );
   }, [getParticlePositions]);
 
