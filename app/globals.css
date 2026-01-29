@@ -23,9 +23,27 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* GPU acceleration utilities for smooth animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
 }
 
-/* Smooth scrolling will be handled by Lenis */
+/* Lenis handles smooth scrolling - disable native to prevent conflicts */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+
+/* Optimize sticky elements for GPU */
+.sticky {
+  transform: translateZ(0);
+  will-change: transform;
 }

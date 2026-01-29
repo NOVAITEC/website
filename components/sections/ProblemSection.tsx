@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useMemo } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import {
   ArrowDown,
   Clock,
@@ -32,6 +32,9 @@ interface StackingCardProps {
   className?: string;
 }
 
+// Spring config for smoother animations
+const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+
 function StackingCard({ children, index, isFirst, isLast, className }: StackingCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -41,21 +44,34 @@ function StackingCard({ children, index, isFirst, isLast, className }: StackingC
     offset: ['start end', 'start start'],
   });
 
+  // Apply spring for smoother interpolation
+  const smoothProgress = useSpring(scrollYProgress, springConfig);
+
   // Cards get a slight scale up as they scroll into view
-  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
+  const scale = useTransform(smoothProgress, [0, 1], [0.95, 1]);
+
+  // Memoize the style object to prevent unnecessary re-renders
+  const cardStyle = useMemo(() => ({
+    zIndex: 10 + index * 10,
+    willChange: 'transform' as const,
+    transform: 'translateZ(0)', // Force GPU layer
+  }), [index]);
+
+  const innerStyle = useMemo(() => ({
+    scale: isLast ? 1 : scale,
+    willChange: 'transform' as const,
+  }), [isLast, scale]);
 
   return (
     <div
       ref={cardRef}
       className={cn('sticky top-0 h-screen w-full', className)}
-      style={{ zIndex: 10 + index * 10 }}
+      style={cardStyle}
     >
       <motion.div
-        style={{
-          scale: isLast ? 1 : scale,
-        }}
+        style={innerStyle}
         className={cn(
-          'relative h-full w-full overflow-hidden',
+          'relative h-full w-full overflow-hidden backface-hidden',
           !isFirst && 'rounded-t-[2rem] md:rounded-t-[3rem] shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.7)]'
         )}
       >

@@ -812,26 +812,43 @@ function ServicesSectionDesktop() {
   const scrollYProgress = useMotionValue(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateProgress = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
       const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
       scrollYProgress.set(progress);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
     };
 
     // Initial calculation
-    handleScroll();
+    updateProgress();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollYProgress]);
 
+  // Smooth the scroll progress for buttery animations
+  const smoothScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 25,
+    restDelta: 0.0001,
+  });
+
   // Convert vertical scroll (0-1) to horizontal translation
   // 6 slides + gaps, translate to show all slides ending at the last one
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-85%']);
+  const x = useTransform(smoothScrollProgress, [0, 1], ['0%', '-85%']);
 
-  // Smooth progress for the progress bar
+  // Smooth progress for the progress bar (slightly different feel)
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -844,8 +861,8 @@ function ServicesSectionDesktop() {
       id="oplossing"
       className="relative h-[800vh] bg-midnight"
     >
-      {/* Sticky viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      {/* Sticky viewport - GPU accelerated */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden gpu-accelerated">
         {/* Noise overlay */}
         <NoiseOverlay />
 
