@@ -157,7 +157,7 @@ export default function AboutSection() {
             >
               {/* Photo */}
               <Image
-                src="/images/kyan-cordes.jpg"
+                src="/images/kyan-cordes.JPG"
                 alt="Kyan Cordes - Founder NOVAITEC"
                 fill
                 className="object-cover"
