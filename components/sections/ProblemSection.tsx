@@ -319,12 +319,12 @@ function SlideIntro() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-montserrat font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-4 sm:mb-6 leading-tight"
         >
-          Je werkt{' '}
+          Ondernemen is{' '}
           <span className="bg-gradient-to-r from-amber via-orange-400 to-amber bg-clip-text text-transparent">
-            60 uur.
+            vrijheid.
           </span>{' '}
           <br className="hidden sm:block" />
-          En toch kom je niet vooruit.
+          Toch?
         </motion.h2>
 
         <motion.p
@@ -334,8 +334,8 @@ function SlideIntro() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-inter text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 mb-8 sm:mb-12 max-w-2xl mx-auto"
         >
-          Brandjes blussen. Administratie. Handmatig werk.
-          Terwijl je bedrijf wacht op jouw aandacht.
+          Of voelt het vaker als brandjes blussen, &apos;s avonds administratie doen,
+          en nooit echt vooruit komen?
         </motion.p>
 
         <motion.div
