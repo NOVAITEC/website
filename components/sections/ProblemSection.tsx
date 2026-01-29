@@ -885,19 +885,10 @@ function ProblemSectionMobile() {
 }
 
 // =============================================================================
-// MAIN EXPORT - CSS-based responsive design
+// MAIN EXPORT - Horizontal cinema scroll on ALL screen sizes
 // =============================================================================
 
 export function ProblemSection() {
-  return (
-    <>
-      <div className="hidden md:block">
-        <ProblemSectionDesktop />
-      </div>
-
-      <div className="block md:hidden">
-        <ProblemSectionMobile />
-      </div>
-    </>
-  );
+  // Use horizontal cinema scroll on all screen sizes (mobile, tablet, desktop)
+  return <ProblemSectionDesktop />;
 }
