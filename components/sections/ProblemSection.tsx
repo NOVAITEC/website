@@ -53,8 +53,8 @@ function StackingCard({ children, index, isFirst, isLast, className }: StackingC
     >
       <motion.div
         style={{
-          scale: isLast ? 1 : scale,
-          filter: isLast ? 'none' : `brightness(${brightness.get()})`,
+          scale: (isFirst || isLast) ? 1 : scale,
+          filter: (isFirst || isLast) ? 'none' : `brightness(${brightness.get()})`,
         }}
         className={cn(
           'relative h-full w-full overflow-hidden',
