@@ -109,7 +109,7 @@ useEffect(() => {
 - ✅ Gebruik **asymmetrische layouts** (tekst links, afbeelding rechts die uit het kader breekt)
 
 ### Horizontale Scroll Illusie (De "Apple" Touch)
-Voor de sectie "Hoe wij werken" of "Tijdlijn":
+Voor de sectie "Hoe ik werk" of "Tijdlijn":
 
 ```typescript
 // Techniek:
@@ -135,10 +135,16 @@ const x = useTransform(scrollYProgress, [0, 1], ["0%", "-66.66%"])
 
 ## 4. TONE OF VOICE & CONTENT
 
-**Motto:** _"Wij verkopen geen AI. Wij verkopen rust en resultaat."_
+**Motto:** _"Ik verkoop geen AI. Ik verkoop rust en resultaat."_
 
 - **Taal:** Nuchter, direct, geen corporate bullshit
 - **Persona:** De Ingenieur met een onderwijzend hart
+
+### Aanspreekstijl (VERPLICHT)
+**De website is 100% in de ik-vorm geschreven en spreekt bezoekers informeel aan:**
+- **Ik over mezelf:** "Ik bouw", "Ik help", "Ik verkoop" (NOOIT "wij" of "we")
+- **Bezoekers aanspreken:** "je", "jij", "jouw" (NOOIT "u" of "uw")
+- Dit geldt voor ALLE teksten: homepage, services, contact, privacy, cookies, etc.
 
 ### Voorbeelden
 
@@ -147,6 +153,8 @@ const x = useTransform(scrollYProgress, [0, 1], ["0%", "-66.66%"])
 | "Ik heb je proces in kaart gebracht." | "Wij faciliteren een synergetische customer journey." |
 | "Geen gedoe. Gewoon bouwen." | "Wij bieden innovatieve oplossingen aan." |
 | "Resultaat binnen 2 weken zichtbaar." | "Wij streven naar optimale resultaten." |
+| "Neem contact met mij op." | "Neem contact met ons op." |
+| "Heb je vragen?" | "Heeft u vragen?" |
 
 ---
 
@@ -229,22 +237,22 @@ De naam is een strategische samenstelling van drie pijlers:
 ### De NOVAITEC Waarden
 
 #### 1. Resultaat boven Uren (Zwart)
-- We hebben een hekel aan het klassieke uurtje-factuurtje model
-- We werken op basis van **Waarde**
+- Ik heb een hekel aan het klassieke uurtje-factuurtje model
+- Ik werk op basis van **Waarde**
 - Je betaalt voor de oplossing en de rust, niet voor de tijd
 - Duidelijke afspraken vooraf zorgen voor vertrouwen
 
 #### 2. Tech-Savvy, maar Overzichtelijk (Teal)
-- We stralen expertise uit
-- We weten wat er speelt in AI en Tech
+- Ik straal expertise uit
+- Ik weet wat er speelt in AI en Tech
 - Maar naar de klant toe: **Jip-en-Janneke taal**
 - Geen black boxes, maar heldere dashboards
 - De klant moet zich nooit dom voelen, maar juist 'empowered'
 
 #### 3. Menselijke Connectie (Amber)
-- Technologie is koud, maar onze service is warm
+- Technologie is koud, maar mijn service is warm
 - Als ZZP'er bied ik persoonlijkheid
-- Door menselijk contact creëren we een échte band
+- Door menselijk contact creëer ik een échte band
 - Ik ben geen anonieme helpdesk, maar een betrokken partner
 
 ### Brand Archetypes
@@ -305,7 +313,7 @@ In de project folder:
 1. **Hero** - Opening statement met impact
 2. **Over Mij** - Persoonlijke introductie, de mens achter NOVAITEC
 3. **Het Probleem** - Pain points van de doelgroep (MKB ondernemers)
-4. **De Oplossing + Services** - Wat we doen en hoe we helpen
+4. **De Oplossing + Services** - Wat ik doe en hoe ik help
 5. **Contact** - Formulier naar kyan@novaitec.nl
 6. **Footer** - Links naar LinkedIn & email
 
@@ -398,7 +406,7 @@ In de project folder:
 
 3. **Abstracte tech visuals** voor secties
    - Stijl: Circuits, data flows, abstracte tech patterns
-   - Alternatief: Kunnen we genereren met placeholders of SVG illustraties
+   - Alternatief: Kan ik genereren met placeholders of SVG illustraties
 
 **Fallback Strategie:**
 - Gebruik placeholder images met NOVAITEC kleuren
@@ -412,7 +420,7 @@ In de project folder:
 
 ### Content & Copy
 - [x] Welke secties moeten er op de homepage komen?
-- [x] Heb je al copy/teksten klaar, of moeten we die samen schrijven?
+- [x] Heb je al copy/teksten klaar, of moet ik die schrijven?
 - [x] Heb je beeldmateriaal (foto's, logo's, iconen)?
 
 ### Functionaliteiten
