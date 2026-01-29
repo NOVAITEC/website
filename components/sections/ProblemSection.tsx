@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useEffect, useMemo } from 'react';
-import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { useRef, useEffect, useMemo, useState } from 'react';
+import { motion, useTransform, MotionValue } from 'framer-motion';
 import {
   ArrowDown,
   ArrowRight,
@@ -94,7 +94,7 @@ function AdminMockup() {
             <div className="w-8 h-8 bg-slate-800 rounded flex items-center justify-center font-mono text-xs text-slate-500">
               {row}
             </div>
-            <div className="flex-1 h-8 bg-slate-800/50 rounded flex items-center px-3 overflow-hidden">
+            <div className="flex-1 h-8 bg-slate-800 rounded flex items-center px-3 overflow-hidden">
               <span className="font-mono text-xs text-slate-400 truncate">
                 {['Factuur #2024-0847...', 'Klant: TechBedrijf BV', 'Bedrag: €3.240,00', 'Status: In behandeling'][i]}
               </span>
@@ -260,7 +260,7 @@ function OpportunityMockup() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 1 }}
-        className="bg-slate-800/50 rounded-xl p-3"
+        className="bg-slate-800 rounded-xl p-3"
       >
         <div className="flex items-center gap-2 mb-2">
           <Calendar className="w-4 h-4 text-slate-500" />
@@ -364,7 +364,7 @@ function SlideIntro() {
 
 function SlideAdmin() {
   return (
-    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900/50 py-12 sm:py-20">
+    <div className="relative w-full flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12 sm:py-20">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
@@ -419,7 +419,7 @@ function SlideAdmin() {
 
 function SlideStaff() {
   return (
-    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900/50">
+    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900">
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-red-500/10 blur-[120px]" />
       <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-amber/10 blur-[100px]" />
 
@@ -479,7 +479,7 @@ function SlideStaff() {
 
 function SlideResearch() {
   return (
-    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800/50">
+    <div className="relative w-full flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber/5 blur-[150px]" />
 
       <div className="container mx-auto px-4 sm:px-6">
@@ -534,7 +534,7 @@ function SlideResearch() {
 
 function SlideTransition() {
   return (
-    <div className="relative w-full flex items-center py-12 sm:py-20 justify-center rounded-3xl overflow-hidden bg-slate-800/50">
+    <div className="relative w-full flex items-center py-12 sm:py-20 justify-center rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber/10 to-transparent" />
       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-teal/20 to-transparent" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-teal/20 blur-[150px]" />
@@ -659,71 +659,61 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: STACKING SLIDE-UP ANIMATION
+// DESKTOP: STACKING CARDS ANIMATION
 // =============================================================================
 
 interface StackingSlideProps {
   children: React.ReactNode;
   index: number;
+  total: number;
 }
 
-function StackingSlide({ children, index }: StackingSlideProps) {
-  const slideRef = useRef<HTMLDivElement>(null);
-  const scrollYProgress = useMotionValue(0);
+function StackingSlide({ children, index, total }: StackingSlideProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    let ticking = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Card is in view when it enters the viewport
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-    const updateProgress = () => {
-      if (!slideRef.current) return;
-      const rect = slideRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
 
-      // Calculate progress: 0 = slide at bottom of screen, 1 = slide fully in view
-      const progress = Math.min(Math.max(1 - (rect.top / windowHeight), 0), 1);
-      scrollYProgress.set(progress);
-      ticking = false;
-    };
+    return () => observer.disconnect();
+  }, []);
 
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateProgress);
-        ticking = true;
-      }
-    };
-
-    updateProgress();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrollYProgress]);
-
-  // Smooth spring animation
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 60,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  // Transform: slides come up from bottom (100vh) to their final position (0)
-  const y = useTransform(smoothProgress, [0, 1], ['100vh', '0vh']);
-  const opacity = useTransform(smoothProgress, [0, 0.2, 1], [0, 0.8, 1]);
-  const scale = useTransform(smoothProgress, [0, 1], [0.9, 1]);
+  // Each card stacks slightly lower than the previous for visual depth
+  const topOffset = index * 20;
 
   return (
-    <motion.div
-      ref={slideRef}
+    <div
+      ref={cardRef}
+      className="sticky h-screen w-full flex items-center justify-center px-4 sm:px-6"
       style={{
-        y,
-        opacity,
-        scale,
-        zIndex: 10 + index
+        top: `${topOffset}px`,
+        zIndex: 10 + index,
       }}
-      className="sticky top-0 h-screen w-full flex items-center justify-center px-4 sm:px-6"
     >
-      <div className="w-full max-w-7xl">
+      <motion.div
+        initial={{ opacity: 0, y: 100, scale: 0.95 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 100, scale: 0.95 }}
+        transition={{
+          duration: 0.6,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="w-full max-w-7xl"
+      >
         {children}
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -750,7 +740,7 @@ function ProblemSectionDesktop() {
 
       {/* Stacking slides */}
       {slides.map((slide, index) => (
-        <StackingSlide key={slide.id} index={index}>
+        <StackingSlide key={slide.id} index={index} total={slides.length}>
           {slide.component}
         </StackingSlide>
       ))}
