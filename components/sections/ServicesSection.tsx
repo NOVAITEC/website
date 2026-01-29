@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   ArrowRight,
@@ -362,7 +362,7 @@ function ChatMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center justify-center rounded-3xl overflow-hidden">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden">
       {/* Network Animation Background */}
       <NetworkAnimation />
 
@@ -427,7 +427,7 @@ function SlideIntro() {
 
 function SlideAutomation() {
   return (
-    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -486,7 +486,7 @@ function SlideAutomation() {
 
 function SlideAIAgents() {
   return (
-    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
@@ -547,7 +547,7 @@ function SlideAIAgents() {
 
 function SlideDashboards() {
   return (
-    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
       <div className="container mx-auto px-4 sm:px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Animated Chart Visual */}
         <motion.div
@@ -607,7 +607,7 @@ function SlideDashboards() {
 
 function SlideOwnership() {
   return (
-    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
       {/* Centered content */}
       <div className="text-center max-w-3xl px-4 sm:px-6">
         <motion.div
@@ -673,7 +673,7 @@ function SlideOwnership() {
 
 function SlideGrandFinale() {
   return (
-    <div className="relative flex-shrink-0 w-[95vw] lg:w-[92vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
+    <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center justify-center rounded-3xl overflow-hidden bg-midnight/50">
       {/* Radial glow background */}
       <div
         className="absolute inset-0"
@@ -845,8 +845,9 @@ function ServicesSectionDesktop() {
   });
 
   // Convert vertical scroll (0-1) to horizontal translation
-  // 6 slides + gaps, translate to show all slides ending at the last one
-  const x = useTransform(smoothScrollProgress, [0, 1], ['0%', '-85%']);
+  // 6 slides at ~88vw each + gaps between them
+  // Translate to show all slides, ending with the last slide in view
+  const x = useTransform(smoothScrollProgress, [0, 1], ['0%', '-82%']);
 
   // Smooth progress for the progress bar (slightly different feel)
   const smoothProgress = useSpring(scrollYProgress, {
@@ -879,7 +880,10 @@ function ServicesSectionDesktop() {
         />
 
         {/* Horizontal slide track - w-max ensures container expands to fit all 6 slides */}
-        <motion.div style={{ x }} className="flex h-full w-max will-change-transform gap-16 lg:gap-24">
+        <motion.div
+          style={{ x }}
+          className="flex h-full w-max will-change-transform gap-12 md:gap-16 lg:gap-20 xl:gap-24"
+        >
           <SlideIntro />
           <SlideAutomation />
           <SlideAIAgents />
@@ -888,19 +892,23 @@ function ServicesSectionDesktop() {
           <SlideGrandFinale />
         </motion.div>
 
-        {/* Progress bar at bottom */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden">
+        {/* Progress bar at bottom - hidden on mobile for cleaner look */}
+        <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden">
           <motion.div
             style={{ scaleX: smoothProgress }}
             className="h-full bg-gradient-to-r from-teal to-cyan-400 origin-left"
           />
         </div>
 
-        {/* Slide counter */}
-        <SlideCounter scrollYProgress={scrollYProgress} />
+        {/* Slide counter - hidden on mobile */}
+        <div className="hidden md:block">
+          <SlideCounter scrollYProgress={scrollYProgress} />
+        </div>
 
-        {/* Slide indicators */}
-        <SlideIndicators scrollYProgress={scrollYProgress} />
+        {/* Slide indicators - hidden on mobile */}
+        <div className="hidden md:block">
+          <SlideIndicators scrollYProgress={scrollYProgress} />
+        </div>
       </div>
     </section>
   );
@@ -1175,29 +1183,23 @@ function ServicesSectionMobile() {
 }
 
 // =============================================================================
-// MAIN EXPORT
+// MAIN EXPORT - CSS-based responsive design (no JS state needed)
 // =============================================================================
 
 export function ServicesSection() {
-  const [isMobile, setIsMobile] = useState(false);
+  // Render both versions, but hide one with CSS for better SSR and no hydration issues
+  // Use md breakpoint (768px) instead of lg (1024px) so tablets get horizontal scroll
+  return (
+    <>
+      {/* Desktop/Tablet version: shown on md+ screens (768px+) */}
+      <div className="hidden md:block">
+        <ServicesSectionDesktop />
+      </div>
 
-  useEffect(() => {
-    // Check initial viewport
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint
-    };
-
-    checkMobile();
-
-    // Add resize listener
-    const handleResize = () => {
-      checkMobile();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Use mobile version below lg breakpoint (1024px)
-  return isMobile ? <ServicesSectionMobile /> : <ServicesSectionDesktop />;
+      {/* Mobile version: shown on screens < md (< 768px) */}
+      <div className="block md:hidden">
+        <ServicesSectionMobile />
+      </div>
+    </>
+  );
 }
