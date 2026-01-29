@@ -787,20 +787,20 @@ function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
   return (
     <div
       ref={cardRef}
-      className="sticky min-h-[100svh] w-full flex items-center justify-center px-3"
+      className="sticky h-[100svh] w-full flex items-center justify-center px-3"
       style={{
         top: `${topOffset}px`,
         zIndex: 10 + index,
       }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 80, scale: 0.95 }}
-        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 80, scale: 0.95 }}
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.98 }}
         transition={{
-          duration: 0.5,
-          ease: [0.16, 1, 0.3, 1],
+          duration: 0.3,
+          ease: 'easeOut',
         }}
-        className="w-full max-w-7xl"
+        className="w-full max-w-7xl h-full flex items-center justify-center"
       >
         {children}
       </motion.div>
