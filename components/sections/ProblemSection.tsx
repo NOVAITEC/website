@@ -319,12 +319,12 @@ function SlideIntro() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-montserrat font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-4 sm:mb-6 leading-tight"
         >
-          Ondernemen is{' '}
+          Je werkt{' '}
           <span className="bg-gradient-to-r from-amber via-orange-400 to-amber bg-clip-text text-transparent">
-            vrijheid.
+            60 uur.
           </span>{' '}
           <br className="hidden sm:block" />
-          Toch?
+          En toch kom je niet vooruit.
         </motion.h2>
 
         <motion.p
@@ -334,8 +334,8 @@ function SlideIntro() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-inter text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 mb-8 sm:mb-12 max-w-2xl mx-auto"
         >
-          Of voelt het vaker als brandjes blussen, &apos;s avonds administratie doen,
-          en nooit echt vooruit komen?
+          Brandjes blussen. Administratie. Handmatig werk.
+          Terwijl je bedrijf wacht op jouw aandacht.
         </motion.p>
 
         <motion.div
@@ -382,13 +382,13 @@ function SlideAdmin() {
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
-              De Administratie{' '}
-              <span className="text-amber">Molen.</span>
+              5 uur per week aan{' '}
+              <span className="text-amber">copy-paste.</span>
             </h3>
 
             <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
-              Je typt data over. Je sleept bestanden. Je controleert handmatig.
-              Ondertussen loopt je echte werk achter.
+              Data overtypen. Bestanden slepen. Handmatig controleren.
+              Werk dat een computer in seconden doet.
             </p>
 
             <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 sm:pt-4">
@@ -448,13 +448,13 @@ function SlideStaff() {
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
-              Het Personeel{' '}
-              <span className="text-amber">Dilemma.</span>
+              Te weinig mensen.{' '}
+              <span className="text-amber">Te veel werk.</span>
             </h3>
 
             <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
-              Te weinig handen. Te veel werk. En je huidige team? Die werkt liever
-              op de vertrouwde manier - ook al bestaan er snellere oplossingen.
+              Vacatures blijven open. Je team is overbelast.
+              En inhuren kost meer dan je kunt missen.
             </p>
 
             <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 sm:pt-4">
@@ -497,13 +497,13 @@ function SlideResearch() {
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
-              De Research{' '}
-              <span className="text-amber">Gap.</span>
+              Geen tijd om{' '}
+              <span className="text-amber">slimmer te werken.</span>
             </h3>
 
             <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
-              Je weet dat AI en automatisering je kunnen helpen. Maar wanneer heb je
-              voor het laatst tijd gehad om het uit te zoeken?
+              Je weet dat AI en automatisering kunnen helpen.
+              Maar je agenda is vol. Elke week weer.
             </p>
 
             <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 sm:pt-4">
@@ -569,9 +569,9 @@ function SlideTransition() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-montserrat font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-4 sm:mb-6 leading-tight"
         >
-          Je bent{' '}
+          Dit hoeft{' '}
           <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
-            niet alleen.
+            niet zo.
           </span>
         </motion.h2>
 
@@ -582,8 +582,8 @@ function SlideTransition() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="font-inter text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 mb-8 sm:mb-10 max-w-xl mx-auto"
         >
-          Duizenden ondernemers zitten in dezelfde situatie. Het goede nieuws?{' '}
-          <span className="text-white font-medium">Er is een uitweg.</span>
+          Wat als je repetitieve taken automatiseert?{' '}
+          <span className="text-white font-medium">Je wint uren terug. Elke week.</span>
         </motion.p>
 
         <motion.div
