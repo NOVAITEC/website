@@ -22,19 +22,19 @@ const faqs = [
       "Ik werk niet op basis van uurtje-factuurtje, maar op basis van waarde. Je betaalt voor de oplossing en de rust, niet voor de tijd. Na een gratis strategie sessie krijg je een helder voorstel met vaste prijs - geen verrassingen achteraf.",
   },
   {
-    question: "Wat is n8n en waarom gebruik je dat?",
+    question: "Heb ik toegang tot mijn code en data?",
     answer:
-      "n8n is een open-source workflow automatiseringstool. Ik kies voor n8n omdat het geen vendor lock-in heeft - jij blijft 100% eigenaar van je workflows. Als je ooit weg wilt, krijg je gewoon de sleutels mee.",
+      "Absoluut. Alle code en workflows die ik voor jou bouw, worden opgeslagen op een privé GitHub server waar jij volledige toegang toe krijgt. Geen vendor lock-in, geen gedoe. Jij bent en blijft 100% eigenaar van alles wat ik voor je maak.",
   },
   {
     question: "Kan ik mijn automatisering zelf beheren na oplevering?",
     answer:
-      "Ja, dat is het hele punt. Ik bouw in standaarden (n8n, SQL) die overdraagbaar zijn. Je krijgt uitleg hoe alles werkt en kunt zelf aanpassingen maken. Natuurlijk sta ik ook klaar voor ondersteuning als je dat nodig hebt.",
+      "Ja, dat is het hele punt. Ik bouw met open standaarden die volledig overdraagbaar zijn. Je krijgt toegang tot de code op GitHub, uitleg hoe alles werkt, en kunt zelf aanpassingen maken. Natuurlijk sta ik ook klaar voor ondersteuning als je dat nodig hebt.",
   },
   {
     question: "Hoe zit het met de privacy van mijn bedrijfsdata?",
     answer:
-      "Data Privacy staat voorop. Ik stuur nooit persoonsgegevens naar publieke AI-modellen zonder anonimisering. Je data blijft van jou. Daarnaast werk ik met 'human-in-the-loop': kritieke acties hebben altijd menselijke goedkeuring nodig.",
+      "Data Privacy staat voorop. Ik stuur nooit persoonsgegevens naar publieke AI-modellen zonder anonimisering. Je data blijft van jou en staat veilig op een privé server. Daarnaast werk ik met 'human-in-the-loop': kritieke acties hebben altijd menselijke goedkeuring nodig.",
   },
 ];
 
