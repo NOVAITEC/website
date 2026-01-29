@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Footer } from "@/components/layout/Footer";
+import { FlyingLogo } from "@/components/effects/FlyingLogo";
 
 export const metadata: Metadata = {
   title: "NOVAITEC | AI-gedreven Automatisering voor MKB",
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="nl">
       <body className="antialiased">
         <SmoothScroll>
+          <FlyingLogo />
           {children}
           <Footer />
         </SmoothScroll>
