@@ -40,9 +40,8 @@ export const metadata: Metadata = {
 
   // Open Graph (Facebook, LinkedIn, etc.)
   openGraph: {
-    title: "NOVAITEC | De motor achter jouw ambitie",
-    description:
-      "Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
+    title: "NOVAITEC | AI-Driven Automation",
+    description: "De motor achter jouw ambitie.",
     url: baseUrl,
     siteName: "NOVAITEC",
     locale: "nl_NL",
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
         url: `${baseUrl}/images/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "NOVAITEC - De motor achter jouw ambitie",
+        alt: "NOVAITEC - AI-Driven Automation",
       },
     ],
   },
@@ -60,9 +59,8 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "NOVAITEC | De motor achter jouw ambitie",
-    description:
-      "Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
+    title: "NOVAITEC | AI-Driven Automation",
+    description: "De motor achter jouw ambitie.",
     images: [`${baseUrl}/images/og-image.jpg`],
     creator: "@kyancordes",
   },
