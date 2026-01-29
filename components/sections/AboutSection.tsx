@@ -159,8 +159,9 @@ export default function AboutSection() {
               <Image
                 src="/images/kyan-cordes.jpg"
                 alt="Kyan Cordes - Founder NOVAITEC"
-                fill
-                className="object-cover"
+                width={1223}
+                height={1887}
+                className="object-cover w-full h-full"
                 sizes="(max-width: 768px) 100vw, 384px"
                 priority
               />
