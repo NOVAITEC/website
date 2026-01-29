@@ -41,9 +41,8 @@ function StackingCard({ children, index, isFirst, isLast, className }: StackingC
     offset: ['start end', 'start start'],
   });
 
-  // Cards get a slight scale down and brightness decrease as they get covered
+  // Cards get a slight scale up as they scroll into view
   const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
-  const brightness = useTransform(scrollYProgress, [0, 0.5, 1], [0.6, 0.8, 1]);
 
   return (
     <div
@@ -53,8 +52,7 @@ function StackingCard({ children, index, isFirst, isLast, className }: StackingC
     >
       <motion.div
         style={{
-          scale: (isFirst || isLast) ? 1 : scale,
-          filter: (isFirst || isLast) ? 'none' : `brightness(${brightness.get()})`,
+          scale: isLast ? 1 : scale,
         }}
         className={cn(
           'relative h-full w-full overflow-hidden',
