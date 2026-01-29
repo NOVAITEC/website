@@ -26,6 +26,7 @@ interface UseParticleSystemReturn {
     color: string;
     opacity: number;
     glowIntensity: number;
+    scale: number;
   }>;
   getConnections: () => Array<{
     x1: number;
@@ -35,12 +36,14 @@ interface UseParticleSystemReturn {
     opacity: number;
   }>;
   isReducedMotion: boolean;
+  time: number;
 }
 
 export function useParticleSystem(): UseParticleSystemReturn {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [canvasSize, setCanvasSize] = useState<CanvasSize>({ width: 0, height: 0 });
   const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [time, setTime] = useState(0);
 
   // Create particles once on mount
   const particles = useMemo(() => {
@@ -51,6 +54,28 @@ export function useParticleSystem(): UseParticleSystemReturn {
 
   // Track scroll progress
   const scrollRef = useRef(0);
+
+  // Animation time tracking
+  useEffect(() => {
+    if (typeof window === 'undefined' || isReducedMotion) return;
+
+    let animationId: number;
+    const startTime = performance.now();
+
+    const updateTime = (currentTime: number) => {
+      const elapsed = (currentTime - startTime) / 1000; // seconds
+      setTime(elapsed);
+      animationId = requestAnimationFrame(updateTime);
+    };
+
+    animationId = requestAnimationFrame(updateTime);
+
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, [isReducedMotion]);
 
   // Handle scroll
   useEffect(() => {
@@ -113,16 +138,17 @@ export function useParticleSystem(): UseParticleSystemReturn {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Calculate particle positions based on current scroll
+  // Calculate particle positions based on current scroll and time
   const getParticlePositions = useCallback(() => {
     if (canvasSize.width === 0 || canvasSize.height === 0) return [];
 
     return particles.map((particle) => {
-      const { x, y, opacity } = calculateParticlePosition(
+      const { x, y, opacity, scale } = calculateParticlePosition(
         particle,
         scrollProgress,
         canvasSize.width,
-        canvasSize.height
+        canvasSize.height,
+        time
       );
 
       return {
@@ -133,16 +159,17 @@ export function useParticleSystem(): UseParticleSystemReturn {
         color: particle.color,
         opacity,
         glowIntensity: particle.glowIntensity,
+        scale,
       };
     });
-  }, [particles, scrollProgress, canvasSize]);
+  }, [particles, scrollProgress, canvasSize, time]);
 
   // Get connection lines between nearby particles
   const getConnections = useCallback(() => {
     const positions = getParticlePositions();
     return getParticleConnections(
       positions.map((p) => ({ x: p.x, y: p.y, opacity: p.opacity })),
-      100 // max distance for connections
+      150 // max distance for connections
     );
   }, [getParticlePositions]);
 
@@ -153,5 +180,6 @@ export function useParticleSystem(): UseParticleSystemReturn {
     getParticlePositions,
     getConnections,
     isReducedMotion,
+    time,
   };
 }

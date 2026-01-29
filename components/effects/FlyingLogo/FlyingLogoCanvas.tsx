@@ -19,9 +19,10 @@ export function FlyingLogoCanvas() {
     getParticlePositions,
     getConnections,
     isReducedMotion,
+    time,
   } = useParticleSystem();
 
-  // Draw a single particle with glow effect
+  // Draw a single particle with glow effect and scale
   const drawParticle = useCallback(
     (
       ctx: CanvasRenderingContext2D,
@@ -30,38 +31,49 @@ export function FlyingLogoCanvas() {
       size: number,
       color: string,
       opacity: number,
-      glowIntensity: number
+      glowIntensity: number,
+      scale: number = 1
     ) => {
       if (opacity <= 0) return;
 
+      const scaledSize = size * scale;
+
       // Outer glow (largest, most transparent)
       ctx.beginPath();
-      ctx.arc(x, y, size * 3, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity * 0.1 * glowIntensity);
+      ctx.arc(x, y, scaledSize * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = hexToRgba(color, opacity * 0.08 * glowIntensity * scale);
       ctx.fill();
 
       // Middle glow
       ctx.beginPath();
-      ctx.arc(x, y, size * 2, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity * 0.2 * glowIntensity);
+      ctx.arc(x, y, scaledSize * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = hexToRgba(color, opacity * 0.15 * glowIntensity * scale);
       ctx.fill();
 
       // Inner glow
       ctx.beginPath();
-      ctx.arc(x, y, size * 1.4, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(color, opacity * 0.4 * glowIntensity);
+      ctx.arc(x, y, scaledSize * 1.6, 0, Math.PI * 2);
+      ctx.fillStyle = hexToRgba(color, opacity * 0.35 * glowIntensity);
       ctx.fill();
 
       // Core (solid)
       ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.arc(x, y, scaledSize, 0, Math.PI * 2);
       ctx.fillStyle = hexToRgba(color, opacity);
       ctx.fill();
+
+      // Bright center highlight for accent particles
+      if (glowIntensity > 0.6 && scale > 0.8) {
+        ctx.beginPath();
+        ctx.arc(x, y, scaledSize * 0.4, 0, Math.PI * 2);
+        ctx.fillStyle = hexToRgba('#FFFFFF', opacity * 0.6);
+        ctx.fill();
+      }
     },
     []
   );
 
-  // Draw connection lines
+  // Draw connection lines with gradient effect
   const drawConnections = useCallback(
     (
       ctx: CanvasRenderingContext2D,
@@ -76,11 +88,17 @@ export function FlyingLogoCanvas() {
       connections.forEach(({ x1, y1, x2, y2, opacity }) => {
         if (opacity <= 0.01) return;
 
+        // Create gradient for each connection
+        const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+        gradient.addColorStop(0, hexToRgba(DEFAULT_CONFIG.colors.primary, opacity));
+        gradient.addColorStop(0.5, hexToRgba(DEFAULT_CONFIG.colors.primary, opacity * 1.2));
+        gradient.addColorStop(1, hexToRgba(DEFAULT_CONFIG.colors.primary, opacity));
+
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.strokeStyle = hexToRgba(DEFAULT_CONFIG.colors.primary, opacity);
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
       });
     },
@@ -105,9 +123,12 @@ export function FlyingLogoCanvas() {
     // Draw connections first (behind particles)
     drawConnections(ctx, connections);
 
+    // Sort particles by size for proper layering (smaller behind larger)
+    const sortedPositions = [...positions].sort((a, b) => a.size - b.size);
+
     // Draw particles
-    positions.forEach(({ x, y, size, color, opacity, glowIntensity }) => {
-      drawParticle(ctx, x, y, size, color, opacity, glowIntensity);
+    sortedPositions.forEach(({ x, y, size, color, opacity, glowIntensity, scale }) => {
+      drawParticle(ctx, x, y, size, color, opacity, glowIntensity, scale);
     });
 
     // Request next frame
@@ -119,9 +140,17 @@ export function FlyingLogoCanvas() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Set canvas size
-    canvas.width = canvasSize.width;
-    canvas.height = canvasSize.height;
+    // Set canvas size with device pixel ratio for sharp rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvasSize.width * dpr;
+    canvas.height = canvasSize.height * dpr;
+    canvas.style.width = `${canvasSize.width}px`;
+    canvas.style.height = `${canvasSize.height}px`;
+
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.scale(dpr, dpr);
+    }
 
     // Start animation loop (only if not reduced motion)
     if (!isReducedMotion) {
@@ -135,12 +164,12 @@ export function FlyingLogoCanvas() {
     };
   }, [canvasSize, render, isReducedMotion]);
 
-  // Re-render on scroll
+  // Re-render on scroll or time change
   useEffect(() => {
     if (!isReducedMotion && animationRef.current === null) {
       animationRef.current = requestAnimationFrame(render);
     }
-  }, [scrollProgress, render, isReducedMotion]);
+  }, [scrollProgress, time, render, isReducedMotion]);
 
   // Don't render if reduced motion is preferred
   if (isReducedMotion) {
@@ -153,7 +182,6 @@ export function FlyingLogoCanvas() {
       className="fixed inset-0 pointer-events-none z-[5]"
       style={{
         willChange: 'transform',
-        opacity: 0.85,
       }}
       aria-hidden="true"
     />
