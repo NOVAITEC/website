@@ -111,7 +111,7 @@ export function HeroSection() {
             </Link>
 
             <Link
-              href="#services"
+              href="#oplossing"
               className="group inline-flex items-center space-x-2 bg-paper/5 border-2 border-paper/20 text-paper px-8 py-4 rounded-xl font-inter font-semibold text-lg hover:bg-paper/10 hover:border-teal/50 transition-all duration-200"
             >
               <Zap className="w-5 h-5 text-teal" />

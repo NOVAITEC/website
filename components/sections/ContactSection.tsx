@@ -77,7 +77,7 @@ export function ContactSection() {
     },
     {
       icon: MapPin,
-      label: 'Drunen',
+      label: 'Drunen, Noord-Brabant',
       href: null,
       external: false,
     },

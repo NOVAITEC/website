@@ -49,12 +49,12 @@ const coreValues = [
   },
   {
     icon: MessageCircle,
-    title: "Gewonemensentaal",
+    title: "Tech-savvy, maar overzichtelijk",
     color: "text-teal",
   },
   {
     icon: Heart,
-    title: "Persoonlijk contact",
+    title: "Menselijke connectie",
     color: "text-amber",
   },
 ];

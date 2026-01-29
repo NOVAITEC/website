@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Linkedin, Github } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const menuLinks = [
   { name: "Home", href: "/" },
   { name: "Over Mij", href: "/#over" },
-  { name: "Services", href: "/#services" },
+  { name: "Services", href: "/#oplossing" },
   { name: "Blog", href: "/#blog" },
 ];
 
@@ -19,8 +19,7 @@ const legalLinks = [
 ];
 
 const socialLinks = [
-  { name: "LinkedIn", href: "https://linkedin.com/company/novaitec", icon: Linkedin },
-  { name: "GitHub", href: "https://github.com/novaitec", icon: Github },
+  { name: "LinkedIn", href: "https://linkedin.com/in/kyancordes", icon: Linkedin },
 ];
 
 const containerVariants = {
