@@ -6,7 +6,7 @@
 // 1. Logo drops in met bounce
 // 2. Logo pulst en gloeit op
 // 3. Logo zoomt DOOR je heen (je vliegt erin)
-// 4. Lichtflits + fade naar hero
+// 4. Lichtflits en klaar
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,11 +19,10 @@ const TIMING = {
   logoPulse: 0.5,       // Glow intensifies
   zoomThrough: 0.8,     // Zoom through the logo
   flash: 0.3,           // White flash
-  reveal: 0.5,          // Fade to hero
 };
 
 export function IntroAnimation() {
-  const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'flash' | 'reveal' | 'done'>('drop');
+  const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'flash' | 'done'>('drop');
 
   useEffect(() => {
     const dropTime = TIMING.logoDrop * 1000;
@@ -31,20 +30,17 @@ export function IntroAnimation() {
     const pulseTime = TIMING.logoPulse * 1000;
     const zoomTime = TIMING.zoomThrough * 1000;
     const flashTime = TIMING.flash * 1000;
-    const revealTime = TIMING.reveal * 1000;
 
     let t1 = dropTime + holdTime;
     let t2 = t1 + pulseTime;
     let t3 = t2 + zoomTime;
     let t4 = t3 + flashTime;
-    let t5 = t4 + revealTime;
 
     const timers = [
       setTimeout(() => setPhase('pulse'), t1),
       setTimeout(() => setPhase('zoom'), t2),
       setTimeout(() => setPhase('flash'), t3),
-      setTimeout(() => setPhase('reveal'), t4),
-      setTimeout(() => setPhase('done'), t5),
+      setTimeout(() => setPhase('done'), t4),
     ];
 
     return () => timers.forEach(clearTimeout);
@@ -59,10 +55,6 @@ export function IntroAnimation() {
       <motion.div
         key="intro-overlay"
         className="fixed inset-0 z-[100] overflow-hidden"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: phase === 'reveal' ? 0 : 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: TIMING.reveal, ease: 'easeOut' }}
       >
         {/* Background */}
         <div className="absolute inset-0 bg-midnight" />
@@ -81,28 +73,13 @@ export function IntroAnimation() {
           />
         )}
 
-        {/* White flash */}
+        {/* White flash - fades to transparent revealing hero */}
         {phase === 'flash' && (
           <motion.div
             className="absolute inset-0 bg-white"
             initial={{ opacity: 0.9 }}
             animate={{ opacity: 0 }}
             transition={{ duration: TIMING.flash, ease: 'easeOut' }}
-          />
-        )}
-
-        {/* Radial reveal mask */}
-        {phase === 'reveal' && (
-          <motion.div
-            className="absolute inset-0 bg-midnight"
-            initial={{
-              clipPath: 'circle(0% at 50% 50%)'
-            }}
-            animate={{
-              clipPath: 'circle(150% at 50% 50%)'
-            }}
-            transition={{ duration: TIMING.reveal, ease: [0.22, 1, 0.36, 1] }}
-            style={{ opacity: 0 }}
           />
         )}
 
