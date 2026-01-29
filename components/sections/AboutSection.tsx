@@ -159,7 +159,7 @@ export default function AboutSection() {
               <img
                 src="/images/kyan-cordes.jpg"
                 alt="Kyan Cordes - Founder NOVAITEC"
-                className="object-cover w-full h-full absolute inset-0"
+                className="object-cover w-full h-full"
               />
 
               {/* Subtle overlay gradient for depth */}
