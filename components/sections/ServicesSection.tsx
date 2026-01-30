@@ -1103,122 +1103,156 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 // DESKTOP: STICKY HORIZONTAL SLIDESHOW - "TUNNEL" EXPERIENCE
 // =============================================================================
 
+// Tunnel configuration constants
+const SCROLL_THRESHOLD = 180;  // Delta needed for slide change (higher = heavier feel)
+const EXIT_THRESHOLD = 300;    // Extra delta needed to exit tunnel
+const EXIT_DELAY = 800;        // Ms to wait on last slide before exit is allowed
+
 function ServicesSectionDesktop() {
   const wrapperRef = useRef<HTMLElement>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLocked, setIsLocked] = useState(false);
-  const [canExit, setCanExit] = useState(false); // Buffer: can only exit after viewing last slide
-  const scrollAccumulator = useRef(0);
-  const isTransitioning = useRef(false);
-  const exitAccumulator = useRef(0);
 
-  const SCROLL_THRESHOLD = 200; // Scroll needed for next slide (higher = heavier feel)
-  const EXIT_THRESHOLD = 300;   // Extra scroll needed to EXIT tunnel
-  const EXIT_DELAY = 800;       // Ms to wait on last slide before exit is allowed
+  // ════════════════════════════════════════════════════════════════════════════
+  // KRITIEK: Refs voor instant response (geen React state lag!)
+  // ════════════════════════════════════════════════════════════════════════════
+  const isLockedRef = useRef(false);
+  const currentSlideRef = useRef(0);
+  const scrollDeltaRef = useRef(0);
+  const exitDeltaRef = useRef(0);
+  const canExitRef = useRef(false);
+  const transitioningRef = useRef(false);
 
+  // React state ALLEEN voor UI updates (niet voor scroll logic)
+  const [displaySlide, setDisplaySlide] = useState(0);
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // SCROLL LOCK FUNCTIES
+  // ════════════════════════════════════════════════════════════════════════════
+  const lockScroll = useCallback(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    window.lenis?.stop();
+  }, []);
+
+  const unlockScroll = useCallback(() => {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    window.lenis?.start();
+  }, []);
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // TUNNEL ENTRY/EXIT FUNCTIES
+  // ════════════════════════════════════════════════════════════════════════════
+  const enterTunnel = useCallback((direction: 'forward' | 'backward') => {
+    if (isLockedRef.current) return; // Already locked
+
+    isLockedRef.current = true;
+    const startSlide = direction === 'forward' ? 0 : TOTAL_SLIDES - 1;
+    currentSlideRef.current = startSlide;
+    setDisplaySlide(startSlide);
+    scrollDeltaRef.current = 0;
+    exitDeltaRef.current = 0;
+    canExitRef.current = false;
+    lockScroll();
+
+    // Pin section to viewport top (instant for snappier feel)
+    wrapperRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+  }, [lockScroll]);
+
+  const exitTunnel = useCallback(() => {
+    if (!isLockedRef.current) return; // Not locked
+
+    isLockedRef.current = false;
+    canExitRef.current = false;
+    scrollDeltaRef.current = 0;
+    exitDeltaRef.current = 0;
+    unlockScroll();
+  }, [unlockScroll]);
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // WHEEL EVENT HANDLER - The core tunnel logic
+  // ════════════════════════════════════════════════════════════════════════════
   useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
     const handleWheel = (e: WheelEvent) => {
+      const wrapper = wrapperRef.current;
+      if (!wrapper) return;
+
       const rect = wrapper.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      const vh = window.innerHeight;
 
-      // Section position checks
-      const sectionTopReached = rect.top <= 50;
-      const sectionVisible = rect.bottom > 0 && rect.top < viewportHeight;
-
-      // ═══════════════════════════════════════════════════════════════════
-      // TUNNEL ENTRY FROM TOP: Scrolling DOWN, section top reaches viewport
-      // ═══════════════════════════════════════════════════════════════════
-      if (!isLocked && sectionTopReached && sectionVisible && e.deltaY > 0 && rect.top > -100) {
-        e.preventDefault();
-        setIsLocked(true);
-        setCurrentSlide(0); // Start from first slide
-        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
-
-      // ═══════════════════════════════════════════════════════════════════
-      // TUNNEL ENTRY FROM BOTTOM: Scrolling UP, section bottom in view
-      // ═══════════════════════════════════════════════════════════════════
-      if (!isLocked && e.deltaY < 0 && rect.bottom > viewportHeight * 0.2 && rect.bottom < viewportHeight + 100) {
-        e.preventDefault();
-        setIsLocked(true);
-        setCurrentSlide(TOTAL_SLIDES - 1); // Start from last slide
-        // Scroll to pin the section
-        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
-
-      // ═══════════════════════════════════════════════════════════════════
+      // ──────────────────────────────────────────────────────────────────────
       // INSIDE TUNNEL: Block ALL scroll, handle slide navigation
-      // ═══════════════════════════════════════════════════════════════════
-      if (isLocked) {
-        // ALWAYS block scroll while locked
+      // ──────────────────────────────────────────────────────────────────────
+      if (isLockedRef.current) {
         e.preventDefault();
+        e.stopPropagation();
 
-        // Don't process during transition
-        if (isTransitioning.current) return;
+        // Don't process during transition animation
+        if (transitioningRef.current) return;
 
-        // Accumulate scroll delta
-        scrollAccumulator.current += e.deltaY;
+        scrollDeltaRef.current += e.deltaY;
+        const currentSlide = currentSlideRef.current;
 
-        // ─────────────────────────────────────────────────────────────────
-        // EXIT ATTEMPT: Only possible on LAST slide, scrolling DOWN, AFTER delay
-        // ─────────────────────────────────────────────────────────────────
+        // EXIT FORWARD: laatste slide + scroll down + canExit delay passed
         if (currentSlide === TOTAL_SLIDES - 1 && e.deltaY > 0) {
-          // Only allow exit accumulation if canExit is true (delay passed)
-          if (canExit) {
-            exitAccumulator.current += e.deltaY;
-
-            if (exitAccumulator.current >= EXIT_THRESHOLD) {
-              // EXIT TUNNEL
-              setIsLocked(false);
-              setCanExit(false);
-              exitAccumulator.current = 0;
-              scrollAccumulator.current = 0;
+          if (canExitRef.current) {
+            exitDeltaRef.current += e.deltaY;
+            if (exitDeltaRef.current >= EXIT_THRESHOLD) {
+              exitTunnel();
               return;
             }
           }
-        } else {
-          exitAccumulator.current = 0;
-        }
-
-        // ─────────────────────────────────────────────────────────────────
-        // BACK TO START: Only possible on FIRST slide, scrolling UP
-        // ─────────────────────────────────────────────────────────────────
-        if (currentSlide === 0 && e.deltaY < 0) {
-          exitAccumulator.current += Math.abs(e.deltaY);
-
-          if (exitAccumulator.current >= EXIT_THRESHOLD) {
-            // EXIT TUNNEL (backwards)
-            setIsLocked(false);
-            exitAccumulator.current = 0;
-            scrollAccumulator.current = 0;
+          // Don't reset exitDelta here - let it accumulate
+        } else if (currentSlide === 0 && e.deltaY < 0) {
+          // EXIT BACKWARD: eerste slide + scroll up
+          exitDeltaRef.current += Math.abs(e.deltaY);
+          if (exitDeltaRef.current >= EXIT_THRESHOLD) {
+            exitTunnel();
             return;
           }
+        } else {
+          // Not at exit point, reset exit accumulator
+          exitDeltaRef.current = 0;
         }
 
-        // ─────────────────────────────────────────────────────────────────
         // SLIDE NAVIGATION
-        // ─────────────────────────────────────────────────────────────────
-        if (Math.abs(scrollAccumulator.current) >= SCROLL_THRESHOLD) {
-          const direction = scrollAccumulator.current > 0 ? 1 : -1;
-          const nextSlide = currentSlide + direction;
+        if (Math.abs(scrollDeltaRef.current) >= SCROLL_THRESHOLD) {
+          const dir = scrollDeltaRef.current > 0 ? 1 : -1;
+          const nextSlide = currentSlide + dir;
 
-          // Clamp to valid range
           if (nextSlide >= 0 && nextSlide < TOTAL_SLIDES) {
-            isTransitioning.current = true;
-            setCurrentSlide(nextSlide);
+            transitioningRef.current = true;
+            currentSlideRef.current = nextSlide;
+            setDisplaySlide(nextSlide);
 
             setTimeout(() => {
-              isTransitioning.current = false;
+              transitioningRef.current = false;
             }, 500);
           }
 
-          scrollAccumulator.current = 0;
+          scrollDeltaRef.current = 0;
         }
+
+        return; // Always return when locked - we've handled the event
+      }
+
+      // ──────────────────────────────────────────────────────────────────────
+      // OUTSIDE TUNNEL: Check for entry conditions
+      // ──────────────────────────────────────────────────────────────────────
+
+      // ENTRY FORWARD: section top at/near viewport top, scrolling down
+      // More generous zone: top between -50 and 80, and section extends below viewport
+      if (rect.top <= 80 && rect.top > -50 && rect.bottom > vh && e.deltaY > 0) {
+        e.preventDefault();
+        enterTunnel('forward');
+        return;
+      }
+
+      // ENTRY BACKWARD: section bottom near/below viewport bottom, scrolling up
+      // Section must be partially above viewport (rect.top < 0) for reverse entry
+      if (rect.bottom < vh + 100 && rect.bottom > vh - 50 && rect.top < 0 && e.deltaY < 0) {
+        e.preventDefault();
+        enterTunnel('backward');
+        return;
       }
     };
 
@@ -1228,32 +1262,42 @@ function ServicesSectionDesktop() {
       handleWheel(e);
       clearTimeout(resetTimeout);
       resetTimeout = setTimeout(() => {
-        scrollAccumulator.current = 0;
-        // Don't reset exitAccumulator - let it persist for intentional exits
+        scrollDeltaRef.current = 0;
+        // Don't reset exitDeltaRef - let it persist for intentional exit gestures
       }, 150);
     };
 
     window.addEventListener('wheel', handleWheelWithReset, { passive: false });
+
     return () => {
       window.removeEventListener('wheel', handleWheelWithReset);
       clearTimeout(resetTimeout);
+      // Safety: unlock on unmount
+      if (isLockedRef.current) {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        window.lenis?.start();
+      }
     };
-  }, [isLocked, currentSlide, canExit]);
+  }, [enterTunnel, exitTunnel]);
 
-  // Enable exit after delay when reaching last slide (gives it time to "rest")
+  // ════════════════════════════════════════════════════════════════════════════
+  // EXIT DELAY: Enable exit after viewing last slide for a moment
+  // ════════════════════════════════════════════════════════════════════════════
   useEffect(() => {
-    if (currentSlide === TOTAL_SLIDES - 1 && isLocked) {
+    if (displaySlide === TOTAL_SLIDES - 1) {
       const timer = setTimeout(() => {
-        setCanExit(true);
+        canExitRef.current = true;
       }, EXIT_DELAY);
-
       return () => clearTimeout(timer);
     } else {
-      setCanExit(false);
+      canExitRef.current = false;
     }
-  }, [currentSlide, isLocked]);
+  }, [displaySlide]);
 
-  // Reset state when section goes completely out of view
+  // ════════════════════════════════════════════════════════════════════════════
+  // SAFETY: Reset state when section goes completely out of view
+  // ════════════════════════════════════════════════════════════════════════════
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
@@ -1261,22 +1305,23 @@ function ServicesSectionDesktop() {
     const handleScroll = () => {
       const rect = wrapper.getBoundingClientRect();
       // If section is completely above viewport (scrolled past)
-      if (rect.bottom < 0) {
-        setIsLocked(false);
+      if (rect.bottom < 0 && isLockedRef.current) {
+        exitTunnel();
       }
       // If section is completely below viewport (scrolled back up)
-      if (rect.top > window.innerHeight) {
-        setIsLocked(false);
-        setCurrentSlide(0);
+      if (rect.top > window.innerHeight && isLockedRef.current) {
+        exitTunnel();
+        currentSlideRef.current = 0;
+        setDisplaySlide(0);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [exitTunnel]);
 
   // Calculate horizontal offset based on current slide
-  const slideOffset = `-${currentSlide * 100}vw`;
+  const slideOffset = `-${displaySlide * 100}vw`;
 
   return (
     // WRAPPER: Height creates scroll space (TOTAL_SLIDES * 100vh)
@@ -1346,7 +1391,7 @@ function ServicesSectionDesktop() {
               key={i}
               className={cn(
                 'w-2 h-2 rounded-full transition-all duration-300',
-                i === currentSlide
+                i === displaySlide
                   ? 'bg-teal w-6'
                   : 'bg-white/20 hover:bg-white/40'
               )}
@@ -1357,7 +1402,7 @@ function ServicesSectionDesktop() {
         {/* Slide counter */}
         <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
           <span className="text-teal font-medium">
-            {String(currentSlide + 1).padStart(2, '0')}
+            {String(displaySlide + 1).padStart(2, '0')}
           </span>
           <span className="text-slate-600">/</span>
           <span className="text-slate-600">

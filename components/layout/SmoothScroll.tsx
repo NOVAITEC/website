@@ -3,6 +3,13 @@
 import { useEffect, useRef, ReactNode } from "react";
 import Lenis from "lenis";
 
+// Expose Lenis type globally for tunnel scroll control
+declare global {
+  interface Window {
+    lenis: Lenis | null;
+  }
+}
+
 interface SmoothScrollProps {
   children: ReactNode;
 }
@@ -50,6 +57,9 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     lenisRef.current = lenis;
 
+    // Expose globally for tunnel scroll control
+    window.lenis = lenis;
+
     function raf(time: number) {
       lenis.raf(time);
       rafIdRef.current = requestAnimationFrame(raf);
@@ -84,6 +94,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       }
       lenis.destroy();
       lenisRef.current = null;
+      window.lenis = null;
     };
   }, []);
 
