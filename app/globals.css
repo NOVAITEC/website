@@ -52,6 +52,19 @@ html {
   scroll-behavior: auto;
 }
 
+/* Disable tap highlight on touch devices */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent blue flash on canvas elements during scroll */
+canvas {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 /* Optimize sticky elements for GPU */
 .sticky {
   transform: translateZ(0);

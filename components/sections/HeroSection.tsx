@@ -10,7 +10,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-midnight">
       {/* Flow Field Background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         <NeuralBackground
           color="#06B6D4"
           trailOpacity={0.08}
