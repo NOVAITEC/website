@@ -1122,19 +1122,31 @@ function ServicesSectionDesktop() {
 
     const handleWheel = (e: WheelEvent) => {
       const rect = wrapper.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
 
-      // ENTRY DETECTION: Section top is at or above viewport top
-      const sectionReached = rect.top <= 50;
-      // Section is still on screen (not scrolled past)
-      const sectionVisible = rect.bottom > 0;
+      // Section position checks
+      const sectionTopReached = rect.top <= 50;
+      const sectionVisible = rect.bottom > 0 && rect.top < viewportHeight;
 
       // ═══════════════════════════════════════════════════════════════════
-      // TUNNEL ENTRY: Lock when section reaches top of viewport
+      // TUNNEL ENTRY FROM TOP: Scrolling DOWN, section top reaches viewport
       // ═══════════════════════════════════════════════════════════════════
-      if (!isLocked && sectionReached && sectionVisible && e.deltaY > 0) {
+      if (!isLocked && sectionTopReached && sectionVisible && e.deltaY > 0 && rect.top > -100) {
         e.preventDefault();
         setIsLocked(true);
-        // Snap section to exact top
+        setCurrentSlide(0); // Start from first slide
+        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      // ═══════════════════════════════════════════════════════════════════
+      // TUNNEL ENTRY FROM BOTTOM: Scrolling UP, section bottom in view
+      // ═══════════════════════════════════════════════════════════════════
+      if (!isLocked && e.deltaY < 0 && rect.bottom > viewportHeight * 0.2 && rect.bottom < viewportHeight + 100) {
+        e.preventDefault();
+        setIsLocked(true);
+        setCurrentSlide(TOTAL_SLIDES - 1); // Start from last slide
+        // Scroll to pin the section
         wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
