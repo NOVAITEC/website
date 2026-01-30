@@ -1235,7 +1235,7 @@ function ServicesSectionDesktop() {
       wheelAccum += e.deltaY;
 
       // Direct reageren bij threshold
-      const threshold = 120;
+      const threshold = 200;
 
       if (Math.abs(wheelAccum) > threshold) {
         const direction = wheelAccum > 0 ? 'down' : 'up';
