@@ -1105,8 +1105,8 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 
 // Tunnel configuration constants
 const SCROLL_THRESHOLD = 180;  // Delta needed for slide change (higher = heavier feel)
-const EXIT_THRESHOLD = 120;    // Extra delta needed to exit tunnel (lighter feel)
-const EXIT_DELAY = 300;        // Ms to wait on last slide before exit is allowed (shorter)
+const EXIT_THRESHOLD = 180;    // Same as SCROLL_THRESHOLD for consistent rhythm
+const EXIT_DELAY = 0;          // No artificial delay - scroll distance is the gate
 
 function ServicesSectionDesktop() {
   const wrapperRef = useRef<HTMLElement>(null);
