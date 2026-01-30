@@ -1108,6 +1108,9 @@ function ServicesSectionDesktop() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const isScrollingRef = useRef(false);
+  const scrollAccumulatorRef = useRef(0);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync horizontal scroll with indicators
   useEffect(() => {
@@ -1132,11 +1135,13 @@ function ServicesSectionDesktop() {
     return () => scrollContainer.removeEventListener('scroll', handleHorizontalScroll);
   }, [scrollYProgress, currentSlide]);
 
-  // Convert vertical scroll to horizontal scroll
+  // Convert vertical scroll to horizontal scroll with threshold-based slide navigation
   useEffect(() => {
     const container = containerRef.current;
     const scrollContainer = scrollContainerRef.current;
     if (!container || !scrollContainer) return;
+
+    const SCROLL_THRESHOLD = 80; // Amount of scroll needed to trigger slide change
 
     const handleWheel = (e: WheelEvent) => {
       const rect = container.getBoundingClientRect();
@@ -1144,22 +1149,68 @@ function ServicesSectionDesktop() {
 
       if (!isInView) return;
 
+      // Get current slide position
+      const slideWidth = scrollContainer.clientWidth;
+      const currentSlideIndex = Math.round(scrollContainer.scrollLeft / slideWidth);
+
       // Check boundaries
-      const atStart = scrollContainer.scrollLeft <= 0;
-      const atEnd = scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth - 10;
+      const atStart = currentSlideIndex === 0;
+      const atEnd = currentSlideIndex >= TOTAL_SLIDES - 1;
 
       // Allow vertical scroll at boundaries
       if ((atStart && e.deltaY < 0) || (atEnd && e.deltaY > 0)) {
         return;
       }
 
-      // Convert vertical scroll to horizontal
+      // Prevent default vertical scroll
       e.preventDefault();
-      scrollContainer.scrollLeft += e.deltaY;
+
+      // Don't accumulate if already scrolling to a slide
+      if (isScrollingRef.current) return;
+
+      // Accumulate scroll delta
+      scrollAccumulatorRef.current += e.deltaY;
+
+      // Clear previous timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      // Reset accumulator after inactivity
+      scrollTimeoutRef.current = setTimeout(() => {
+        scrollAccumulatorRef.current = 0;
+      }, 150);
+
+      // Check if accumulated scroll exceeds threshold
+      if (Math.abs(scrollAccumulatorRef.current) >= SCROLL_THRESHOLD) {
+        const direction = scrollAccumulatorRef.current > 0 ? 1 : -1;
+        const targetSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, currentSlideIndex + direction));
+
+        if (targetSlide !== currentSlideIndex) {
+          isScrollingRef.current = true;
+          scrollAccumulatorRef.current = 0;
+
+          // Scroll to target slide
+          scrollContainer.scrollTo({
+            left: targetSlide * slideWidth,
+            behavior: 'smooth'
+          });
+
+          // Reset scrolling flag after animation
+          setTimeout(() => {
+            isScrollingRef.current = false;
+          }, 500);
+        }
+      }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => window.removeEventListener('wheel', handleWheel);
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Only use spring for the progress bar indicator (subtle smoothing)
@@ -1192,7 +1243,6 @@ function ServicesSectionDesktop() {
       <div
         ref={scrollContainerRef}
         className="relative h-full w-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide"
-        style={{ scrollBehavior: 'smooth' }}
       >
         <div className="flex h-full w-max">
           <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
