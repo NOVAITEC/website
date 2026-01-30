@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap } from "lucide-react";
+import { Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import NeuralBackground from "@/components/ui/flow-field-background";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 export function HeroSection() {
   return (
@@ -65,12 +66,8 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           >
-            <Link
-              href="#contact"
-              className="group inline-flex items-center space-x-2 bg-teal text-midnight px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-inter font-semibold text-base sm:text-lg hover:bg-teal/90 transition-all duration-200 hover:scale-105 shadow-lg shadow-teal/20 w-full sm:w-auto justify-center"
-            >
-              <span>Start je automatisering</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Link href="#contact">
+              <InteractiveHoverButton text="Start je automatisering" />
             </Link>
 
             <Link
