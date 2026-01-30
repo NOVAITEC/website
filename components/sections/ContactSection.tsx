@@ -189,22 +189,29 @@ export function ContactSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                className="flex items-center gap-4 group"
+                className="group"
               >
-                <div className="w-10 h-10 rounded-lg bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-teal/50 group-hover:bg-teal/10 transition-all duration-300">
-                  <item.icon className="w-5 h-5 text-teal" strokeWidth={1.5} />
-                </div>
                 {item.href ? (
                   <a
                     href={item.href}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="font-inter text-slate-300 hover:text-teal transition-colors duration-300"
+                    className="flex items-center gap-4 p-2 -m-2 rounded-lg active:bg-slate-800/30 transition-colors duration-300"
                   >
-                    {item.label}
+                    <div className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-teal/50 group-hover:bg-teal/10 transition-all duration-300 flex-shrink-0">
+                      <item.icon className="w-5 h-5 text-teal" strokeWidth={1.5} />
+                    </div>
+                    <span className="font-inter text-slate-300 group-hover:text-teal transition-colors duration-300">
+                      {item.label}
+                    </span>
                   </a>
                 ) : (
-                  <span className="font-inter text-slate-300">{item.label}</span>
+                  <div className="flex items-center gap-4 p-2 -m-2">
+                    <div className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-slate-800/50 border border-slate-700 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-5 h-5 text-teal" strokeWidth={1.5} />
+                    </div>
+                    <span className="font-inter text-slate-300">{item.label}</span>
+                  </div>
                 )}
               </motion.div>
             ))}

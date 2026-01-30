@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface NeuralBackgroundProps {
@@ -35,6 +35,17 @@ export default function NeuralBackground({
 }: NeuralBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -43,6 +54,9 @@ export default function NeuralBackground({
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // Reduce particles significantly on mobile for better performance
+    const actualParticleCount = isMobile ? Math.min(particleCount * 0.25, 100) : particleCount;
 
     // --- CONFIGURATION ---
     let width = container.clientWidth;
@@ -140,7 +154,7 @@ export default function NeuralBackground({
       canvas.style.height = `${height}px`;
 
       particles = [];
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < actualParticleCount; i++) {
         particles.push(new Particle());
       }
     };
@@ -194,7 +208,7 @@ export default function NeuralBackground({
       container.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [color, trailOpacity, particleCount, speed]);
+  }, [color, trailOpacity, particleCount, speed, isMobile]);
 
   return (
     <div

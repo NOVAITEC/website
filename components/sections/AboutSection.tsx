@@ -122,7 +122,7 @@ export default function AboutSection() {
             {/* Core Values - Icon Grid */}
             <motion.div
               variants={fadeInUp}
-              className="flex flex-wrap gap-6 pt-4"
+              className="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-6 pt-4"
             >
               {coreValues.map((value, index) => (
                 <motion.div
@@ -131,14 +131,14 @@ export default function AboutSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 p-3 sm:p-0 bg-slate-800/30 sm:bg-transparent rounded-lg sm:rounded-none"
                 >
                   <div
-                    className={`w-10 h-10 rounded-lg bg-slate-800/50 border border-slate-700 flex items-center justify-center flex-shrink-0 ${value.color}`}
+                    className={`w-10 h-10 sm:w-10 sm:h-10 rounded-lg bg-slate-800/50 border border-slate-700 flex items-center justify-center flex-shrink-0 ${value.color}`}
                   >
                     <value.icon className="w-5 h-5" />
                   </div>
-                  <span className="font-inter text-slate-200 text-sm">
+                  <span className="font-inter text-slate-200 text-sm sm:text-sm">
                     {value.title}
                   </span>
                 </motion.div>
