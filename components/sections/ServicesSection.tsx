@@ -565,11 +565,20 @@ export function ServicesSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isInTunnel, setIsInTunnel] = useState(false);
   const wheelAccumRef = useRef(0);
+  const cooldownRef = useRef(false);
 
-  // Navigate to specific slide
+  // Navigate to specific slide with cooldown
   const goToSlide = useCallback((index: number) => {
     const clamped = Math.max(0, Math.min(index, TOTAL_SLIDES - 1));
     setCurrentSlide(clamped);
+
+    // Start cooldown - ignore scroll for 600ms after slide change
+    cooldownRef.current = true;
+    wheelAccumRef.current = 0;
+    setTimeout(() => {
+      cooldownRef.current = false;
+      wheelAccumRef.current = 0; // Double reset after cooldown
+    }, 600);
   }, []);
 
   // Tunnel scroll behavior for desktop
@@ -612,6 +621,9 @@ export function ServicesSection() {
       setIsInTunnel(true);
       window.lenis?.stop();
 
+      // Skip if in cooldown period
+      if (cooldownRef.current) return;
+
       // Accumulate scroll
       wheelAccumRef.current += e.deltaY;
 
@@ -622,7 +634,6 @@ export function ServicesSection() {
         } else if (wheelAccumRef.current < 0 && !atFirstSlide) {
           goToSlide(currentSlide - 1);
         }
-        wheelAccumRef.current = 0;
       }
     };
 
