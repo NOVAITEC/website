@@ -1106,8 +1106,36 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 function ServicesSectionDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
-  const isSnapping = useRef(false);
-  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentSlide = useRef(0);
+  const isAnimating = useRef(false);
+  const lastWheelTime = useRef(0);
+
+  // Navigate to a specific slide
+  const goToSlide = useCallback((slideIndex: number) => {
+    if (!containerRef.current || isAnimating.current) return;
+
+    // Clamp slide index
+    const targetSlide = Math.max(0, Math.min(slideIndex, TOTAL_SLIDES - 1));
+    if (targetSlide === currentSlide.current) return;
+
+    isAnimating.current = true;
+    currentSlide.current = targetSlide;
+
+    const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
+    const containerTop = containerRef.current.offsetTop;
+    const targetProgress = targetSlide / (TOTAL_SLIDES - 1);
+    const targetScroll = containerTop + (targetProgress * scrollableHeight);
+
+    window.scrollTo({
+      top: targetScroll,
+      behavior: 'smooth'
+    });
+
+    // Reset animation flag after scroll completes
+    setTimeout(() => {
+      isAnimating.current = false;
+    }, 600);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -1118,38 +1146,12 @@ function ServicesSectionDesktop() {
       const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
       const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
       scrollYProgress.set(progress);
-      ticking = false;
-    };
 
-    const snapToSlide = () => {
-      if (!containerRef.current || isSnapping.current) return;
-
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
-      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
-
-      // Calculate which slide we're closest to (6 slides)
-      const slideIndex = Math.round(progress * (TOTAL_SLIDES - 1));
-      const targetProgress = slideIndex / (TOTAL_SLIDES - 1);
-
-      // Only snap if we're not already at the target
-      if (Math.abs(progress - targetProgress) > 0.01) {
-        isSnapping.current = true;
-
-        // Calculate the target scroll position
-        const containerTop = containerRef.current.offsetTop;
-        const targetScroll = containerTop + (targetProgress * scrollableHeight);
-
-        window.scrollTo({
-          top: targetScroll,
-          behavior: 'smooth'
-        });
-
-        // Reset snapping flag after animation
-        setTimeout(() => {
-          isSnapping.current = false;
-        }, 500);
+      // Update current slide based on progress (for initial load / external scrolls)
+      if (!isAnimating.current) {
+        currentSlide.current = Math.round(progress * (TOTAL_SLIDES - 1));
       }
+      ticking = false;
     };
 
     const handleScroll = () => {
@@ -1157,26 +1159,46 @@ function ServicesSectionDesktop() {
         requestAnimationFrame(updateProgress);
         ticking = true;
       }
+    };
 
-      // Debounce: wait for scroll to stop, then snap
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+    // Handle wheel events for snap scrolling
+    const handleWheel = (e: WheelEvent) => {
+      if (!containerRef.current) return;
 
-      if (!isSnapping.current) {
-        scrollTimeout.current = setTimeout(snapToSlide, 150);
-      }
+      const rect = containerRef.current.getBoundingClientRect();
+      const isInSection = rect.top <= 0 && rect.bottom >= window.innerHeight;
+
+      if (!isInSection) return;
+
+      // Throttle wheel events
+      const now = Date.now();
+      if (now - lastWheelTime.current < 100) return;
+      lastWheelTime.current = now;
+
+      // Determine scroll direction
+      const direction = e.deltaY > 0 ? 1 : -1;
+
+      // Check if we're at the boundaries
+      const atStart = currentSlide.current === 0 && direction < 0;
+      const atEnd = currentSlide.current === TOTAL_SLIDES - 1 && direction > 0;
+
+      // Allow normal scrolling at boundaries
+      if (atStart || atEnd) return;
+
+      // Prevent default and snap to next/prev slide
+      e.preventDefault();
+      goToSlide(currentSlide.current + direction);
     };
 
     updateProgress();
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
+      window.removeEventListener('wheel', handleWheel);
     };
-  }, [scrollYProgress]);
+  }, [scrollYProgress, goToSlide]);
 
   // Direct 1:1 mapping - no spring for immediate response to scroll
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-82%']);
