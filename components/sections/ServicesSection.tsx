@@ -1106,9 +1106,9 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 function ServicesSectionDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
-  const currentSlide = useRef(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const isAnimating = useRef(false);
-  const lastWheelTime = useRef(0);
+  const accumulatedDelta = useRef(0);
 
   // Navigate to a specific slide
   const goToSlide = useCallback((slideIndex: number) => {
@@ -1116,10 +1116,10 @@ function ServicesSectionDesktop() {
 
     // Clamp slide index
     const targetSlide = Math.max(0, Math.min(slideIndex, TOTAL_SLIDES - 1));
-    if (targetSlide === currentSlide.current) return;
 
     isAnimating.current = true;
-    currentSlide.current = targetSlide;
+    setCurrentSlide(targetSlide);
+    accumulatedDelta.current = 0;
 
     const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
     const containerTop = containerRef.current.offsetTop;
@@ -1134,60 +1134,69 @@ function ServicesSectionDesktop() {
     // Reset animation flag after scroll completes
     setTimeout(() => {
       isAnimating.current = false;
-    }, 600);
+      accumulatedDelta.current = 0;
+    }, 800);
   }, []);
 
   useEffect(() => {
-    let ticking = false;
-
     const updateProgress = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
       const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
       scrollYProgress.set(progress);
-
-      // Update current slide based on progress (for initial load / external scrolls)
-      if (!isAnimating.current) {
-        currentSlide.current = Math.round(progress * (TOTAL_SLIDES - 1));
-      }
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateProgress);
-        ticking = true;
-      }
     };
 
     // Handle wheel events for snap scrolling
     const handleWheel = (e: WheelEvent) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || isAnimating.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      const isInSection = rect.top <= 0 && rect.bottom >= window.innerHeight;
+
+      // Check if section is in view (sticky area is active)
+      const sectionTop = rect.top;
+      const sectionBottom = rect.bottom;
+      const isInSection = sectionTop <= 50 && sectionBottom > window.innerHeight;
 
       if (!isInSection) return;
-
-      // Throttle wheel events
-      const now = Date.now();
-      if (now - lastWheelTime.current < 100) return;
-      lastWheelTime.current = now;
 
       // Determine scroll direction
       const direction = e.deltaY > 0 ? 1 : -1;
 
-      // Check if we're at the boundaries
-      const atStart = currentSlide.current === 0 && direction < 0;
-      const atEnd = currentSlide.current === TOTAL_SLIDES - 1 && direction > 0;
+      // Check if we're at the boundaries - allow exit
+      if (currentSlide === 0 && direction < 0) return;
+      if (currentSlide === TOTAL_SLIDES - 1 && direction > 0) return;
 
-      // Allow normal scrolling at boundaries
-      if (atStart || atEnd) return;
-
-      // Prevent default and snap to next/prev slide
+      // Prevent default scroll
       e.preventDefault();
-      goToSlide(currentSlide.current + direction);
+      e.stopPropagation();
+
+      // Accumulate delta for touchpad scrolling (smaller increments)
+      accumulatedDelta.current += Math.abs(e.deltaY);
+
+      // Threshold to trigger slide change (works for both mouse wheel and touchpad)
+      const threshold = 50;
+
+      if (accumulatedDelta.current >= threshold) {
+        goToSlide(currentSlide + direction);
+      }
+    };
+
+    // Initial snap when entering section
+    const handleScroll = () => {
+      updateProgress();
+
+      if (!containerRef.current || isAnimating.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+
+      // Sync current slide with scroll position when not animating
+      const calculatedSlide = Math.round(progress * (TOTAL_SLIDES - 1));
+      if (calculatedSlide !== currentSlide && !isAnimating.current) {
+        setCurrentSlide(calculatedSlide);
+      }
     };
 
     updateProgress();
@@ -1198,7 +1207,7 @@ function ServicesSectionDesktop() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [scrollYProgress, goToSlide]);
+  }, [scrollYProgress, goToSlide, currentSlide]);
 
   // Direct 1:1 mapping - no spring for immediate response to scroll
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-82%']);
