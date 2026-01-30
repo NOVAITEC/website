@@ -53,10 +53,10 @@ function StatCard({ value, label, delay = 0 }: StatCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay }}
-      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 md:p-4 text-center"
+      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 md:p-4 text-center"
     >
-      <p className="font-montserrat font-bold text-xl md:text-2xl lg:text-3xl text-amber mb-1">{value}</p>
-      <p className="font-inter text-xs md:text-sm text-slate-400 leading-tight">{label}</p>
+      <p className="font-montserrat font-bold text-base sm:text-xl md:text-2xl lg:text-3xl text-amber mb-0.5 sm:mb-1">{value}</p>
+      <p className="font-inter text-[10px] sm:text-xs md:text-sm text-slate-400 leading-tight">{label}</p>
     </motion.div>
   );
 }
@@ -297,9 +297,9 @@ function OpportunityMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center justify-center rounded-3xl overflow-hidden bg-midnight py-12 sm:py-20">
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/10 blur-[150px]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/5 blur-[120px]" />
+    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center justify-center rounded-2xl sm:rounded-3xl overflow-hidden bg-midnight py-8 sm:py-12 lg:py-20">
+      <div className="absolute top-1/4 left-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-amber/10 blur-[100px] sm:blur-[150px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-amber/5 blur-[80px] sm:blur-[120px]" />
 
       <div className="relative z-10 text-center max-w-4xl px-4 sm:px-6">
         <motion.p
@@ -307,7 +307,7 @@ function SlideIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="font-mono text-xs sm:text-sm uppercase tracking-wider text-amber mb-3 sm:mb-4"
+          className="font-mono text-[10px] sm:text-xs lg:text-sm uppercase tracking-wider text-amber mb-2 sm:mb-4"
         >
           HERKENBAAR?
         </motion.p>
@@ -317,7 +317,7 @@ function SlideIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-montserrat font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-4 sm:mb-6 leading-tight"
+          className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-3 sm:mb-6 leading-tight"
         >
           Ondernemen is{' '}
           <span className="bg-gradient-to-r from-amber via-orange-400 to-amber bg-clip-text text-transparent">
@@ -332,7 +332,7 @@ function SlideIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="font-inter text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 mb-8 sm:mb-12 max-w-2xl mx-auto"
+          className="font-inter text-xs sm:text-sm md:text-lg lg:text-xl text-slate-400 mb-6 sm:mb-12 max-w-2xl mx-auto leading-relaxed"
         >
           Of voelt het vaker als brandjes blussen, &apos;s avonds administratie doen,
           en nooit echt vooruit komen?
@@ -343,14 +343,14 @@ function SlideIntro() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="flex items-center justify-center gap-2 sm:gap-3 text-slate-500"
+          className="flex items-center justify-center gap-2 text-slate-500"
         >
-          <span className="font-inter text-xs sm:text-sm">Scroll naar beneden</span>
+          <span className="font-inter text-[10px] sm:text-xs lg:text-sm">Scroll naar beneden</span>
           <motion.div
-            animate={{ y: [0, 8, 0] }}
+            animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
           </motion.div>
         </motion.div>
       </div>
@@ -364,34 +364,34 @@ function SlideIntro() {
 
 function SlideAdmin() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center rounded-3xl overflow-hidden bg-slate-900 py-12 sm:py-20">
-      <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]" />
+    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 py-6 sm:py-12 lg:py-20">
+      <div className="absolute top-0 right-0 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-amber/10 blur-[80px] sm:blur-[120px]" />
 
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+      <div className="container mx-auto px-3 sm:px-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="space-y-4 sm:space-y-6 text-center lg:text-left"
+            className="space-y-2 sm:space-y-4 lg:space-y-6 text-center lg:text-left"
           >
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-amber/10 border border-amber/30 rounded-full px-2.5 py-1 sm:px-4 sm:py-2">
               <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-amber" />
-              <span className="font-mono text-xs sm:text-sm text-amber uppercase tracking-wide">Probleem 01</span>
+              <span className="font-mono text-[10px] sm:text-xs lg:text-sm text-amber uppercase tracking-wide">Probleem 01</span>
             </div>
 
-            <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
+            <h3 className="font-montserrat font-extrabold text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white leading-tight">
               5 uur per week aan{' '}
               <span className="text-amber">copy-paste.</span>
             </h3>
 
-            <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
+            <p className="font-inter text-xs sm:text-sm lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
               Data overtypen. Bestanden slepen. Handmatig controleren.
               Werk dat een computer in seconden doet.
             </p>
 
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 sm:pt-4">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-3 pt-1 sm:pt-4">
               <StatCard value="3-5" label="uur/week verloren" delay={0.3} />
               <StatCard value="15%" label="foutenmarge" delay={0.4} />
               <StatCard value="€2.400+" label="per jaar aan fouten" delay={0.5} />
@@ -403,7 +403,7 @@ function SlideAdmin() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="w-full scale-90 sm:scale-100"
+            className="w-full hidden sm:block"
           >
             <AdminMockup />
           </motion.div>
@@ -419,18 +419,18 @@ function SlideAdmin() {
 
 function SlideStaff() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-800">
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-red-500/10 blur-[120px]" />
-      <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-amber/10 blur-[100px]" />
+    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-800">
+      <div className="absolute bottom-0 left-0 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-red-500/10 blur-[80px] sm:blur-[120px]" />
+      <div className="absolute top-0 right-0 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] rounded-full bg-amber/10 blur-[70px] sm:blur-[100px]" />
 
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+      <div className="container mx-auto px-3 sm:px-6">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="w-full scale-90 sm:scale-100"
+            className="w-full hidden sm:block"
           >
             <StaffMockup />
           </motion.div>
@@ -440,30 +440,30 @@ function SlideStaff() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="space-y-4 sm:space-y-6 text-center lg:text-left"
+            className="space-y-2 sm:space-y-4 lg:space-y-6 text-center lg:text-left"
           >
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-amber/10 border border-amber/30 rounded-full px-2.5 py-1 sm:px-4 sm:py-2">
               <Users className="w-3 h-3 sm:w-4 sm:h-4 text-amber" />
-              <span className="font-mono text-xs sm:text-sm text-amber uppercase tracking-wide">Probleem 02</span>
+              <span className="font-mono text-[10px] sm:text-xs lg:text-sm text-amber uppercase tracking-wide">Probleem 02</span>
             </div>
 
-            <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
+            <h3 className="font-montserrat font-extrabold text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white leading-tight">
               Te weinig mensen.{' '}
               <span className="text-amber">Te veel werk.</span>
             </h3>
 
-            <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
+            <p className="font-inter text-xs sm:text-sm lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
               Vacatures blijven open. Je team is overbelast.
               En inhuren kost meer dan je kunt missen.
             </p>
 
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 sm:pt-4">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-3 pt-1 sm:pt-4">
               <StatCard value="71%" label="personeelstekort" delay={0.3} />
               <StatCard value="53%" label="MKB onderbezet" delay={0.4} />
               <StatCard value="29%" label="meer werkdruk" delay={0.5} />
             </div>
 
-            <p className="font-mono text-xs text-slate-500 pt-2">
+            <p className="font-mono text-[10px] sm:text-xs text-slate-500 pt-1 sm:pt-2">
               Bron: CBS 2024, MKB Servicedesk
             </p>
           </motion.div>
@@ -479,34 +479,34 @@ function SlideStaff() {
 
 function SlideResearch() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 rounded-3xl overflow-hidden bg-slate-900">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber/5 blur-[150px]" />
+    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-amber/5 blur-[100px] sm:blur-[150px]" />
 
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+      <div className="container mx-auto px-3 sm:px-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="space-y-4 sm:space-y-6 text-center lg:text-left"
+            className="space-y-2 sm:space-y-4 lg:space-y-6 text-center lg:text-left"
           >
-            <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-amber/10 border border-amber/30 rounded-full px-2.5 py-1 sm:px-4 sm:py-2">
               <Lightbulb className="w-3 h-3 sm:w-4 sm:h-4 text-amber" />
-              <span className="font-mono text-xs sm:text-sm text-amber uppercase tracking-wide">Probleem 03</span>
+              <span className="font-mono text-[10px] sm:text-xs lg:text-sm text-amber uppercase tracking-wide">Probleem 03</span>
             </div>
 
-            <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
+            <h3 className="font-montserrat font-extrabold text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white leading-tight">
               Geen tijd om{' '}
               <span className="text-amber">slimmer te werken.</span>
             </h3>
 
-            <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
+            <p className="font-inter text-xs sm:text-sm lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
               Je weet dat AI en automatisering kunnen helpen.
               Maar je agenda is vol. Elke week weer.
             </p>
 
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2 sm:pt-4">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-3 pt-1 sm:pt-4">
               <StatCard value="72%" label="gelooft in AI" delay={0.3} />
               <StatCard value="Weinig" label="heeft geautomatiseerd" delay={0.4} />
               <StatCard value="0 uur" label="voor innovatie" delay={0.5} />
@@ -518,7 +518,7 @@ function SlideResearch() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="w-full scale-90 sm:scale-100"
+            className="w-full hidden sm:block"
           >
             <OpportunityMockup />
           </motion.div>
@@ -534,10 +534,10 @@ function SlideResearch() {
 
 function SlideTransition() {
   return (
-    <div className="relative w-full min-h-[600px] lg:min-h-[700px] flex items-center py-12 sm:py-20 justify-center rounded-3xl overflow-hidden bg-slate-800">
+    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 justify-center rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber/10 to-transparent" />
       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-teal/20 to-transparent" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-teal/20 blur-[150px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-teal/20 blur-[100px] sm:blur-[150px]" />
 
       <div className="relative z-10 text-center max-w-3xl px-4 sm:px-6">
         <motion.div
@@ -545,10 +545,10 @@ function SlideTransition() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ type: 'spring', stiffness: 200 }}
-          className="mb-6 sm:mb-8"
+          className="mb-4 sm:mb-8"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-teal/10 border border-teal/30">
-            <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-teal" />
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 rounded-full bg-teal/10 border border-teal/30">
+            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-teal" />
           </div>
         </motion.div>
 
@@ -557,7 +557,7 @@ function SlideTransition() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="font-mono text-xs sm:text-sm uppercase tracking-wider text-teal mb-3 sm:mb-4"
+          className="font-mono text-[10px] sm:text-xs lg:text-sm uppercase tracking-wider text-teal mb-2 sm:mb-4"
         >
           HERKENBAAR?
         </motion.p>
@@ -567,7 +567,7 @@ function SlideTransition() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="font-montserrat font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-4 sm:mb-6 leading-tight"
+          className="font-montserrat font-extrabold text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-white mb-3 sm:mb-6 leading-tight"
         >
           Dit hoeft{' '}
           <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
@@ -580,7 +580,7 @@ function SlideTransition() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-inter text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 mb-8 sm:mb-10 max-w-xl mx-auto"
+          className="font-inter text-xs sm:text-sm md:text-lg lg:text-xl text-slate-400 mb-6 sm:mb-10 max-w-xl mx-auto leading-relaxed"
         >
           Wat als je repetitieve taken automatiseert?{' '}
           <span className="text-white font-medium">Je wint uren terug. Elke week.</span>
@@ -596,10 +596,10 @@ function SlideTransition() {
             href="#oplossing"
             whileHover={{ scale: 1.05, boxShadow: '0 0 60px -10px rgba(6,182,212,0.6)' }}
             whileTap={{ scale: 0.95 }}
-            className="group inline-flex items-center gap-2 sm:gap-3 bg-teal text-midnight font-montserrat font-bold text-sm sm:text-base md:text-lg px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-all"
+            className="group inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-bold text-xs sm:text-sm md:text-lg px-5 py-2.5 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-all"
           >
             Ontdek de Oplossing
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
           </motion.a>
         </motion.div>
       </div>
@@ -782,20 +782,20 @@ function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
   }, []);
 
   // Smaller offset for mobile screens
-  const topOffset = index * 12;
+  const topOffset = index * 8;
 
   return (
     <div
       ref={cardRef}
-      className="sticky h-[100svh] w-full flex items-center justify-center px-3"
+      className="sticky min-h-[480px] h-[85svh] max-h-[600px] w-full flex items-center justify-center px-2"
       style={{
         top: `${topOffset}px`,
         zIndex: 10 + index,
       }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.98 }}
-        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.98 }}
+        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.98 }}
         transition={{
           duration: 0.3,
           ease: 'easeOut',
@@ -832,7 +832,7 @@ function ProblemSectionMobile() {
       ))}
 
       {/* Extra spacing at the end */}
-      <div className="h-[100svh]" />
+      <div className="h-[85svh] max-h-[600px]" />
     </section>
   );
 }
