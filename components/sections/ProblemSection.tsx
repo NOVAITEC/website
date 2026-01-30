@@ -368,10 +368,7 @@ function SlideAdmin() {
       <div className="absolute top-0 right-0 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-amber/10 blur-[80px] sm:blur-[120px]" />
 
       <div className="container mx-auto px-3 sm:px-6">
-        {/* Verbindende gradient container - alleen op desktop */}
-        <div className="hidden lg:block absolute inset-x-6 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-slate-800/60 via-slate-800/30 to-slate-800/60 border border-white/5" />
-
-        <div className="relative flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -427,10 +424,7 @@ function SlideStaff() {
       <div className="absolute top-0 right-0 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] rounded-full bg-amber/10 blur-[70px] sm:blur-[100px]" />
 
       <div className="container mx-auto px-3 sm:px-6">
-        {/* Verbindende gradient container - alleen op desktop */}
-        <div className="hidden lg:block absolute inset-x-6 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-slate-700/50 via-slate-700/20 to-slate-700/50 border border-white/5" />
-
-        <div className="relative flex flex-col-reverse lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -489,10 +483,7 @@ function SlideResearch() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-amber/5 blur-[100px] sm:blur-[150px]" />
 
       <div className="container mx-auto px-3 sm:px-6">
-        {/* Verbindende gradient container - alleen op desktop */}
-        <div className="hidden lg:block absolute inset-x-6 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-slate-800/60 via-slate-800/30 to-slate-800/60 border border-white/5" />
-
-        <div className="relative flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
