@@ -1169,14 +1169,11 @@ function ServicesSectionDesktop() {
     goToSlide(targetSlide);
   }, [currentSlide, slideWidth, goToSlide]);
 
-  // Muiswiel handler - BI-DIRECTIONELE TUNNEL
-  // Entry van boven: moet alle slides door, exit bij slide 6
-  // Entry van onder: moet alle slides terug, exit bij slide 1
+  // Muiswiel handler - SIMPELE THRESHOLD SCROLL
+  // Direct reageren bij threshold, dan reset voor volgende slide
   useEffect(() => {
     let wheelAccum = 0;
-    let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
-    let isAnimating = false;
-    let hasExited = false; // Track of we net zijn ge-exit
+    let hasExited = false;
 
     const handleWheel = (e: WheelEvent) => {
       const container = containerRef.current;
@@ -1189,7 +1186,8 @@ function ServicesSectionDesktop() {
       // NIET in beeld → hervat Lenis en reset state
       if (!sectionInView) {
         if (window.lenis) window.lenis.start();
-        hasExited = false; // Reset exit flag
+        hasExited = false;
+        wheelAccum = 0;
         if (entryDirection !== null) {
           setEntryDirection(null);
         }
@@ -1201,83 +1199,63 @@ function ServicesSectionDesktop() {
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      // TUNNEL ESCAPE LOGICA:
-      // Exit altijd mogelijk aan de grenzen, ongeacht hoe je binnenkwam
+      // TUNNEL ESCAPE: Exit mogelijk aan de grenzen
       const canExitDown = atLastSlide && tryingToScrollDown;
       const canExitUp = atFirstSlide && tryingToScrollUp;
 
       if (canExitDown || canExitUp) {
-        // Start Lenis expliciet en laat scroll door
         if (window.lenis) window.lenis.start();
         hasExited = true;
-        setEntryDirection(null); // Reset voor volgende keer
-        return; // Laat Lenis de scroll afhandelen
+        wheelAccum = 0;
+        setEntryDirection(null);
+        return;
       }
 
-      // Als we net ge-exit zijn, laat scroll door tot we buiten de sectie zijn
+      // Net ge-exit, laat scroll door
       if (hasExited) {
         return;
       }
 
-      // PAS NU Lenis pauzeren - we blijven in de tunnel
+      // Lenis pauzeren - we zijn in de tunnel
       if (window.lenis) window.lenis.stop();
 
-      // Detecteer entry richting bij eerste scroll in de sectie
+      // Detecteer entry richting
       if (entryDirection === null) {
         if (tryingToScrollDown) {
-          // Kwam van boven (ProblemSection), start bij slide 1
           setEntryDirection('above');
         } else {
-          // Kwam van onder (FAQSection), spring naar slide 6
           setEntryDirection('below');
           setCurrentSlide(TOTAL_SLIDES - 1);
         }
       }
 
-      // Blokkeer alle andere scroll aan de grenzen (tunnel lock)
       e.preventDefault();
 
-      // Tijdens animatie: negeer scroll EN reset accumulatie
-      if (isAnimating) {
-        wheelAccum = 0;
-        return;
-      }
-
+      // Accumuleer scroll
       wheelAccum += e.deltaY;
 
-      if (wheelTimeout) clearTimeout(wheelTimeout);
-      wheelTimeout = setTimeout(() => {
-        const threshold = 35;
+      // Direct reageren bij threshold
+      const threshold = 80;
 
-        if (Math.abs(wheelAccum) > threshold) {
-          const direction = wheelAccum > 0 ? 'down' : 'up';
+      if (Math.abs(wheelAccum) > threshold) {
+        const direction = wheelAccum > 0 ? 'down' : 'up';
 
-          isAnimating = true;
-          wheelAccum = 0; // Direct resetten na richting bepalen
-
-          // Navigeer alleen als niet aan de grens
-          if (direction === 'down' && !atLastSlide) {
-            goToSlide(currentSlide + 1);
-          } else if (direction === 'up' && !atFirstSlide) {
-            goToSlide(currentSlide - 1);
-          }
-
-          // Rust tussen slides
-          setTimeout(() => {
-            isAnimating = false;
-          }, 600);
+        // Navigeer
+        if (direction === 'down' && !atLastSlide) {
+          goToSlide(currentSlide + 1);
+        } else if (direction === 'up' && !atFirstSlide) {
+          goToSlide(currentSlide - 1);
         }
 
+        // Reset - moet opnieuw threshold bereiken voor volgende slide
         wheelAccum = 0;
-      }, 30);
+      }
     };
 
-    // Luister op window niveau om alle scroll events te vangen
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => {
       window.removeEventListener('wheel', handleWheel);
-      if (window.lenis) window.lenis.start();  // Cleanup: hervat Lenis
-      if (wheelTimeout) clearTimeout(wheelTimeout);
+      if (window.lenis) window.lenis.start();
     };
   }, [currentSlide, goToSlide, entryDirection]);
 
