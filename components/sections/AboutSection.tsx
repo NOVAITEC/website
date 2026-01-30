@@ -71,12 +71,10 @@ export default function AboutSection() {
 
       {/* Animated Dot Pattern Background */}
       <DotPattern
-        width={40}
-        height={40}
-        cx={1}
-        cy={1}
-        cr={1}
-        className="text-teal/[0.15] [mask-image:radial-gradient(ellipse_at_bottom_right,white,transparent_70%)]"
+        width={30}
+        height={30}
+        cr={1.5}
+        className="text-teal/30 [mask-image:radial-gradient(ellipse_at_bottom_right,white_20%,transparent_70%)]"
       />
 
       {/* Main Content */}
