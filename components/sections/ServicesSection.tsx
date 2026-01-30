@@ -1105,29 +1105,80 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 
 function ServicesSectionDesktop() {
   const targetRef = useRef<HTMLElement>(null);
-  
+  const isSnapping = useRef(false);
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // 1. We gebruiken de 'native' scroll progress van de container
-  // Dit is 100% stabiel en kan nooit 'springen' of rekenfouten maken.
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    // Start animatie zodra de sectie de top bereikt (start start)
-    // Eindig animatie zodra de onderkant van de sectie de onderkant van viewport raakt (end end)
     offset: ["start start", "end end"],
   });
 
-  // 2. We mappen de verticale scroll (0% tot 100%) direct naar horizontale beweging
-  // We hebben 6 slides. De beweging is van 0% (slide 1) naar -500vw (slide 6).
+  // 2. We mappen de verticale scroll direct naar horizontale beweging
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-500vw"]);
 
-  // Active slide state voor de UI dots (omdat we daar specifieke styling (width) op willen)
+  // Active slide state
   const [activeSlide, setActiveSlide] = useState(0);
-  
-  // Update de active slide state efficiënt
+
+  // Scroll snap functie - scrollt naar de dichtstbijzijnde slide
+  const snapToSlide = useCallback((slideIndex: number) => {
+    if (!targetRef.current || isSnapping.current) return;
+
+    const section = targetRef.current;
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const scrollableDistance = sectionHeight - viewportHeight;
+
+    // Bereken de scroll positie voor deze slide
+    const targetProgress = slideIndex / (TOTAL_SLIDES - 1);
+    const targetScrollY = sectionTop + (scrollableDistance * targetProgress);
+
+    isSnapping.current = true;
+    window.scrollTo({
+      top: targetScrollY,
+      behavior: 'smooth'
+    });
+
+    // Reset snapping flag na animatie
+    setTimeout(() => {
+      isSnapping.current = false;
+    }, 500);
+  }, []);
+
+  // Detecteer wanneer scrolling stopt en snap naar dichtstbijzijnde slide
   useEffect(() => {
-    return scrollYProgress.on("change", (latest) => {
-      // Verdeel de progressie in 6 stukken en rond af
+    const handleScroll = () => {
+      if (isSnapping.current) return;
+
+      // Clear previous timeout
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+
+      // Set new timeout - snap na 150ms idle
+      scrollTimeout.current = setTimeout(() => {
+        const progress = scrollYProgress.get();
+        // Alleen snappen als we binnen de sectie zijn
+        if (progress > 0 && progress < 1) {
+          const nearestSlide = Math.round(progress * (TOTAL_SLIDES - 1));
+          snapToSlide(nearestSlide);
+        }
+      }, 150);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
+  }, [scrollYProgress, snapToSlide]);
+
+  // Update active slide state
+  useEffect(() => {
+    return scrollYProgress.on("change", (latest: number) => {
       const slideIndex = Math.min(
-        Math.floor(latest * TOTAL_SLIDES), 
+        Math.round(latest * (TOTAL_SLIDES - 1)),
         TOTAL_SLIDES - 1
       );
       setActiveSlide(slideIndex);
