@@ -2,16 +2,6 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-
-// Extend Window for Lenis
-declare global {
-  interface Window {
-    lenis?: {
-      start: () => void;
-      stop: () => void;
-    };
-  }
-}
 import {
   ArrowRight,
   ArrowDown,
