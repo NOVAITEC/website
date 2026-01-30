@@ -1135,13 +1135,15 @@ function ServicesSectionDesktop() {
   }, [scrollYProgress]);
 
   return (
-    // TRACK: Deze container is 600vh hoog (6 slides * 100vh).
-    // Hierdoor moet je fysiek 6 schermen naar beneden scrollen om er doorheen te gaan.
-    <section 
-      ref={targetRef} 
-      id="oplossing" 
+    // TRACK: Container hoogte = 520vh
+    // - Scroll distance: 520vh - 100vh viewport = 420vh
+    // - 5 slide transitions over 420vh = ~84vh per transition
+    // - Geen "dode zone" aan het einde: animatie eindigt samen met de container
+    <section
+      ref={targetRef}
+      id="oplossing"
       className="relative bg-midnight"
-      style={{ height: `${TOTAL_SLIDES * 100}vh` }} 
+      style={{ height: '520vh' }}
     >
       {/* CAMERA: Dit blok blijft plakken (sticky) zolang we in de track zitten */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
