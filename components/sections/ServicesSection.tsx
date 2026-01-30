@@ -1107,12 +1107,14 @@ function ServicesSectionDesktop() {
   const wrapperRef = useRef<HTMLElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
+  const [canExit, setCanExit] = useState(false); // Buffer: can only exit after viewing last slide
   const scrollAccumulator = useRef(0);
   const isTransitioning = useRef(false);
   const exitAccumulator = useRef(0);
 
   const SCROLL_THRESHOLD = 200; // Scroll needed for next slide (higher = heavier feel)
   const EXIT_THRESHOLD = 300;   // Extra scroll needed to EXIT tunnel
+  const EXIT_DELAY = 800;       // Ms to wait on last slide before exit is allowed
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -1151,17 +1153,21 @@ function ServicesSectionDesktop() {
         scrollAccumulator.current += e.deltaY;
 
         // ─────────────────────────────────────────────────────────────────
-        // EXIT ATTEMPT: Only possible on LAST slide, scrolling DOWN
+        // EXIT ATTEMPT: Only possible on LAST slide, scrolling DOWN, AFTER delay
         // ─────────────────────────────────────────────────────────────────
         if (currentSlide === TOTAL_SLIDES - 1 && e.deltaY > 0) {
-          exitAccumulator.current += e.deltaY;
+          // Only allow exit accumulation if canExit is true (delay passed)
+          if (canExit) {
+            exitAccumulator.current += e.deltaY;
 
-          if (exitAccumulator.current >= EXIT_THRESHOLD) {
-            // EXIT TUNNEL
-            setIsLocked(false);
-            exitAccumulator.current = 0;
-            scrollAccumulator.current = 0;
-            return;
+            if (exitAccumulator.current >= EXIT_THRESHOLD) {
+              // EXIT TUNNEL
+              setIsLocked(false);
+              setCanExit(false);
+              exitAccumulator.current = 0;
+              scrollAccumulator.current = 0;
+              return;
+            }
           }
         } else {
           exitAccumulator.current = 0;
@@ -1220,7 +1226,20 @@ function ServicesSectionDesktop() {
       window.removeEventListener('wheel', handleWheelWithReset);
       clearTimeout(resetTimeout);
     };
-  }, [isLocked, currentSlide]);
+  }, [isLocked, currentSlide, canExit]);
+
+  // Enable exit after delay when reaching last slide (gives it time to "rest")
+  useEffect(() => {
+    if (currentSlide === TOTAL_SLIDES - 1 && isLocked) {
+      const timer = setTimeout(() => {
+        setCanExit(true);
+      }, EXIT_DELAY);
+
+      return () => clearTimeout(timer);
+    } else {
+      setCanExit(false);
+    }
+  }, [currentSlide, isLocked]);
 
   // Reset state when section goes completely out of view
   useEffect(() => {
