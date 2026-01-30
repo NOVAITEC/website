@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
 
 // Hook to detect if we should reduce animations (mobile/low-power)
@@ -963,9 +963,24 @@ function ServicesSectionDesktop() {
 // MOBILE: VERTICAL STACK LAYOUT (simpler, more natural scrolling)
 // =============================================================================
 
-function MobileSlideIntro() {
+function MobileSlideIntro({ onInView }: { onInView?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current || !onInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) onInView(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onInView]);
+
   return (
-    <div className="relative w-full min-h-[80vh] flex items-center justify-center py-16 px-4">
+    <div ref={ref} className="relative w-full min-h-[80vh] flex items-center justify-center py-20 px-4">
+      {/* Gradient background - neutral start */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-teal/[0.02] to-teal/[0.03]" />
+
       {/* Simplified network background for mobile */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-[200px] h-[200px] rounded-full bg-teal/20 blur-[80px]" />
@@ -1025,14 +1040,36 @@ function MobileSlideIntro() {
   );
 }
 
-function MobileSlideAutomation() {
+function MobileSlideAutomation({ onInView }: { onInView?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current || !onInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) onInView(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onInView]);
+
   return (
-    <div className="relative w-full py-16 px-4">
-      <div className="max-w-lg mx-auto">
+    <div ref={ref} className="relative w-full py-14 px-4">
+      {/* Gradient background - teal hint */}
+      <div className="absolute inset-0 bg-gradient-to-b from-teal/[0.03] via-teal/[0.04] to-teal/[0.02]" />
+
+      {/* Subtle container */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="relative max-w-lg mx-auto bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] rounded-2xl p-5"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
           className="space-y-4 text-center mb-8"
         >
           <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5">
@@ -1057,7 +1094,6 @@ function MobileSlideAutomation() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="scale-90"
         >
           <WorkflowMockup />
         </motion.div>
@@ -1077,19 +1113,41 @@ function MobileSlideAutomation() {
             <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-function MobileSlideAIAgents() {
+function MobileSlideAIAgents({ onInView }: { onInView?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current || !onInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) onInView(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onInView]);
+
   return (
-    <div className="relative w-full py-16 px-4">
-      <div className="max-w-lg mx-auto">
+    <div ref={ref} className="relative w-full py-14 px-4">
+      {/* Gradient background - teal to amber transition */}
+      <div className="absolute inset-0 bg-gradient-to-b from-teal/[0.02] via-teal/[0.02] to-amber/[0.02]" />
+
+      {/* Subtle container */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="relative max-w-lg mx-auto bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] rounded-2xl p-5"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
           className="space-y-4 text-center mb-8"
         >
           <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5">
@@ -1116,7 +1174,6 @@ function MobileSlideAIAgents() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="scale-90"
         >
           <ChatMockup />
         </motion.div>
@@ -1136,19 +1193,41 @@ function MobileSlideAIAgents() {
             <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-function MobileSlideDashboards() {
+function MobileSlideDashboards({ onInView }: { onInView?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current || !onInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) onInView(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onInView]);
+
   return (
-    <div className="relative w-full py-16 px-4">
-      <div className="max-w-lg mx-auto">
+    <div ref={ref} className="relative w-full py-14 px-4">
+      {/* Gradient background - amber hint */}
+      <div className="absolute inset-0 bg-gradient-to-b from-amber/[0.02] via-amber/[0.03] to-amber/[0.02]" />
+
+      {/* Subtle container */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="relative max-w-lg mx-auto bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] rounded-2xl p-5"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
           className="space-y-4 text-center mb-8"
         >
           <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5">
@@ -1172,7 +1251,6 @@ function MobileSlideDashboards() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="scale-90"
         >
           <AnimatedChart />
         </motion.div>
@@ -1192,53 +1270,92 @@ function MobileSlideDashboards() {
             <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-function MobileSlideOwnership() {
+function MobileSlideOwnership({ onInView }: { onInView?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current || !onInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) onInView(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onInView]);
+
   return (
-    <div className="relative w-full py-16 px-4">
-      <div className="max-w-lg mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="mb-6"
-        >
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber/10 border border-amber/30">
-            <ShieldCheck className="w-10 h-10 text-amber" strokeWidth={1.5} />
-          </div>
-        </motion.div>
+    <div ref={ref} className="relative w-full py-14 px-4">
+      {/* Gradient background - amber fading out */}
+      <div className="absolute inset-0 bg-gradient-to-b from-amber/[0.02] via-amber/[0.01] to-transparent" />
 
-        <motion.h3
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white mb-4 leading-tight"
-        >
-          Geen <span className="text-amber">Gijzeling.</span>
-        </motion.h3>
+      {/* Subtle container */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="relative max-w-lg mx-auto bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] rounded-2xl p-5"
+      >
+        <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mb-6"
+          >
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber/10 border border-amber/30">
+              <ShieldCheck className="w-10 h-10 text-amber" strokeWidth={1.5} />
+            </div>
+          </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="font-inter text-sm text-slate-400 mb-8"
-        >
-          Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
-        </motion.p>
-      </div>
+          <motion.h3
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white mb-4 leading-tight"
+          >
+            Geen <span className="text-amber">Gijzeling.</span>
+          </motion.h3>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="font-inter text-sm text-slate-400"
+          >
+            Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
+          </motion.p>
+        </div>
+      </motion.div>
     </div>
   );
 }
 
-function MobileSlideGrandFinale() {
+function MobileSlideGrandFinale({ onInView }: { onInView?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current || !onInView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) onInView(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onInView]);
+
   return (
-    <div className="relative w-full min-h-[60vh] flex items-center justify-center py-16 px-4">
+    <div ref={ref} className="relative w-full min-h-[60vh] flex items-center justify-center py-16 px-4">
+      {/* Gradient background - CTA highlight */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-teal/[0.03] to-teal/[0.04]" />
+
       {/* Radial glow */}
       <div
         className="absolute inset-0"
@@ -1301,21 +1418,69 @@ function MobileSlideGrandFinale() {
   );
 }
 
-function ServicesSectionMobile() {
+// =============================================================================
+// MOBILE PROGRESS DOTS
+// =============================================================================
+
+function MobileProgressDots({ activeSlide }: { activeSlide: number }) {
   return (
-    <section id="oplossing" className="relative bg-midnight">
-      {/* Static background blobs for mobile - no animations for performance */}
-      <div className="absolute top-0 left-0 w-[200px] h-[200px] rounded-full bg-teal/10 blur-[80px] opacity-20" />
-      <div className="absolute top-1/3 right-0 w-[150px] h-[150px] rounded-full bg-amber/10 blur-[60px] opacity-15" />
-      <div className="absolute bottom-1/3 left-0 w-[180px] h-[180px] rounded-full bg-teal/5 blur-[70px] opacity-10" />
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.5 }}
+      className="fixed left-3 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2.5"
+    >
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <motion.div
+          key={i}
+          className={cn(
+            'w-2 h-2 rounded-full transition-all duration-300',
+            activeSlide === i
+              ? 'bg-teal scale-125 shadow-[0_0_8px_rgba(6,182,212,0.6)]'
+              : 'bg-white/20'
+          )}
+          animate={{
+            scale: activeSlide === i ? 1.25 : 1,
+          }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        />
+      ))}
+    </motion.div>
+  );
+}
+
+function ServicesSectionMobile() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [showDots, setShowDots] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Show/hide dots based on section visibility
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowDots(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleSlideInView = useCallback((index: number) => () => {
+    setActiveSlide(index);
+  }, []);
+
+  return (
+    <section ref={sectionRef} id="oplossing" className="relative bg-midnight overflow-hidden">
+      {/* Progress dots */}
+      {showDots && <MobileProgressDots activeSlide={activeSlide} />}
 
       {/* Simple vertical stack of slides */}
-      <MobileSlideIntro />
-      <MobileSlideAutomation />
-      <MobileSlideAIAgents />
-      <MobileSlideDashboards />
-      <MobileSlideOwnership />
-      <MobileSlideGrandFinale />
+      <MobileSlideIntro onInView={handleSlideInView(0)} />
+      <MobileSlideAutomation onInView={handleSlideInView(1)} />
+      <MobileSlideAIAgents onInView={handleSlideInView(2)} />
+      <MobileSlideDashboards onInView={handleSlideInView(3)} />
+      <MobileSlideOwnership onInView={handleSlideInView(4)} />
+      <MobileSlideGrandFinale onInView={handleSlideInView(5)} />
     </section>
   );
 }
