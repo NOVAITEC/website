@@ -1105,112 +1105,62 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 
 function ServicesSectionDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const isAnimating = useRef(false);
-  const accumulatedDelta = useRef(0);
 
-  // Navigate to a specific slide
-  const goToSlide = useCallback((slideIndex: number) => {
-    if (!containerRef.current || isAnimating.current) return;
-
-    // Clamp slide index
-    const targetSlide = Math.max(0, Math.min(slideIndex, TOTAL_SLIDES - 1));
-
-    isAnimating.current = true;
-    setCurrentSlide(targetSlide);
-    accumulatedDelta.current = 0;
-
-    const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
-    const containerTop = containerRef.current.offsetTop;
-    const targetProgress = targetSlide / (TOTAL_SLIDES - 1);
-    const targetScroll = containerTop + (targetProgress * scrollableHeight);
-
-    window.scrollTo({
-      top: targetScroll,
-      behavior: 'smooth'
-    });
-
-    // Reset animation flag after scroll completes
-    setTimeout(() => {
-      isAnimating.current = false;
-      accumulatedDelta.current = 0;
-    }, 800);
-  }, []);
-
+  // Sync horizontal scroll with indicators
   useEffect(() => {
-    const updateProgress = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
-      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const handleHorizontalScroll = () => {
+      const scrollLeft = scrollContainer.scrollLeft;
+      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+      const progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
       scrollYProgress.set(progress);
+
+      // Update current slide
+      const slideWidth = scrollContainer.clientWidth;
+      const newSlide = Math.round(scrollLeft / slideWidth);
+      if (newSlide !== currentSlide) {
+        setCurrentSlide(newSlide);
+      }
     };
 
-    // Handle wheel events for snap scrolling
+    scrollContainer.addEventListener('scroll', handleHorizontalScroll, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', handleHorizontalScroll);
+  }, [scrollYProgress, currentSlide]);
+
+  // Convert vertical scroll to horizontal scroll
+  useEffect(() => {
+    const container = containerRef.current;
+    const scrollContainer = scrollContainerRef.current;
+    if (!container || !scrollContainer) return;
+
     const handleWheel = (e: WheelEvent) => {
-      if (!containerRef.current || isAnimating.current) return;
+      const rect = container.getBoundingClientRect();
+      const isInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
 
-      const rect = containerRef.current.getBoundingClientRect();
+      if (!isInView) return;
 
-      // Check if section is in view (sticky area is active)
-      const sectionTop = rect.top;
-      const sectionBottom = rect.bottom;
-      const isInSection = sectionTop <= 50 && sectionBottom > window.innerHeight;
+      // Check boundaries
+      const atStart = scrollContainer.scrollLeft <= 0;
+      const atEnd = scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth - 10;
 
-      if (!isInSection) return;
+      // Allow vertical scroll at boundaries
+      if ((atStart && e.deltaY < 0) || (atEnd && e.deltaY > 0)) {
+        return;
+      }
 
-      // Determine scroll direction
-      const direction = e.deltaY > 0 ? 1 : -1;
-
-      // Check if we're at the boundaries - allow exit
-      if (currentSlide === 0 && direction < 0) return;
-      if (currentSlide === TOTAL_SLIDES - 1 && direction > 0) return;
-
-      // Prevent default scroll
+      // Convert vertical scroll to horizontal
       e.preventDefault();
-      e.stopPropagation();
-
-      // Accumulate delta for touchpad scrolling (smaller increments)
-      accumulatedDelta.current += Math.abs(e.deltaY);
-
-      // Threshold to trigger slide change (works for both mouse wheel and touchpad)
-      const threshold = 50;
-
-      if (accumulatedDelta.current >= threshold) {
-        goToSlide(currentSlide + direction);
-      }
+      scrollContainer.scrollLeft += e.deltaY;
     };
 
-    // Initial snap when entering section
-    const handleScroll = () => {
-      updateProgress();
-
-      if (!containerRef.current || isAnimating.current) return;
-
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
-      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
-
-      // Sync current slide with scroll position when not animating
-      const calculatedSlide = Math.round(progress * (TOTAL_SLIDES - 1));
-      if (calculatedSlide !== currentSlide && !isAnimating.current) {
-        setCurrentSlide(calculatedSlide);
-      }
-    };
-
-    updateProgress();
-    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [scrollYProgress, goToSlide, currentSlide]);
-
-  // Direct 1:1 mapping - no spring for immediate response to scroll
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-82%']);
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, []);
 
   // Only use spring for the progress bar indicator (subtle smoothing)
   const smoothProgress = useSpring(scrollYProgress, {
@@ -1223,48 +1173,62 @@ function ServicesSectionDesktop() {
     <section
       ref={containerRef}
       id="oplossing"
-      className="relative h-[600vh] bg-midnight"
+      className="relative h-screen bg-midnight"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden gpu-accelerated">
-        <NoiseOverlay />
+      <NoiseOverlay />
 
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]"
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      {/* Horizontal scroll container with CSS snap */}
+      <div
+        ref={scrollContainerRef}
+        className="relative h-full w-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide"
+        style={{ scrollBehavior: 'smooth' }}
+      >
+        <div className="flex h-full w-max">
+          <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideIntro />
+          </div>
+          <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideAutomation />
+          </div>
+          <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideAIAgents />
+          </div>
+          <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideDashboards />
+          </div>
+          <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideOwnership />
+          </div>
+          <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideGrandFinale />
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden z-10">
         <motion.div
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ scaleX: smoothProgress }}
+          className="h-full bg-gradient-to-r from-teal to-cyan-400 origin-left"
         />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]"
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
+      </div>
 
-        <motion.div
-          style={{ x }}
-          className="flex h-full w-max will-change-transform gap-12 md:gap-16 lg:gap-20 xl:gap-24"
-        >
-          <SlideIntro />
-          <SlideAutomation />
-          <SlideAIAgents />
-          <SlideDashboards />
-          <SlideOwnership />
-          <SlideGrandFinale />
-        </motion.div>
+      <div className="hidden md:block">
+        <SlideCounter scrollYProgress={scrollYProgress} />
+      </div>
 
-        <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden">
-          <motion.div
-            style={{ scaleX: smoothProgress }}
-            className="h-full bg-gradient-to-r from-teal to-cyan-400 origin-left"
-          />
-        </div>
-
-        <div className="hidden md:block">
-          <SlideCounter scrollYProgress={scrollYProgress} />
-        </div>
-
-        <div className="hidden md:block">
-          <SlideIndicators scrollYProgress={scrollYProgress} />
-        </div>
+      <div className="hidden md:block">
+        <SlideIndicators scrollYProgress={scrollYProgress} />
       </div>
     </section>
   );
