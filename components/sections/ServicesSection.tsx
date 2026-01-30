@@ -1176,6 +1176,7 @@ function ServicesSectionDesktop() {
     let wheelAccum = 0;
     let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
     let isAnimating = false;
+    let hasExited = false; // Track of we net zijn ge-exit
 
     const handleWheel = (e: WheelEvent) => {
       const container = containerRef.current;
@@ -1188,6 +1189,7 @@ function ServicesSectionDesktop() {
       // NIET in beeld → hervat Lenis en reset state
       if (!sectionInView) {
         if (window.lenis) window.lenis.start();
+        hasExited = false; // Reset exit flag
         if (entryDirection !== null) {
           setEntryDirection(null);
         }
@@ -1205,9 +1207,16 @@ function ServicesSectionDesktop() {
       const canExitUp = atFirstSlide && tryingToScrollUp && entryDirection === 'below';
 
       if (canExitDown || canExitUp) {
-        // Lenis is nog actief, dus scroll gaat door naar volgende sectie
+        // Start Lenis expliciet en laat scroll door
+        if (window.lenis) window.lenis.start();
+        hasExited = true;
         setEntryDirection(null); // Reset voor volgende keer
         return; // Laat Lenis de scroll afhandelen
+      }
+
+      // Als we net ge-exit zijn, laat scroll door tot we buiten de sectie zijn
+      if (hasExited) {
+        return;
       }
 
       // PAS NU Lenis pauzeren - we blijven in de tunnel
@@ -1234,7 +1243,7 @@ function ServicesSectionDesktop() {
 
       if (wheelTimeout) clearTimeout(wheelTimeout);
       wheelTimeout = setTimeout(() => {
-        const threshold = 50;
+        const threshold = 25; // Lagere drempel voor soepeler scrollen
 
         if (Math.abs(wheelAccum) > threshold) {
           isAnimating = true;
@@ -1249,11 +1258,11 @@ function ServicesSectionDesktop() {
           // Blokkeer nieuwe input tijdens animatie
           setTimeout(() => {
             isAnimating = false;
-          }, 400);
+          }, 350); // Iets korter voor snellere respons
         }
 
         wheelAccum = 0;
-      }, 30);
+      }, 20); // Snellere debounce
     };
 
     // Luister op window niveau om alle scroll events te vangen
