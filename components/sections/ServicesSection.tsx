@@ -545,6 +545,7 @@ function SlideAutomation() {
         >
           <WorkflowMockup />
         </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -610,6 +611,7 @@ function SlideAIAgents() {
         >
           <ChatMockup />
         </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -674,6 +676,7 @@ function SlideDashboards() {
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.a>
         </motion.div>
+        </div>
       </div>
     </div>
   );
