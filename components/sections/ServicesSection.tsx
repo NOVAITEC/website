@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
-import { motion, useMotionValue, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { motion, useTransform, MotionValue } from 'framer-motion';
 
 // Hook to detect if we should reduce animations (mobile/low-power)
 function useReducedAnimations() {
@@ -1100,245 +1100,89 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: HORIZONTAL CINEMA SCROLL WITH SNAP-TO-SLIDE
+// DESKTOP: VERTICAL SCROLL SNAP (Pure CSS)
 // =============================================================================
 
 function ServicesSectionDesktop() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLocked, setIsLocked] = useState(false);
-  const isAnimatingRef = useRef(false);
-  const scrollAccumulatorRef = useRef(0);
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Motion value for progress (0 to 1)
-  const progress = useMotionValue(0);
-
-  // Transform progress to horizontal position
-  const x = useTransform(
-    progress,
-    [0, 1],
-    ['0%', `-${(TOTAL_SLIDES - 1) * 100}%`]
-  );
-
-  // Smooth spring for progress bar
-  const smoothProgress = useSpring(progress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  // Update progress when slide changes
-  useEffect(() => {
-    progress.set(currentSlide / (TOTAL_SLIDES - 1));
-  }, [currentSlide, progress]);
-
-  // Navigate to a specific slide
-  const goToSlide = useCallback((slideIndex: number) => {
-    if (isAnimatingRef.current) return;
-
-    const targetSlide = Math.max(0, Math.min(TOTAL_SLIDES - 1, slideIndex));
-    if (targetSlide === currentSlide) return;
-
-    isAnimatingRef.current = true;
-    setCurrentSlide(targetSlide);
-
-    // Reset animation lock after transition
-    setTimeout(() => {
-      isAnimatingRef.current = false;
-    }, 600);
-  }, [currentSlide]);
-
-  // Handle wheel events for slide navigation
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const SCROLL_THRESHOLD = 50;
-    const EXIT_THRESHOLD = 100; // Higher threshold to exit section
-
-    const handleWheel = (e: WheelEvent) => {
-      const rect = container.getBoundingClientRect();
-
-      // Check if section is visible in viewport
-      const sectionTop = rect.top;
-      const sectionBottom = rect.bottom;
-      const viewportHeight = window.innerHeight;
-
-      // Section is "in view" when it covers most of the viewport
-      const isInView = sectionTop <= 100 && sectionBottom >= viewportHeight - 100;
-
-      // Not in the section area at all - let normal scroll happen
-      if (sectionBottom < 0 || sectionTop > viewportHeight) {
-        return;
-      }
-
-      // Scrolling DOWN and section is coming into view (section top is in lower half of screen)
-      if (!isLocked && e.deltaY > 0 && sectionTop > 0 && sectionTop < viewportHeight) {
-        e.preventDefault();
-        container.scrollIntoView({ behavior: 'smooth' });
-        setIsLocked(true);
-        return;
-      }
-
-      // Scrolling UP and section is below us (we're above the section)
-      if (!isLocked && e.deltaY < 0 && sectionTop >= viewportHeight) {
-        return; // Let normal scroll happen
-      }
-
-      // If section is in view, lock it
-      if (isInView && !isLocked) {
-        setIsLocked(true);
-      }
-
-      // If locked, handle slide navigation
-      if (isLocked || isInView) {
-        const atFirstSlide = currentSlide === 0;
-        const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
-
-        // Accumulate scroll for exit detection
-        scrollAccumulatorRef.current += e.deltaY;
-
-        // Clear previous timeout
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current);
-        }
-
-        // Reset accumulator after inactivity
-        scrollTimeoutRef.current = setTimeout(() => {
-          scrollAccumulatorRef.current = 0;
-        }, 200);
-
-        // Check if we should exit the section (requires more scroll effort)
-        if (atFirstSlide && scrollAccumulatorRef.current < -EXIT_THRESHOLD) {
-          setIsLocked(false);
-          scrollAccumulatorRef.current = 0;
-          return; // Allow scroll up to exit
-        }
-
-        if (atLastSlide && scrollAccumulatorRef.current > EXIT_THRESHOLD) {
-          setIsLocked(false);
-          scrollAccumulatorRef.current = 0;
-          return; // Allow scroll down to exit
-        }
-
-        // Block all scroll while in section
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Don't navigate if animating
-        if (isAnimatingRef.current) return;
-
-        // Navigate when threshold is reached
-        if (Math.abs(scrollAccumulatorRef.current) >= SCROLL_THRESHOLD) {
-          const direction = scrollAccumulatorRef.current > 0 ? 1 : -1;
-          const targetSlide = currentSlide + direction;
-
-          // Only navigate if within bounds
-          if (targetSlide >= 0 && targetSlide < TOTAL_SLIDES) {
-            goToSlide(targetSlide);
-          }
-          scrollAccumulatorRef.current = 0;
-        }
-      }
-    };
-
-    // Use capture phase to intercept before other handlers
-    window.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel, { capture: true });
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, [isLocked, currentSlide, goToSlide]);
-
-  // Reset state when section goes out of view
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const rect = container.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-
-      // If section is completely out of view, reset everything
-      if (rect.bottom < -50 || rect.top > viewportHeight + 50) {
-        setIsLocked(false);
-        // Only reset slide if we scrolled up past the section
-        if (rect.top > viewportHeight) {
-          setCurrentSlide(0);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <section
-      ref={containerRef}
-      id="oplossing"
-      className="relative h-screen bg-midnight"
-    >
-      <NoiseOverlay />
-
-      {/* Background effects */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]"
-        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      {/* Horizontal slides container */}
-      <motion.div
-        className="flex h-full"
-        style={{ x }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+    <section id="oplossing" className="relative bg-midnight">
+      {/*
+        CSS Scroll Snap Container
+        - snap-y: vertical scroll snapping
+        - snap-mandatory: always snap to a snap point (magnetic effect)
+        - scroll-pt-0: scroll padding top (adjust if you have a sticky header)
+        - h-screen: container height = viewport height (enables snapping)
+        - overflow-y-auto: enable vertical scrolling within container
+      */}
+      <div
+        className="h-screen overflow-y-auto snap-y snap-mandatory scroll-pt-0 scrollbar-hide"
+        style={{ scrollBehavior: 'smooth' }}
       >
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+        {/* Slide 1: Intro */}
+        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
+          <NoiseOverlay />
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <SlideIntro />
         </div>
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+
+        {/* Slide 2: Automation */}
+        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
+          <NoiseOverlay />
+          <motion.div
+            className="absolute top-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-teal/10 blur-[120px]"
+            animate={{ scale: [1.1, 1, 1.1], opacity: [0.1, 0.15, 0.1] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <SlideAutomation />
         </div>
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+
+        {/* Slide 3: AI Agents */}
+        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
+          <NoiseOverlay />
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] rounded-full bg-teal/10 blur-[130px]"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.18, 0.1] }}
+            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <SlideAIAgents />
         </div>
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+
+        {/* Slide 4: Dashboards */}
+        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
+          <NoiseOverlay />
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]"
+            animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
+            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <SlideDashboards />
         </div>
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+
+        {/* Slide 5: Ownership */}
+        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
+          <NoiseOverlay />
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full bg-amber/15 blur-[100px]"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <SlideOwnership />
         </div>
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+
+        {/* Slide 6: Grand Finale */}
+        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
+          <NoiseOverlay />
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <SlideGrandFinale />
         </div>
-      </motion.div>
-
-      {/* Progress bar */}
-      <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 w-1/3 max-w-xs h-1 bg-slate-800 rounded-full overflow-hidden z-10">
-        <motion.div
-          style={{ scaleX: smoothProgress }}
-          className="h-full bg-gradient-to-r from-teal to-cyan-400 origin-left"
-        />
-      </div>
-
-      {/* Slide counter */}
-      <div className="hidden md:block">
-        <SlideCounter scrollYProgress={progress} />
-      </div>
-
-      {/* Slide indicators */}
-      <div className="hidden md:block">
-        <SlideIndicators scrollYProgress={progress} />
       </div>
     </section>
   );
