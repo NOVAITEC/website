@@ -1135,15 +1135,15 @@ function ServicesSectionDesktop() {
   }, [scrollYProgress]);
 
   return (
-    // TRACK: Container hoogte = 520vh
-    // - Scroll distance: 520vh - 100vh viewport = 420vh
-    // - 5 slide transitions over 420vh = ~84vh per transition
-    // - Geen "dode zone" aan het einde: animatie eindigt samen met de container
+    // TRACK: Container hoogte = 560vh
+    // - Scroll distance: 560vh - 100vh viewport = 460vh
+    // - 5 slide transitions over 460vh = ~92vh per transition
+    // - Goede balans tussen "magnetisch" gevoel en minimale dode zone
     <section
       ref={targetRef}
       id="oplossing"
       className="relative bg-midnight"
-      style={{ height: '520vh' }}
+      style={{ height: '560vh' }}
     >
       {/* CAMERA: Dit blok blijft plakken (sticky) zolang we in de track zitten */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
