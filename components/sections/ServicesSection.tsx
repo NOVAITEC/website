@@ -1111,8 +1111,8 @@ function ServicesSectionDesktop() {
   const isTransitioning = useRef(false);
   const exitAccumulator = useRef(0);
 
-  const SCROLL_THRESHOLD = 80;  // Scroll needed for next slide
-  const EXIT_THRESHOLD = 150;   // Extra scroll needed to EXIT tunnel
+  const SCROLL_THRESHOLD = 200; // Scroll needed for next slide (higher = heavier feel)
+  const EXIT_THRESHOLD = 300;   // Extra scroll needed to EXIT tunnel
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
