@@ -1243,7 +1243,7 @@ function ServicesSectionDesktop() {
 
       if (wheelTimeout) clearTimeout(wheelTimeout);
       wheelTimeout = setTimeout(() => {
-        const threshold = 40; // Relaxte drempel - niet te snel, niet te traag
+        const threshold = 35; // Beetje intentie nodig, niet per ongeluk
 
         if (Math.abs(wheelAccum) > threshold) {
           isAnimating = true;
@@ -1255,14 +1255,14 @@ function ServicesSectionDesktop() {
             goToSlide(currentSlide - 1);
           }
 
-          // Rust tussen slides
+          // Rust tussen slides - genoeg tijd om slide te laten landen
           setTimeout(() => {
             isAnimating = false;
-          }, 500);
+          }, 450);
         }
 
         wheelAccum = 0;
-      }, 50); // Rustige debounce
+      }, 25); // Snelle reactie, geen wachtgevoel
     };
 
     // Luister op window niveau om alle scroll events te vangen
