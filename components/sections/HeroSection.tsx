@@ -3,57 +3,20 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
+import NeuralBackground from "@/components/ui/flow-field-background";
 
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-midnight">
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Main Gradient Blob 1 */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-teal/20 rounded-full blur-3xl"
+      {/* Flow Field Background */}
+      <div className="absolute inset-0">
+        <NeuralBackground
+          color="#06B6D4"
+          trailOpacity={0.08}
+          particleCount={400}
+          speed={0.6}
+          className="bg-midnight"
         />
-
-        {/* Main Gradient Blob 2 */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
-          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-teal/15 rounded-full blur-3xl"
-        />
-
-        {/* Accent Gradient Blob */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.4, ease: "easeOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 bg-amber/10 rounded-full blur-3xl"
-        />
-
-        {/* Decorative Tech Lines */}
-        <div className="absolute inset-0 opacity-10">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="grid"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 40 0 L 0 0 0 40"
-                  fill="none"
-                  stroke="#06B6D4"
-                  strokeWidth="0.5"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
       </div>
 
       {/* Content */}
