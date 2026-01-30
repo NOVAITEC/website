@@ -1100,35 +1100,149 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: HORIZONTAL SCROLL SLIDER (CSS Snap + JS Wheel Support)
+// DESKTOP: STICKY HORIZONTAL SLIDESHOW WITH STEP-SNAP
 // =============================================================================
 
 function ServicesSectionDesktop() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const scrollAccumulator = useRef(0);
+  const isTransitioning = useRef(false);
 
-  // Convert vertical mouse wheel to horizontal scroll
+  const SCROLL_THRESHOLD = 80; // Scroll amount needed to trigger next slide
+
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Only handle if we're scrolling vertically (deltaY)
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Check if section is at or near the top of viewport
+      const isSectionAtTop = rect.top <= 5 && rect.top >= -5;
+
+      // SCENARIO 1: Scrolling DOWN, section coming into view → snap to section
+      if (!isActive && e.deltaY > 0 && rect.top > 0 && rect.top < viewportHeight * 0.8) {
         e.preventDefault();
-        // Add deltaY to scrollLeft (vertical wheel → horizontal scroll)
-        container.scrollLeft += e.deltaY;
+        section.scrollIntoView({ behavior: 'smooth' });
+        setIsActive(true);
+        setCurrentSlide(0);
+        return;
+      }
+
+      // SCENARIO 2: Section is active (sticky) → handle slide navigation
+      if (isActive || isSectionAtTop) {
+        // Activate if we hit the section
+        if (!isActive && isSectionAtTop) {
+          setIsActive(true);
+        }
+
+        // Don't process during transition animation
+        if (isTransitioning.current) {
+          e.preventDefault();
+          return;
+        }
+
+        // Accumulate scroll delta
+        scrollAccumulator.current += e.deltaY;
+
+        // Check for slide navigation
+        if (Math.abs(scrollAccumulator.current) >= SCROLL_THRESHOLD) {
+          const direction = scrollAccumulator.current > 0 ? 1 : -1;
+          const nextSlide = currentSlide + direction;
+
+          // EXIT CONDITIONS
+          // Scrolling UP on first slide → release section, scroll page up
+          if (nextSlide < 0) {
+            setIsActive(false);
+            scrollAccumulator.current = 0;
+            return; // Let the page scroll naturally
+          }
+
+          // Scrolling DOWN on last slide → release section, scroll page down
+          if (nextSlide >= TOTAL_SLIDES) {
+            setIsActive(false);
+            scrollAccumulator.current = 0;
+            return; // Let the page scroll naturally
+          }
+
+          // NAVIGATE TO NEXT/PREV SLIDE
+          e.preventDefault();
+          isTransitioning.current = true;
+          scrollAccumulator.current = 0;
+          setCurrentSlide(nextSlide);
+
+          // Reset transition lock after animation
+          setTimeout(() => {
+            isTransitioning.current = false;
+          }, 500);
+          return;
+        }
+
+        // Block scroll while in section (not at exit boundaries)
+        if (currentSlide > 0 || e.deltaY > 0) {
+          if (currentSlide < TOTAL_SLIDES - 1 || e.deltaY < 0) {
+            e.preventDefault();
+          }
+        }
       }
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheel);
+    // Reset accumulator on scroll end
+    const resetAccumulator = () => {
+      scrollAccumulator.current = 0;
+    };
+
+    let resetTimeout: ReturnType<typeof setTimeout>;
+    const handleWheelWithReset = (e: WheelEvent) => {
+      handleWheel(e);
+      clearTimeout(resetTimeout);
+      resetTimeout = setTimeout(resetAccumulator, 150);
+    };
+
+    window.addEventListener('wheel', handleWheelWithReset, { passive: false });
+    return () => {
+      window.removeEventListener('wheel', handleWheelWithReset);
+      clearTimeout(resetTimeout);
+    };
+  }, [isActive, currentSlide]);
+
+  // Reset when section goes out of view
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setIsActive(false);
+          // Reset to first slide if scrolled up past section
+          if (entry.boundingClientRect.top > 0) {
+            setCurrentSlide(0);
+          }
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
+  // Calculate horizontal offset based on current slide
+  const slideOffset = `-${currentSlide * 100}vw`;
+
   return (
-    <section id="oplossing" className="relative h-screen bg-midnight overflow-hidden">
+    <section
+      ref={sectionRef}
+      id="oplossing"
+      className="relative h-screen bg-midnight overflow-hidden"
+    >
       <NoiseOverlay />
 
-      {/* Background ambient effects (fixed position) */}
+      {/* Background ambient effects */}
       <motion.div
         className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none"
         animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
@@ -1140,52 +1254,66 @@ function ServicesSectionDesktop() {
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/*
-        Horizontal Scroll Container
-        - flex: horizontal layout
-        - overflow-x-auto: enable horizontal scrolling
-        - snap-x mandatory: magnetic snap effect on X-axis
-        - scrollbar-hide: hide scrollbar but keep functionality
-      */}
+      {/* Horizontal slides container - transforms based on currentSlide */}
       <div
-        ref={scrollContainerRef}
-        className="
-          relative h-full w-full
-          flex overflow-x-auto overflow-y-hidden
-          snap-x snap-mandatory
-          scrollbar-hide
-        "
-        style={{ scrollBehavior: 'smooth' }}
+        className="relative h-full flex transition-transform duration-500 ease-out"
+        style={{ transform: `translateX(${slideOffset})` }}
       >
         {/* Slide 1: Intro */}
-        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideIntro />
         </div>
 
         {/* Slide 2: Automation */}
-        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideAutomation />
         </div>
 
         {/* Slide 3: AI Agents */}
-        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideAIAgents />
         </div>
 
         {/* Slide 4: Dashboards */}
-        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideDashboards />
         </div>
 
         {/* Slide 5: Ownership */}
-        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideOwnership />
         </div>
 
         {/* Slide 6: Grand Finale */}
-        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideGrandFinale />
         </div>
+      </div>
+
+      {/* Progress indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
+          <div
+            key={i}
+            className={cn(
+              'w-2 h-2 rounded-full transition-all duration-300',
+              i === currentSlide
+                ? 'bg-teal w-6'
+                : 'bg-white/20 hover:bg-white/40'
+            )}
+          />
+        ))}
+      </div>
+
+      {/* Slide counter */}
+      <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
+        <span className="text-teal font-medium">
+          {String(currentSlide + 1).padStart(2, '0')}
+        </span>
+        <span className="text-slate-600">/</span>
+        <span className="text-slate-600">
+          {String(TOTAL_SLIDES).padStart(2, '0')}
+        </span>
       </div>
     </section>
   );
