@@ -1237,32 +1237,39 @@ function ServicesSectionDesktop() {
       // Blokkeer alle andere scroll aan de grenzen (tunnel lock)
       e.preventDefault();
 
-      if (isAnimating) return;
+      // Tijdens animatie: negeer scroll EN reset accumulatie
+      if (isAnimating) {
+        wheelAccum = 0;
+        return;
+      }
 
       wheelAccum += e.deltaY;
 
       if (wheelTimeout) clearTimeout(wheelTimeout);
       wheelTimeout = setTimeout(() => {
-        const threshold = 35; // Beetje intentie nodig, niet per ongeluk
+        const threshold = 35;
 
         if (Math.abs(wheelAccum) > threshold) {
+          const direction = wheelAccum > 0 ? 'down' : 'up';
+
           isAnimating = true;
+          wheelAccum = 0; // Direct resetten na richting bepalen
 
           // Navigeer alleen als niet aan de grens
-          if (wheelAccum > 0 && !atLastSlide) {
+          if (direction === 'down' && !atLastSlide) {
             goToSlide(currentSlide + 1);
-          } else if (wheelAccum < 0 && !atFirstSlide) {
+          } else if (direction === 'up' && !atFirstSlide) {
             goToSlide(currentSlide - 1);
           }
 
-          // Rust tussen slides - genoeg tijd om slide te laten landen
+          // Rust tussen slides
           setTimeout(() => {
             isAnimating = false;
-          }, 450);
+          }, 600);
         }
 
         wheelAccum = 0;
-      }, 25); // Snelle reactie, geen wachtgevoel
+      }, 30);
     };
 
     // Luister op window niveau om alle scroll events te vangen
