@@ -1120,6 +1120,8 @@ function ServicesSectionDesktop() {
   const exitDeltaRef = useRef(0);
   const canExitRef = useRef(false);
   const transitioningRef = useRef(false);
+  const lastExitTimeRef = useRef(0); // Cooldown: prevent re-entry after exit
+  const REENTRY_COOLDOWN = 600; // Ms to wait before allowing re-entry
 
   // React state ALLEEN voor UI updates (niet voor scroll logic)
   const [displaySlide, setDisplaySlide] = useState(0);
@@ -1165,6 +1167,7 @@ function ServicesSectionDesktop() {
     canExitRef.current = false;
     scrollDeltaRef.current = 0;
     exitDeltaRef.current = 0;
+    lastExitTimeRef.current = Date.now(); // Record exit time for cooldown
     unlockScroll();
   }, [unlockScroll]);
 
@@ -1201,18 +1204,24 @@ function ServicesSectionDesktop() {
               return;
             }
           }
-          // Don't reset exitDelta here - let it accumulate
-        } else if (currentSlide === 0 && e.deltaY < 0) {
-          // EXIT BACKWARD: eerste slide + scroll up
+          // At last slide, scrolling down - don't process slide navigation
+          // Just wait for canExit to become true
+          return;
+        }
+
+        // EXIT BACKWARD: eerste slide + scroll up
+        if (currentSlide === 0 && e.deltaY < 0) {
           exitDeltaRef.current += Math.abs(e.deltaY);
           if (exitDeltaRef.current >= EXIT_THRESHOLD) {
             exitTunnel();
             return;
           }
-        } else {
-          // Not at exit point, reset exit accumulator
-          exitDeltaRef.current = 0;
+          // At first slide, scrolling up - don't process slide navigation
+          return;
         }
+
+        // Not at boundary, reset exit accumulator
+        exitDeltaRef.current = 0;
 
         // SLIDE NAVIGATION
         if (Math.abs(scrollDeltaRef.current) >= SCROLL_THRESHOLD) {
@@ -1238,6 +1247,11 @@ function ServicesSectionDesktop() {
       // ──────────────────────────────────────────────────────────────────────
       // OUTSIDE TUNNEL: Check for entry conditions
       // ──────────────────────────────────────────────────────────────────────
+
+      // COOLDOWN: Prevent immediate re-entry after exit (Lenis momentum protection)
+      if (Date.now() - lastExitTimeRef.current < REENTRY_COOLDOWN) {
+        return;
+      }
 
       // ENTRY FORWARD: section top at/near viewport top, scrolling down
       // More generous zone: top between -50 and 80, and section extends below viewport
