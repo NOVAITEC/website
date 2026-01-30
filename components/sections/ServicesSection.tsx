@@ -1194,13 +1194,24 @@ function ServicesSectionDesktop() {
         return;
       }
 
-      // IN BEELD → PAUZEER LENIS (kritiek voor tunnel werking!)
-      if (window.lenis) window.lenis.stop();
-
       const tryingToScrollUp = e.deltaY < 0;
       const tryingToScrollDown = e.deltaY > 0;
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
+
+      // BI-DIRECTIONELE TUNNEL ESCAPE LOGICA:
+      // Check exit VOORDAT we Lenis stoppen, zodat Lenis de scroll kan afhandelen
+      const canExitDown = atLastSlide && tryingToScrollDown && entryDirection === 'above';
+      const canExitUp = atFirstSlide && tryingToScrollUp && entryDirection === 'below';
+
+      if (canExitDown || canExitUp) {
+        // Lenis is nog actief, dus scroll gaat door naar volgende sectie
+        setEntryDirection(null); // Reset voor volgende keer
+        return; // Laat Lenis de scroll afhandelen
+      }
+
+      // PAS NU Lenis pauzeren - we blijven in de tunnel
+      if (window.lenis) window.lenis.stop();
 
       // Detecteer entry richting bij eerste scroll in de sectie
       if (entryDirection === null) {
@@ -1212,18 +1223,6 @@ function ServicesSectionDesktop() {
           setEntryDirection('below');
           setCurrentSlide(TOTAL_SLIDES - 1);
         }
-      }
-
-      // BI-DIRECTIONELE TUNNEL ESCAPE LOGICA:
-      // - Entry van boven: alleen exit bij slide 6 + scroll down
-      // - Entry van onder: alleen exit bij slide 1 + scroll up
-      const canExitDown = atLastSlide && tryingToScrollDown && entryDirection === 'above';
-      const canExitUp = atFirstSlide && tryingToScrollUp && entryDirection === 'below';
-
-      if (canExitDown || canExitUp) {
-        if (window.lenis) window.lenis.start();  // HERVAT LENIS bij exit
-        setEntryDirection(null); // Reset voor volgende keer
-        return; // Laat browser scroll toe
       }
 
       // Blokkeer alle andere scroll aan de grenzen (tunnel lock)
