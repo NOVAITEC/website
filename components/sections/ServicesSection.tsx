@@ -32,6 +32,11 @@ import {
   Calendar,
   User,
   Sparkles,
+  ChevronDown,
+  Car,
+  Share2,
+  FileText,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -50,6 +55,203 @@ function NoiseOverlay() {
     />
   );
 }
+
+// =============================================================================
+// EXPANDABLE CASE CARD COMPONENT
+// =============================================================================
+
+interface CaseExample {
+  title: string;
+  subtitle: string;
+  Icon: React.ElementType;
+  features: string[];
+  accentColor: 'teal' | 'amber';
+}
+
+function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: number }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { title, subtitle, Icon, features, accentColor } = example;
+
+  const colorClasses = {
+    teal: {
+      bg: 'bg-teal/5',
+      border: 'border-teal/20',
+      iconBg: 'bg-teal/10',
+      iconColor: 'text-teal',
+      hoverBorder: 'hover:border-teal/40',
+      chevron: 'text-teal',
+      bullet: 'bg-teal',
+    },
+    amber: {
+      bg: 'bg-amber/5',
+      border: 'border-amber/20',
+      iconBg: 'bg-amber/10',
+      iconColor: 'text-amber',
+      hoverBorder: 'hover:border-amber/40',
+      chevron: 'text-amber',
+      bullet: 'bg-amber',
+    },
+  };
+
+  const colors = colorClasses[accentColor];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.5 }}
+      className={cn(
+        'rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300',
+        colors.bg,
+        colors.border,
+        colors.hoverBorder,
+        isOpen && 'border-opacity-60'
+      )}
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      {/* Header - always visible */}
+      <div className="flex items-center gap-3 p-4">
+        <div className={cn('flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center', colors.iconBg)}>
+          <Icon className={cn('w-5 h-5', colors.iconColor)} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-montserrat font-bold text-sm sm:text-base text-white truncate">
+            {title}
+          </h4>
+          <p className="font-inter text-xs sm:text-sm text-slate-400 truncate">
+            {subtitle}
+          </p>
+        </div>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className={cn('flex-shrink-0', colors.chevron)}
+        >
+          <ChevronDown className="w-5 h-5" />
+        </motion.div>
+      </div>
+
+      {/* Expandable content */}
+      <motion.div
+        initial={false}
+        animate={{
+          height: isOpen ? 'auto' : 0,
+          opacity: isOpen ? 1 : 0,
+        }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className="overflow-hidden"
+      >
+        <div className="px-4 pb-4 pt-1">
+          <div className="border-t border-white/5 pt-3">
+            <ul className="space-y-2">
+              {features.map((feature, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <div className={cn('w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0', colors.bullet)} />
+                  <span className="font-inter text-xs sm:text-sm text-slate-300">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// =============================================================================
+// CASE EXAMPLES DATA
+// =============================================================================
+
+const workflowCases: CaseExample[] = [
+  {
+    title: 'Auto Import Adviseur',
+    subtitle: 'Voor autobedrijven die Duitse occasions importeren',
+    Icon: Car,
+    accentColor: 'teal',
+    features: [
+      'Scrapet auto\'s van Duitse platforms op basis van een link',
+      'Onderzoekt automatisch de Nederlandse marktwaarde',
+      'Vergelijkt specificaties, km-stand en prijshistorie',
+      'Berekent totale importkosten (BPM, transport, keuring)',
+      'Adviseert of de import rendabel is met verwachte marge',
+    ],
+  },
+  {
+    title: 'Factuur & Offerte Automaat',
+    subtitle: 'Complete administratie automatisering',
+    Icon: FileText,
+    accentColor: 'teal',
+    features: [
+      'Haalt projectdata uit je CRM of projecttool',
+      'Genereert offertes automatisch in jouw huisstijl',
+      'Stuurt herinneringen bij openstaande facturen',
+      'Boekt betalingen automatisch in je boekhouding',
+      'Signaleert klanten die vaak te laat betalen',
+    ],
+  },
+];
+
+const aiAgentCases: CaseExample[] = [
+  {
+    title: 'Social Media Autopilot',
+    subtitle: 'Een agent die je hele social media overneemt',
+    Icon: Share2,
+    accentColor: 'teal',
+    features: [
+      'Scant dagelijks nieuws in jouw branche',
+      'Checkt het weer, feestdagen en speciale dagen',
+      'Doet diepgaand onderzoek naar trending topics',
+      'Vergelijkt met eerdere posts om duplicaten te voorkomen',
+      'Herschrijft indien nodig voor variatie',
+      'Genereert afbeelding in jouw huisstijl',
+      'Past tone of voice aan per platform',
+      'Plant en publiceert automatisch',
+    ],
+  },
+  {
+    title: 'Persoonlijke Email Assistent',
+    subtitle: 'AI die jouw inbox afhandelt',
+    Icon: Mail,
+    accentColor: 'teal',
+    features: [
+      'Leert jouw schrijfstijl en voorkeuren',
+      'Beantwoordt standaard vragen automatisch',
+      'Maakt concept-antwoorden voor complexe mails',
+      'Plant follow-ups in bij geen reactie',
+      'Sorteert en prioriteert inkomende mail',
+    ],
+  },
+];
+
+const dashboardCases: CaseExample[] = [
+  {
+    title: 'Real-time Business Intelligence',
+    subtitle: 'Dashboard dat al je data verbindt',
+    Icon: BarChart3,
+    accentColor: 'amber',
+    features: [
+      'Live omzet per klant, project en medewerker',
+      'Voorspelling cashflow komende 3 maanden',
+      'Winstgevendheid per dienst berekend',
+      'Automatische alerts bij afwijkingen',
+      'Vergelijking met vorig jaar/kwartaal',
+    ],
+  },
+  {
+    title: 'Marketing Performance Centrum',
+    subtitle: 'Al je marketing data op één plek',
+    Icon: TrendingUp,
+    accentColor: 'amber',
+    features: [
+      'ROI per campagne en kanaal',
+      'Customer acquisition cost berekening',
+      'Conversie funnel visualisatie',
+      'A/B test resultaten real-time',
+      'Voorspelling beste posting tijden',
+    ],
+  },
+];
 
 // =============================================================================
 // NETWORK ANIMATION (Slide 1 Background)
@@ -210,7 +412,7 @@ function WorkflowMockup() {
         <div className="w-3 h-3 rounded-full bg-green-500/70" />
       </div>
       <div className="absolute top-4 right-4 font-mono text-xs text-slate-500">
-        workflow.n8n
+        workflow.nova
       </div>
 
       <svg className="w-full h-full mt-6" viewBox="0 0 480 160">
@@ -461,9 +663,19 @@ function SlideIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="font-inter text-sm sm:text-lg md:text-xl text-slate-400 mb-8 sm:mb-14"
+          className="font-inter text-sm sm:text-lg md:text-xl text-slate-400 mb-4 sm:mb-6"
         >
           Stop met handmatig werk. Start met schalen.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="font-inter text-xs sm:text-sm md:text-base text-slate-500 mb-8 sm:mb-14 max-w-2xl mx-auto"
+        >
+          Door de kracht van AI bouw ik complete software oplossingen — van idee tot werkend product, tegen een fractie van de traditionele kosten.
         </motion.p>
 
         {/* Scroll indicator */}
@@ -515,8 +727,8 @@ function SlideAutomation() {
           </div>
 
           <h3 className="font-montserrat font-extrabold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
-            De &apos;Busy Work&apos;{' '}
-            <span className="text-teal">Killer.</span>
+            <span className="text-teal">Slimme</span>{' '}
+            Workflows.
           </h3>
 
           <p className="font-inter text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0">
@@ -535,15 +747,17 @@ function SlideAutomation() {
           </motion.a>
         </motion.div>
 
-        {/* Right: Workflow Mockup */}
+        {/* Right: Expandable Case Cards */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7 }}
-          className="w-full max-w-md lg:max-w-xl scale-75 sm:scale-90 lg:scale-100"
+          className="w-full max-w-md lg:max-w-lg space-y-3"
         >
-          <WorkflowMockup />
+          {workflowCases.map((example, i) => (
+            <ExpandableCard key={example.title} example={example} delay={0.3 + i * 0.1} />
+          ))}
         </motion.div>
         </div>
       </div>
@@ -601,15 +815,17 @@ function SlideAIAgents() {
           </motion.a>
         </motion.div>
 
-        {/* Right: Chat Mockup */}
+        {/* Right: Expandable Case Cards */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7 }}
-          className="w-full max-w-md lg:max-w-xl scale-75 sm:scale-90 lg:scale-100"
+          className="w-full max-w-md lg:max-w-lg space-y-3"
         >
-          <ChatMockup />
+          {aiAgentCases.map((example, i) => (
+            <ExpandableCard key={example.title} example={example} delay={0.3 + i * 0.1} />
+          ))}
         </motion.div>
         </div>
       </div>
@@ -629,15 +845,17 @@ function SlideDashboards() {
         <div className="hidden lg:block absolute inset-x-0 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-amber/10 via-amber/5 to-amber/10 border border-amber/10" />
 
         <div className="relative flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
-        {/* Left: Animated Chart Visual */}
+        {/* Left: Expandable Case Cards */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="w-full max-w-md lg:max-w-xl scale-75 sm:scale-90 lg:scale-100"
+          className="w-full max-w-md lg:max-w-lg space-y-3"
         >
-          <AnimatedChart />
+          {dashboardCases.map((example, i) => (
+            <ExpandableCard key={example.title} example={example} delay={0.3 + i * 0.1} />
+          ))}
         </motion.div>
 
         {/* Right: Text Content */}
@@ -724,7 +942,7 @@ function SlideOwnership() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="font-inter text-sm sm:text-base md:text-lg text-slate-400 mb-6 sm:mb-10 max-w-2xl mx-auto"
         >
-          Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
+          Ik bouw in open standaarden. Jij blijft 100% eigenaar. Geen vendor lock-in.
         </motion.p>
 
         <motion.div
@@ -1030,9 +1248,19 @@ function MobileSlideIntro({ onInView }: { onInView?: () => void }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="font-inter text-base text-slate-400 mb-8"
+          className="font-inter text-base text-slate-400 mb-4"
         >
           Stop met handmatig werk. Start met schalen.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.25 }}
+          className="font-inter text-sm text-slate-500 mb-8 max-w-sm mx-auto"
+        >
+          Door de kracht van AI bouw ik complete software oplossingen — tegen een fractie van de traditionele kosten.
         </motion.p>
 
         <motion.div
@@ -1095,7 +1323,7 @@ function MobileSlideAutomation({ onInView }: { onInView?: () => void }) {
           </div>
 
           <h3 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-white leading-tight">
-            De &apos;Busy Work&apos; <span className="text-teal">Killer.</span>
+            <span className="text-teal">Slimme</span> Workflows.
           </h3>
 
           <p className="font-inter text-sm text-slate-400 leading-relaxed">
@@ -1109,22 +1337,25 @@ function MobileSlideAutomation({ onInView }: { onInView?: () => void }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
+          className="space-y-3"
         >
-          <WorkflowMockup />
+          {workflowCases.map((example, i) => (
+            <ExpandableCard key={example.title} example={example} delay={0.25 + i * 0.1} />
+          ))}
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="mt-6 text-center"
         >
           <a
             href="#contact"
             className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-5 py-2.5 rounded-xl"
           >
-            Bekijk Cases
+            Start Gesprek
             <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
@@ -1189,22 +1420,25 @@ function MobileSlideAIAgents({ onInView }: { onInView?: () => void }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
+          className="space-y-3"
         >
-          <ChatMockup />
+          {aiAgentCases.map((example, i) => (
+            <ExpandableCard key={example.title} example={example} delay={0.25 + i * 0.1} />
+          ))}
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="mt-6 text-center"
         >
           <a
             href="#contact"
             className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-5 py-2.5 rounded-xl"
           >
-            Ontdek AI
+            Start Gesprek
             <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
@@ -1266,22 +1500,25 @@ function MobileSlideDashboards({ onInView }: { onInView?: () => void }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
+          className="space-y-3"
         >
-          <AnimatedChart />
+          {dashboardCases.map((example, i) => (
+            <ExpandableCard key={example.title} example={example} delay={0.25 + i * 0.1} />
+          ))}
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="mt-6 text-center"
         >
           <a
             href="#contact"
             className="inline-flex items-center gap-2 border-2 border-amber text-amber font-inter font-semibold text-sm px-5 py-2.5 rounded-xl"
           >
-            Zie Voorbeeld
+            Start Gesprek
             <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
@@ -1345,7 +1582,7 @@ function MobileSlideOwnership({ onInView }: { onInView?: () => void }) {
             transition={{ delay: 0.3 }}
             className="font-inter text-sm text-slate-400"
           >
-            Ik bouw in standaarden (n8n, SQL). Jij blijft 100% eigenaar. Geen vendor lock-in.
+            Ik bouw in open standaarden. Jij blijft 100% eigenaar. Geen vendor lock-in.
           </motion.p>
         </div>
       </motion.div>
