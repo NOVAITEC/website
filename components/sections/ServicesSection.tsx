@@ -1,7 +1,17 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+
+// Extend Window for Lenis
+declare global {
+  interface Window {
+    lenis?: {
+      start: () => void;
+      stop: () => void;
+    };
+  }
+}
 import {
   ArrowRight,
   ArrowDown,
@@ -554,40 +564,114 @@ function SlideFinale() {
 }
 
 // =============================================================================
-// MAIN COMPONENT
+// MAIN COMPONENT - DESKTOP WITH TUNNEL SCROLL
 // =============================================================================
 
 const TOTAL_SLIDES = 6;
+const SCROLL_THRESHOLD = 150; // Pixels of scroll needed to change slide
 
 export function ServicesSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isInTunnel, setIsInTunnel] = useState(false);
+  const wheelAccumRef = useRef(0);
 
-  // Track scroll position to update indicators
-  const handleScroll = () => {
-    if (!containerRef.current) return;
-    const scrollLeft = containerRef.current.scrollLeft;
-    const slideWidth = containerRef.current.offsetWidth;
-    const newSlide = Math.round(scrollLeft / slideWidth);
-    if (newSlide !== currentSlide) {
-      setCurrentSlide(newSlide);
-    }
-  };
+  // Navigate to specific slide
+  const goToSlide = useCallback((index: number) => {
+    const clamped = Math.max(0, Math.min(index, TOTAL_SLIDES - 1));
+    setCurrentSlide(clamped);
+  }, []);
+
+  // Tunnel scroll behavior for desktop
+  useEffect(() => {
+    // Only on desktop
+    if (typeof window === 'undefined' || window.innerWidth < 1024) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const sectionCentered = rect.top <= 50 && rect.bottom >= window.innerHeight - 50;
+
+      // Not in view - let normal scroll happen
+      if (!sectionCentered) {
+        if (isInTunnel) {
+          setIsInTunnel(false);
+          window.lenis?.start();
+        }
+        wheelAccumRef.current = 0;
+        return;
+      }
+
+      const scrollingDown = e.deltaY > 0;
+      const scrollingUp = e.deltaY < 0;
+      const atFirstSlide = currentSlide === 0;
+      const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
+
+      // Allow exit at boundaries
+      if ((atFirstSlide && scrollingUp) || (atLastSlide && scrollingDown)) {
+        setIsInTunnel(false);
+        window.lenis?.start();
+        wheelAccumRef.current = 0;
+        return;
+      }
+
+      // We're in the tunnel - capture scroll
+      e.preventDefault();
+      setIsInTunnel(true);
+      window.lenis?.stop();
+
+      // Accumulate scroll
+      wheelAccumRef.current += e.deltaY;
+
+      // Change slide when threshold reached
+      if (Math.abs(wheelAccumRef.current) >= SCROLL_THRESHOLD) {
+        if (wheelAccumRef.current > 0 && !atLastSlide) {
+          goToSlide(currentSlide + 1);
+        } else if (wheelAccumRef.current < 0 && !atFirstSlide) {
+          goToSlide(currentSlide - 1);
+        }
+        wheelAccumRef.current = 0;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.lenis?.start();
+    };
+  }, [currentSlide, isInTunnel, goToSlide]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isInTunnel) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        goToSlide(currentSlide + 1);
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        goToSlide(currentSlide - 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentSlide, isInTunnel, goToSlide]);
 
   return (
-    <section id="oplossing" className="relative bg-midnight">
-      {/* Desktop: Horizontal scroll with CSS scroll-snap */}
+    <section ref={sectionRef} id="oplossing" className="relative bg-midnight">
+      {/* Desktop: Horizontal carousel with tunnel scroll */}
       <div className="hidden lg:block h-screen overflow-hidden">
         {/* Ambient background */}
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/10 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none" />
 
-        {/* Horizontal scroll container */}
+        {/* Slides container - animated with transform */}
         <div
-          ref={containerRef}
-          onScroll={handleScroll}
-          className="h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
-          style={{ scrollBehavior: 'smooth' }}
+          className="h-full flex transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(-${currentSlide * 100}vw)` }}
         >
           <SlideIntro />
           <SlideAutomation />
@@ -602,14 +686,7 @@ export function ServicesSection() {
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
             <button
               key={i}
-              onClick={() => {
-                if (containerRef.current) {
-                  containerRef.current.scrollTo({
-                    left: i * containerRef.current.offsetWidth,
-                    behavior: 'smooth',
-                  });
-                }
-              }}
+              onClick={() => goToSlide(i)}
               className={cn(
                 'h-2 rounded-full transition-all duration-300',
                 i === currentSlide ? 'bg-teal w-6' : 'bg-white/20 hover:bg-white/40 w-2'
