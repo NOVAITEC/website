@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Clock, MessageCircle, Heart } from "lucide-react";
 import Image from "next/image";
+import { DotPattern } from "@/components/ui/dot-pattern";
 
 // Animation variants
 const containerVariants = {
@@ -67,15 +68,15 @@ export default function AboutSection() {
     >
       {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-teal/5 rounded-full blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2" />
-      <div
-        className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-5"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: "40px 40px",
-        }}
+
+      {/* Animated Dot Pattern Background */}
+      <DotPattern
+        width={40}
+        height={40}
+        cx={1}
+        cy={1}
+        cr={1}
+        className="text-teal/[0.15] [mask-image:radial-gradient(ellipse_at_bottom_right,white,transparent_70%)]"
       />
 
       {/* Main Content */}
