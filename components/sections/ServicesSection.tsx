@@ -1100,152 +1100,204 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: STICKY HORIZONTAL SLIDESHOW - PERFECT RHYTHM METHOD
+// DESKTOP: MAGNETIC HORIZONTAL SLIDER
 // =============================================================================
 //
-// WISKUNDE:
-// - TOTAL_SLIDES = 6
-// - SCROLL_PER_SLIDE = 100vh (de "zwaarte" van 1 stap)
-// - Stappen: 5 slide-transities + 1 exit-transitie = 6 stappen
-// - Container hoogte: (6 stappen × 100vh) + 100vh viewport = 700vh
-// - Scroll distance: 700vh - 100vh = 600vh
-//
-// ANIMATIE MAPPING:
-// - De horizontale beweging (-500vw) moet klaar zijn bij stap 5 van 6
-// - Input range: [0, 5/6] = [0, 0.833...]
-// - Output range: ["0%", "-500vw"]
-//
-// RITME:
-// - 0% → 83.3%: Slides bewegen horizontaal (5 transities)
-// - 83.3% → 100%: Slides staan stil op slide 6 (exit buffer)
-// - 100%: Sticky container laat los, footer verschijnt
+// FEATURES:
+// - Swipe: Trackpad/touch gestures werken native
+// - Magnetic: Na loslaten snapt naar dichtstbijzijnde slide
+// - Wheel: Muiswiel omlaag = slider naar rechts
 //
 // =============================================================================
-
-const SCROLL_PER_SLIDE = 100; // vh
-const TOTAL_STEPS = TOTAL_SLIDES; // 5 transities + 1 exit = 6 stappen
-const ANIMATION_END = (TOTAL_SLIDES - 1) / TOTAL_STEPS; // 5/6 = 0.833...
 
 function ServicesSectionDesktop() {
-  const targetRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideWidth, setSlideWidth] = useState(0);
+  const [isInView, setIsInView] = useState(false);
 
-  // Scroll progress van de hele sectie (0 = top raakt viewport top, 1 = bottom raakt viewport bottom)
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Horizontale beweging: van 0% naar -500vw over de eerste 5/6 van de scroll
-  // Na 5/6 (83.3%) blijft x op -500vw (slide 6 zichtbaar) tijdens de exit buffer
-  const x = useTransform(
-    scrollYProgress,
-    [0, ANIMATION_END],
-    ["0%", "-500vw"]
-  );
-
-  // Active slide berekening (voor UI indicators)
-  const [activeSlide, setActiveSlide] = useState(0);
-
+  // Meet slide breedte bij mount en resize
   useEffect(() => {
-    return scrollYProgress.on("change", (progress: number) => {
-      // Normaliseer progress naar animatie-bereik (0 tot 5/6 → 0 tot 1)
-      const normalizedProgress = Math.min(progress / ANIMATION_END, 1);
-      // Bereken slide index (0-5)
-      const slideIndex = Math.min(
-        Math.floor(normalizedProgress * TOTAL_SLIDES),
-        TOTAL_SLIDES - 1
-      );
-      setActiveSlide(slideIndex);
-    });
-  }, [scrollYProgress]);
+    const updateSlideWidth = () => {
+      setSlideWidth(window.innerWidth);
+    };
+    updateSlideWidth();
+    window.addEventListener('resize', updateSlideWidth);
+    return () => window.removeEventListener('resize', updateSlideWidth);
+  }, []);
 
-  // Container hoogte: 6 stappen × 100vh + 100vh viewport = 700vh
-  const containerHeight = `${(TOTAL_STEPS * SCROLL_PER_SLIDE) + 100}vh`;
+  // Detecteer of sectie in view is (voor wheel event handling)
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.5 }
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Navigeer naar specifieke slide
+  const goToSlide = useCallback((index: number) => {
+    const clampedIndex = Math.max(0, Math.min(index, TOTAL_SLIDES - 1));
+    setCurrentSlide(clampedIndex);
+  }, []);
+
+  // Wheel event: scroll omlaag = volgende slide, scroll omhoog = vorige slide
+  useEffect(() => {
+    if (!isInView) return;
+
+    let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
+    let accumulatedDelta = 0;
+    const threshold = 50; // Minimale scroll delta om slide te wisselen
+
+    const handleWheel = (e: WheelEvent) => {
+      // Voorkom normale pagina scroll binnen de sectie
+      e.preventDefault();
+
+      accumulatedDelta += e.deltaY;
+
+      // Debounce: wacht tot scrolling stopt
+      if (wheelTimeout) clearTimeout(wheelTimeout);
+      wheelTimeout = setTimeout(() => {
+        if (Math.abs(accumulatedDelta) > threshold) {
+          if (accumulatedDelta > 0 && currentSlide < TOTAL_SLIDES - 1) {
+            // Scroll omlaag = volgende slide
+            goToSlide(currentSlide + 1);
+          } else if (accumulatedDelta < 0 && currentSlide > 0) {
+            // Scroll omhoog = vorige slide
+            goToSlide(currentSlide - 1);
+          } else if (accumulatedDelta > 0 && currentSlide === TOTAL_SLIDES - 1) {
+            // Op laatste slide en scroll omlaag: laat normale scroll toe naar footer
+            // Door niets te doen hier, zal de volgende scroll event doorgaan
+          }
+        }
+        accumulatedDelta = 0;
+      }, 100);
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('wheel', handleWheel, { passive: false });
+    }
+    return () => {
+      if (container) {
+        container.removeEventListener('wheel', handleWheel);
+      }
+      if (wheelTimeout) clearTimeout(wheelTimeout);
+    };
+  }, [isInView, currentSlide, goToSlide]);
+
+  // Drag handling voor swipe support
+  const handleDragEnd = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: { offset: { x: number }; velocity: { x: number } }
+  ) => {
+    const swipeThreshold = slideWidth * 0.2; // 20% van slide breedte
+    const velocityThreshold = 500; // px/s
+
+    // Bepaal richting op basis van velocity of offset
+    if (info.velocity.x < -velocityThreshold || info.offset.x < -swipeThreshold) {
+      // Swipe naar links = volgende slide
+      goToSlide(currentSlide + 1);
+    } else if (info.velocity.x > velocityThreshold || info.offset.x > swipeThreshold) {
+      // Swipe naar rechts = vorige slide
+      goToSlide(currentSlide - 1);
+    }
+    // Anders: snap terug naar huidige slide (gebeurt automatisch door animate)
+  };
 
   return (
     <section
-      ref={targetRef}
+      ref={containerRef}
       id="oplossing"
-      className="relative bg-midnight"
-      style={{ height: containerHeight }}
+      className="relative bg-midnight h-screen overflow-hidden"
     >
-      {/* CAMERA: Dit blok blijft plakken (sticky) zolang we in de track zitten */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <NoiseOverlay />
+      <NoiseOverlay />
 
-        {/* Background ambient effects */}
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none"
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
+      {/* Background ambient effects */}
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none"
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+      />
 
-        {/* HORIZONTALE SLIDER: Beweegt op basis van de scroll-waarde */}
-        <motion.div 
-          className="flex h-full will-change-transform"
-          style={{ x }} // Koppel de framer-motion value direct aan de style
-        >
-          {/* Slide 1: Intro */}
-          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-            <SlideIntro />
-          </div>
-
-          {/* Slide 2: Automation */}
-          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-            <SlideAutomation />
-          </div>
-
-          {/* Slide 3: AI Agents */}
-          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-            <SlideAIAgents />
-          </div>
-
-          {/* Slide 4: Dashboards */}
-          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-            <SlideDashboards />
-          </div>
-
-          {/* Slide 5: Ownership */}
-          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-            <SlideOwnership />
-          </div>
-
-          {/* Slide 6: Grand Finale */}
-          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-            <SlideGrandFinale />
-          </div>
-        </motion.div>
-
-        {/* Progress indicators */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
-            <div
-              key={i}
-              className={cn(
-                'w-2 h-2 rounded-full transition-all duration-300',
-                i === activeSlide
-                  ? 'bg-teal w-6'
-                  : 'bg-white/20 hover:bg-white/40'
-              )}
-            />
-          ))}
+      {/* HORIZONTALE SLIDER: Draggable met magnetic snap */}
+      <motion.div
+        className="flex h-full cursor-grab active:cursor-grabbing"
+        drag="x"
+        dragConstraints={{ left: -slideWidth * (TOTAL_SLIDES - 1), right: 0 }}
+        dragElastic={0.1}
+        onDragEnd={handleDragEnd}
+        animate={{ x: -currentSlide * slideWidth }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      >
+        {/* Slide 1: Intro */}
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+          <SlideIntro />
         </div>
 
-        {/* Slide counter */}
-        <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
-          <span className="text-teal font-medium">
-            {String(activeSlide + 1).padStart(2, '0')}
-          </span>
-          <span className="text-slate-600">/</span>
-          <span className="text-slate-600">
-            {String(TOTAL_SLIDES).padStart(2, '0')}
-          </span>
+        {/* Slide 2: Automation */}
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+          <SlideAutomation />
         </div>
+
+        {/* Slide 3: AI Agents */}
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+          <SlideAIAgents />
+        </div>
+
+        {/* Slide 4: Dashboards */}
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+          <SlideDashboards />
+        </div>
+
+        {/* Slide 5: Ownership */}
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+          <SlideOwnership />
+        </div>
+
+        {/* Slide 6: Grand Finale */}
+        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+          <SlideGrandFinale />
+        </div>
+      </motion.div>
+
+      {/* Progress indicators - clickable */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goToSlide(i)}
+            className={cn(
+              'h-2 rounded-full transition-all duration-300',
+              i === currentSlide
+                ? 'bg-teal w-6'
+                : 'bg-white/20 hover:bg-white/40 w-2'
+            )}
+          />
+        ))}
+      </div>
+
+      {/* Slide counter */}
+      <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
+        <span className="text-teal font-medium">
+          {String(currentSlide + 1).padStart(2, '0')}
+        </span>
+        <span className="text-slate-600">/</span>
+        <span className="text-slate-600">
+          {String(TOTAL_SLIDES).padStart(2, '0')}
+        </span>
+      </div>
+
+      {/* Keyboard navigation hint */}
+      <div className="absolute bottom-8 right-8 font-mono text-xs text-slate-600 z-10 hidden lg:block">
+        ← → of scroll
       </div>
     </section>
   );
