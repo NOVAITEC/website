@@ -1106,6 +1106,8 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 function ServicesSectionDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollYProgress = useMotionValue(0);
+  const isSnapping = useRef(false);
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -1119,16 +1121,61 @@ function ServicesSectionDesktop() {
       ticking = false;
     };
 
+    const snapToSlide = () => {
+      if (!containerRef.current || isSnapping.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollableHeight = containerRef.current.offsetHeight - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+
+      // Calculate which slide we're closest to (6 slides)
+      const slideIndex = Math.round(progress * (TOTAL_SLIDES - 1));
+      const targetProgress = slideIndex / (TOTAL_SLIDES - 1);
+
+      // Only snap if we're not already at the target
+      if (Math.abs(progress - targetProgress) > 0.01) {
+        isSnapping.current = true;
+
+        // Calculate the target scroll position
+        const containerTop = containerRef.current.offsetTop;
+        const targetScroll = containerTop + (targetProgress * scrollableHeight);
+
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'smooth'
+        });
+
+        // Reset snapping flag after animation
+        setTimeout(() => {
+          isSnapping.current = false;
+        }, 500);
+      }
+    };
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(updateProgress);
         ticking = true;
       }
+
+      // Debounce: wait for scroll to stop, then snap
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+
+      if (!isSnapping.current) {
+        scrollTimeout.current = setTimeout(snapToSlide, 150);
+      }
     };
 
     updateProgress();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
   }, [scrollYProgress]);
 
   // Direct 1:1 mapping - no spring for immediate response to scroll
