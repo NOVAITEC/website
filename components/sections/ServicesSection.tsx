@@ -1104,102 +1104,77 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 // =============================================================================
 
 function ServicesSectionDesktop() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const wrapperRef = useRef<HTMLElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isActive, setIsActive] = useState(false);
   const scrollAccumulator = useRef(0);
   const isTransitioning = useRef(false);
 
-  const SCROLL_THRESHOLD = 80; // Scroll amount needed to trigger next slide
+  const SCROLL_THRESHOLD = 100; // Scroll amount needed to trigger next slide
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
 
     const handleWheel = (e: WheelEvent) => {
-      const rect = section.getBoundingClientRect();
+      const rect = wrapper.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // Check if section is at or near the top of viewport
-      const isSectionAtTop = rect.top <= 5 && rect.top >= -5;
+      // Check if sticky container is "pinned" (wrapper top is above viewport, bottom is below)
+      const isSticky = rect.top <= 0 && rect.bottom >= viewportHeight;
 
-      // SCENARIO 1: Scrolling DOWN, section coming into view → snap to section
-      if (!isActive && e.deltaY > 0 && rect.top > 0 && rect.top < viewportHeight * 0.8) {
+      // Only handle when the sticky container is pinned
+      if (!isSticky) return;
+
+      // Don't process during transition animation
+      if (isTransitioning.current) {
         e.preventDefault();
-        section.scrollIntoView({ behavior: 'smooth' });
-        setIsActive(true);
-        setCurrentSlide(0);
         return;
       }
 
-      // SCENARIO 2: Section is active (sticky) → handle slide navigation
-      if (isActive || isSectionAtTop) {
-        // Activate if we hit the section
-        if (!isActive && isSectionAtTop) {
-          setIsActive(true);
-        }
+      // Accumulate scroll delta
+      scrollAccumulator.current += e.deltaY;
 
-        // Don't process during transition animation
-        if (isTransitioning.current) {
-          e.preventDefault();
-          return;
-        }
+      // Check for slide navigation
+      if (Math.abs(scrollAccumulator.current) >= SCROLL_THRESHOLD) {
+        const direction = scrollAccumulator.current > 0 ? 1 : -1;
+        const nextSlide = currentSlide + direction;
 
-        // Accumulate scroll delta
-        scrollAccumulator.current += e.deltaY;
-
-        // Check for slide navigation
-        if (Math.abs(scrollAccumulator.current) >= SCROLL_THRESHOLD) {
-          const direction = scrollAccumulator.current > 0 ? 1 : -1;
-          const nextSlide = currentSlide + direction;
-
-          // EXIT CONDITIONS
-          // Scrolling UP on first slide → release section, scroll page up
-          if (nextSlide < 0) {
-            setIsActive(false);
-            scrollAccumulator.current = 0;
-            return; // Let the page scroll naturally
-          }
-
-          // Scrolling DOWN on last slide → release section, scroll page down
-          if (nextSlide >= TOTAL_SLIDES) {
-            setIsActive(false);
-            scrollAccumulator.current = 0;
-            return; // Let the page scroll naturally
-          }
-
-          // NAVIGATE TO NEXT/PREV SLIDE
-          e.preventDefault();
-          isTransitioning.current = true;
+        // EXIT CONDITIONS - let page scroll naturally
+        if (nextSlide < 0 || nextSlide >= TOTAL_SLIDES) {
           scrollAccumulator.current = 0;
-          setCurrentSlide(nextSlide);
-
-          // Reset transition lock after animation
-          setTimeout(() => {
-            isTransitioning.current = false;
-          }, 500);
           return;
         }
 
-        // Block scroll while in section (not at exit boundaries)
-        if (currentSlide > 0 || e.deltaY > 0) {
-          if (currentSlide < TOTAL_SLIDES - 1 || e.deltaY < 0) {
-            e.preventDefault();
-          }
-        }
+        // NAVIGATE TO NEXT/PREV SLIDE
+        e.preventDefault();
+        isTransitioning.current = true;
+        scrollAccumulator.current = 0;
+        setCurrentSlide(nextSlide);
+
+        // Reset transition lock after animation
+        setTimeout(() => {
+          isTransitioning.current = false;
+        }, 600);
+        return;
+      }
+
+      // Block scroll while navigating between slides (not at boundaries)
+      const atStart = currentSlide === 0 && e.deltaY < 0;
+      const atEnd = currentSlide === TOTAL_SLIDES - 1 && e.deltaY > 0;
+
+      if (!atStart && !atEnd) {
+        e.preventDefault();
       }
     };
 
-    // Reset accumulator on scroll end
-    const resetAccumulator = () => {
-      scrollAccumulator.current = 0;
-    };
-
+    // Reset accumulator on scroll pause
     let resetTimeout: ReturnType<typeof setTimeout>;
     const handleWheelWithReset = (e: WheelEvent) => {
       handleWheel(e);
       clearTimeout(resetTimeout);
-      resetTimeout = setTimeout(resetAccumulator, 150);
+      resetTimeout = setTimeout(() => {
+        scrollAccumulator.current = 0;
+      }, 200);
     };
 
     window.addEventListener('wheel', handleWheelWithReset, { passive: false });
@@ -1207,113 +1182,114 @@ function ServicesSectionDesktop() {
       window.removeEventListener('wheel', handleWheelWithReset);
       clearTimeout(resetTimeout);
     };
-  }, [isActive, currentSlide]);
+  }, [currentSlide]);
 
-  // Reset when section goes out of view
+  // Reset slide when scrolling back to section from above
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          setIsActive(false);
-          // Reset to first slide if scrolled up past section
-          if (entry.boundingClientRect.top > 0) {
-            setCurrentSlide(0);
-          }
-        }
-      },
-      { threshold: 0.1 }
-    );
+    const handleScroll = () => {
+      const rect = wrapper.getBoundingClientRect();
+      // If we're above the section, reset to first slide
+      if (rect.top > window.innerHeight) {
+        setCurrentSlide(0);
+      }
+    };
 
-    observer.observe(section);
-    return () => observer.disconnect();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Calculate horizontal offset based on current slide
   const slideOffset = `-${currentSlide * 100}vw`;
 
   return (
+    // WRAPPER: Height creates scroll space (TOTAL_SLIDES * 100vh)
+    // This allows the sticky container to "pin" while user scrolls through
     <section
-      ref={sectionRef}
+      ref={wrapperRef}
       id="oplossing"
-      className="relative h-screen bg-midnight overflow-hidden"
+      className="relative bg-midnight"
+      style={{ height: `${TOTAL_SLIDES * 100}vh` }}
     >
-      <NoiseOverlay />
+      {/* STICKY CONTAINER: Pins to top while scrolling through wrapper */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <NoiseOverlay />
 
-      {/* Background ambient effects */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none"
-        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-      />
+        {/* Background ambient effects */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none"
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        />
 
-      {/* Horizontal slides container - transforms based on currentSlide */}
-      <div
-        className="relative h-full flex transition-transform duration-500 ease-out"
-        style={{ transform: `translateX(${slideOffset})` }}
-      >
-        {/* Slide 1: Intro */}
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-          <SlideIntro />
+        {/* Horizontal slides container - transforms based on currentSlide */}
+        <div
+          className="relative h-full flex transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(${slideOffset})` }}
+        >
+          {/* Slide 1: Intro */}
+          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideIntro />
+          </div>
+
+          {/* Slide 2: Automation */}
+          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideAutomation />
+          </div>
+
+          {/* Slide 3: AI Agents */}
+          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideAIAgents />
+          </div>
+
+          {/* Slide 4: Dashboards */}
+          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideDashboards />
+          </div>
+
+          {/* Slide 5: Ownership */}
+          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideOwnership />
+          </div>
+
+          {/* Slide 6: Grand Finale */}
+          <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
+            <SlideGrandFinale />
+          </div>
         </div>
 
-        {/* Slide 2: Automation */}
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-          <SlideAutomation />
+        {/* Progress indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                'w-2 h-2 rounded-full transition-all duration-300',
+                i === currentSlide
+                  ? 'bg-teal w-6'
+                  : 'bg-white/20 hover:bg-white/40'
+              )}
+            />
+          ))}
         </div>
 
-        {/* Slide 3: AI Agents */}
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-          <SlideAIAgents />
+        {/* Slide counter */}
+        <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
+          <span className="text-teal font-medium">
+            {String(currentSlide + 1).padStart(2, '0')}
+          </span>
+          <span className="text-slate-600">/</span>
+          <span className="text-slate-600">
+            {String(TOTAL_SLIDES).padStart(2, '0')}
+          </span>
         </div>
-
-        {/* Slide 4: Dashboards */}
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-          <SlideDashboards />
-        </div>
-
-        {/* Slide 5: Ownership */}
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-          <SlideOwnership />
-        </div>
-
-        {/* Slide 6: Grand Finale */}
-        <div className="flex-shrink-0 w-screen h-full flex items-center justify-center">
-          <SlideGrandFinale />
-        </div>
-      </div>
-
-      {/* Progress indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
-          <div
-            key={i}
-            className={cn(
-              'w-2 h-2 rounded-full transition-all duration-300',
-              i === currentSlide
-                ? 'bg-teal w-6'
-                : 'bg-white/20 hover:bg-white/40'
-            )}
-          />
-        ))}
-      </div>
-
-      {/* Slide counter */}
-      <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
-        <span className="text-teal font-medium">
-          {String(currentSlide + 1).padStart(2, '0')}
-        </span>
-        <span className="text-slate-600">/</span>
-        <span className="text-slate-600">
-          {String(TOTAL_SLIDES).padStart(2, '0')}
-        </span>
       </div>
     </section>
   );
