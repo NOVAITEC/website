@@ -1201,10 +1201,10 @@ function ServicesSectionDesktop() {
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      // BI-DIRECTIONELE TUNNEL ESCAPE LOGICA:
-      // Check exit VOORDAT we Lenis stoppen, zodat Lenis de scroll kan afhandelen
-      const canExitDown = atLastSlide && tryingToScrollDown && entryDirection === 'above';
-      const canExitUp = atFirstSlide && tryingToScrollUp && entryDirection === 'below';
+      // TUNNEL ESCAPE LOGICA:
+      // Exit altijd mogelijk aan de grenzen, ongeacht hoe je binnenkwam
+      const canExitDown = atLastSlide && tryingToScrollDown;
+      const canExitUp = atFirstSlide && tryingToScrollUp;
 
       if (canExitDown || canExitUp) {
         // Start Lenis expliciet en laat scroll door
