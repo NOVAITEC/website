@@ -197,8 +197,16 @@ export default function NeuralBackground({
   }, [color, trailOpacity, particleCount, speed]);
 
   return (
-    <div ref={containerRef} className={cn("relative w-full h-full bg-black overflow-hidden", className)}>
-      <canvas ref={canvasRef} className="block w-full h-full" />
+    <div
+      ref={containerRef}
+      className={cn("relative w-full h-full bg-black overflow-hidden", className)}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="block w-full h-full"
+        style={{ WebkitTapHighlightColor: 'transparent', touchAction: 'pan-y' }}
+      />
     </div>
   );
 }
