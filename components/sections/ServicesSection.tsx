@@ -494,7 +494,11 @@ function SlideIntro() {
 function SlideAutomation() {
   return (
     <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
-      <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative">
+        {/* Verbindende gradient container - alleen op desktop */}
+        <div className="hidden lg:block absolute inset-x-0 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-teal/10 via-teal/5 to-teal/10 border border-teal/10" />
+
+        <div className="relative flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -553,7 +557,11 @@ function SlideAutomation() {
 function SlideAIAgents() {
   return (
     <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
-      <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative">
+        {/* Verbindende gradient container - alleen op desktop */}
+        <div className="hidden lg:block absolute inset-x-0 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-teal/10 via-teal/5 to-teal/10 border border-teal/10" />
+
+        <div className="relative flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Text Content */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -614,7 +622,11 @@ function SlideAIAgents() {
 function SlideDashboards() {
   return (
     <div className="relative flex-shrink-0 w-[92vw] md:w-[90vw] lg:w-[88vw] h-full flex items-center rounded-3xl overflow-hidden bg-midnight/50">
-      <div className="container mx-auto px-4 sm:px-6 flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative">
+        {/* Verbindende gradient container - alleen op desktop */}
+        <div className="hidden lg:block absolute inset-x-0 top-1/2 -translate-y-1/2 h-[420px] rounded-2xl bg-gradient-to-r from-amber/10 via-amber/5 to-amber/10 border border-amber/10" />
+
+        <div className="relative flex flex-col-reverse lg:grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         {/* Left: Animated Chart Visual */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
