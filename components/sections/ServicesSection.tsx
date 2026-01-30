@@ -1100,87 +1100,90 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: VERTICAL SCROLL SNAP (Pure CSS)
+// DESKTOP: HORIZONTAL SCROLL SLIDER (CSS Snap + JS Wheel Support)
 // =============================================================================
 
 function ServicesSectionDesktop() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Convert vertical mouse wheel to horizontal scroll
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Only handle if we're scrolling vertically (deltaY)
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        // Add deltaY to scrollLeft (vertical wheel → horizontal scroll)
+        container.scrollLeft += e.deltaY;
+      }
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, []);
+
   return (
-    <section id="oplossing" className="relative bg-midnight">
+    <section id="oplossing" className="relative h-screen bg-midnight overflow-hidden">
+      <NoiseOverlay />
+
+      {/* Background ambient effects (fixed position) */}
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px] pointer-events-none"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px] pointer-events-none"
+        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
       {/*
-        CSS Scroll Snap Container
-        - snap-y: vertical scroll snapping
-        - snap-mandatory: always snap to a snap point (magnetic effect)
-        - scroll-pt-0: scroll padding top (adjust if you have a sticky header)
-        - h-screen: container height = viewport height (enables snapping)
-        - overflow-y-auto: enable vertical scrolling within container
+        Horizontal Scroll Container
+        - flex: horizontal layout
+        - overflow-x-auto: enable horizontal scrolling
+        - snap-x mandatory: magnetic snap effect on X-axis
+        - scrollbar-hide: hide scrollbar but keep functionality
       */}
       <div
-        className="h-screen overflow-y-auto snap-y snap-mandatory scroll-pt-0 scrollbar-hide"
+        ref={scrollContainerRef}
+        className="
+          relative h-full w-full
+          flex overflow-x-auto overflow-y-hidden
+          snap-x snap-mandatory
+          scrollbar-hide
+        "
         style={{ scrollBehavior: 'smooth' }}
       >
         {/* Slide 1: Intro */}
-        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
-          <NoiseOverlay />
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideIntro />
         </div>
 
         {/* Slide 2: Automation */}
-        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
-          <NoiseOverlay />
-          <motion.div
-            className="absolute top-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-teal/10 blur-[120px]"
-            animate={{ scale: [1.1, 1, 1.1], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideAutomation />
         </div>
 
         {/* Slide 3: AI Agents */}
-        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
-          <NoiseOverlay />
-          <motion.div
-            className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] rounded-full bg-teal/10 blur-[130px]"
-            animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.18, 0.1] }}
-            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideAIAgents />
         </div>
 
         {/* Slide 4: Dashboards */}
-        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
-          <NoiseOverlay />
-          <motion.div
-            className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-amber/10 blur-[120px]"
-            animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideDashboards />
         </div>
 
         {/* Slide 5: Ownership */}
-        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
-          <NoiseOverlay />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full bg-amber/15 blur-[100px]"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideOwnership />
         </div>
 
         {/* Slide 6: Grand Finale */}
-        <div className="snap-start snap-always h-screen w-full flex items-center justify-center relative">
-          <NoiseOverlay />
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-teal/15 blur-[150px]"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center">
           <SlideGrandFinale />
         </div>
       </div>
