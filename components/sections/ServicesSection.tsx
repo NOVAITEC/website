@@ -558,7 +558,7 @@ function SlideFinale() {
 // =============================================================================
 
 const TOTAL_SLIDES = 6;
-const SCROLL_THRESHOLD = 150; // Pixels of scroll needed to change slide
+const SCROLL_THRESHOLD = 400; // Pixels of scroll needed to change slide
 
 export function ServicesSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
