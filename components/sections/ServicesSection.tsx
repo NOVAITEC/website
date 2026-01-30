@@ -1100,16 +1100,19 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: STICKY HORIZONTAL SLIDESHOW WITH STEP-SNAP
+// DESKTOP: STICKY HORIZONTAL SLIDESHOW - "TUNNEL" EXPERIENCE
 // =============================================================================
 
 function ServicesSectionDesktop() {
   const wrapperRef = useRef<HTMLElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
   const scrollAccumulator = useRef(0);
   const isTransitioning = useRef(false);
+  const exitAccumulator = useRef(0);
 
-  const SCROLL_THRESHOLD = 100; // Scroll amount needed to trigger next slide
+  const SCROLL_THRESHOLD = 80;  // Scroll needed for next slide
+  const EXIT_THRESHOLD = 150;   // Extra scroll needed to EXIT tunnel
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -1117,53 +1120,87 @@ function ServicesSectionDesktop() {
 
     const handleWheel = (e: WheelEvent) => {
       const rect = wrapper.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
 
-      // Check if sticky container is "pinned" (wrapper top is above viewport, bottom is below)
-      const isSticky = rect.top <= 0 && rect.bottom >= viewportHeight;
+      // ENTRY DETECTION: Section top is at or above viewport top
+      const sectionReached = rect.top <= 50;
+      // Section is still on screen (not scrolled past)
+      const sectionVisible = rect.bottom > 0;
 
-      // Only handle when the sticky container is pinned
-      if (!isSticky) return;
-
-      // Don't process during transition animation
-      if (isTransitioning.current) {
+      // ═══════════════════════════════════════════════════════════════════
+      // TUNNEL ENTRY: Lock when section reaches top of viewport
+      // ═══════════════════════════════════════════════════════════════════
+      if (!isLocked && sectionReached && sectionVisible && e.deltaY > 0) {
         e.preventDefault();
+        setIsLocked(true);
+        // Snap section to exact top
+        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
 
-      // Accumulate scroll delta
-      scrollAccumulator.current += e.deltaY;
+      // ═══════════════════════════════════════════════════════════════════
+      // INSIDE TUNNEL: Block ALL scroll, handle slide navigation
+      // ═══════════════════════════════════════════════════════════════════
+      if (isLocked) {
+        // ALWAYS block scroll while locked
+        e.preventDefault();
 
-      // Check for slide navigation
-      if (Math.abs(scrollAccumulator.current) >= SCROLL_THRESHOLD) {
-        const direction = scrollAccumulator.current > 0 ? 1 : -1;
-        const nextSlide = currentSlide + direction;
+        // Don't process during transition
+        if (isTransitioning.current) return;
 
-        // EXIT CONDITIONS - let page scroll naturally
-        if (nextSlide < 0 || nextSlide >= TOTAL_SLIDES) {
-          scrollAccumulator.current = 0;
-          return;
+        // Accumulate scroll delta
+        scrollAccumulator.current += e.deltaY;
+
+        // ─────────────────────────────────────────────────────────────────
+        // EXIT ATTEMPT: Only possible on LAST slide, scrolling DOWN
+        // ─────────────────────────────────────────────────────────────────
+        if (currentSlide === TOTAL_SLIDES - 1 && e.deltaY > 0) {
+          exitAccumulator.current += e.deltaY;
+
+          if (exitAccumulator.current >= EXIT_THRESHOLD) {
+            // EXIT TUNNEL
+            setIsLocked(false);
+            exitAccumulator.current = 0;
+            scrollAccumulator.current = 0;
+            return;
+          }
+        } else {
+          exitAccumulator.current = 0;
         }
 
-        // NAVIGATE TO NEXT/PREV SLIDE
-        e.preventDefault();
-        isTransitioning.current = true;
-        scrollAccumulator.current = 0;
-        setCurrentSlide(nextSlide);
+        // ─────────────────────────────────────────────────────────────────
+        // BACK TO START: Only possible on FIRST slide, scrolling UP
+        // ─────────────────────────────────────────────────────────────────
+        if (currentSlide === 0 && e.deltaY < 0) {
+          exitAccumulator.current += Math.abs(e.deltaY);
 
-        // Reset transition lock after animation
-        setTimeout(() => {
-          isTransitioning.current = false;
-        }, 600);
-        return;
-      }
+          if (exitAccumulator.current >= EXIT_THRESHOLD) {
+            // EXIT TUNNEL (backwards)
+            setIsLocked(false);
+            exitAccumulator.current = 0;
+            scrollAccumulator.current = 0;
+            return;
+          }
+        }
 
-      // Block scroll while navigating between slides (not at boundaries)
-      const atStart = currentSlide === 0 && e.deltaY < 0;
-      const atEnd = currentSlide === TOTAL_SLIDES - 1 && e.deltaY > 0;
+        // ─────────────────────────────────────────────────────────────────
+        // SLIDE NAVIGATION
+        // ─────────────────────────────────────────────────────────────────
+        if (Math.abs(scrollAccumulator.current) >= SCROLL_THRESHOLD) {
+          const direction = scrollAccumulator.current > 0 ? 1 : -1;
+          const nextSlide = currentSlide + direction;
 
-      if (!atStart && !atEnd) {
-        e.preventDefault();
+          // Clamp to valid range
+          if (nextSlide >= 0 && nextSlide < TOTAL_SLIDES) {
+            isTransitioning.current = true;
+            setCurrentSlide(nextSlide);
+
+            setTimeout(() => {
+              isTransitioning.current = false;
+            }, 500);
+          }
+
+          scrollAccumulator.current = 0;
+        }
       }
     };
 
@@ -1174,7 +1211,8 @@ function ServicesSectionDesktop() {
       clearTimeout(resetTimeout);
       resetTimeout = setTimeout(() => {
         scrollAccumulator.current = 0;
-      }, 200);
+        // Don't reset exitAccumulator - let it persist for intentional exits
+      }, 150);
     };
 
     window.addEventListener('wheel', handleWheelWithReset, { passive: false });
@@ -1182,17 +1220,22 @@ function ServicesSectionDesktop() {
       window.removeEventListener('wheel', handleWheelWithReset);
       clearTimeout(resetTimeout);
     };
-  }, [currentSlide]);
+  }, [isLocked, currentSlide]);
 
-  // Reset slide when scrolling back to section from above
+  // Reset state when section goes completely out of view
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
     const handleScroll = () => {
       const rect = wrapper.getBoundingClientRect();
-      // If we're above the section, reset to first slide
+      // If section is completely above viewport (scrolled past)
+      if (rect.bottom < 0) {
+        setIsLocked(false);
+      }
+      // If section is completely below viewport (scrolled back up)
       if (rect.top > window.innerHeight) {
+        setIsLocked(false);
         setCurrentSlide(0);
       }
     };
