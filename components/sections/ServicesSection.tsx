@@ -1185,13 +1185,17 @@ function ServicesSectionDesktop() {
       const rect = container.getBoundingClientRect();
       const sectionInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
 
-      // Reset entry direction als sectie niet in beeld
+      // NIET in beeld → hervat Lenis en reset state
       if (!sectionInView) {
+        if (window.lenis) window.lenis.start();
         if (entryDirection !== null) {
           setEntryDirection(null);
         }
         return;
       }
+
+      // IN BEELD → PAUZEER LENIS (kritiek voor tunnel werking!)
+      if (window.lenis) window.lenis.stop();
 
       const tryingToScrollUp = e.deltaY < 0;
       const tryingToScrollDown = e.deltaY > 0;
@@ -1217,6 +1221,7 @@ function ServicesSectionDesktop() {
       const canExitUp = atFirstSlide && tryingToScrollUp && entryDirection === 'below';
 
       if (canExitDown || canExitUp) {
+        if (window.lenis) window.lenis.start();  // HERVAT LENIS bij exit
         setEntryDirection(null); // Reset voor volgende keer
         return; // Laat browser scroll toe
       }
@@ -1256,6 +1261,7 @@ function ServicesSectionDesktop() {
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      if (window.lenis) window.lenis.start();  // Cleanup: hervat Lenis
       if (wheelTimeout) clearTimeout(wheelTimeout);
     };
   }, [currentSlide, goToSlide, entryDirection]);
