@@ -1167,47 +1167,69 @@ function ServicesSectionDesktop() {
     goToSlide(targetSlide);
   }, [currentSlide, slideWidth, goToSlide]);
 
-  // Muiswiel handler
+  // Muiswiel handler - vangt scroll en zet om naar slide navigatie
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
     let wheelAccum = 0;
     let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
+    let isAnimating = false;
 
     const handleWheel = (e: WheelEvent) => {
-      // Check of we in de sectie zijn
+      const container = containerRef.current;
+      if (!container) return;
+
+      // Check of de sectie in beeld is
       const rect = container.getBoundingClientRect();
-      const inView = rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5;
+      const sectionInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
 
-      if (!inView) return;
+      if (!sectionInView) return;
 
-      // Voorkom pagina scroll als we niet op eerste/laatste slide zijn
-      // OF als we niet naar buiten proberen te scrollen
-      const atStart = currentSlide === 0 && e.deltaY < 0;
-      const atEnd = currentSlide === TOTAL_SLIDES - 1 && e.deltaY > 0;
+      // Bepaal of we mogen "ontsnappen" uit de sectie
+      const tryingToScrollUp = e.deltaY < 0;
+      const tryingToScrollDown = e.deltaY > 0;
+      const atFirstSlide = currentSlide === 0;
+      const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      if (!atStart && !atEnd) {
-        e.preventDefault();
+      // Laat normale scroll toe als:
+      // - Op eerste slide EN scroll omhoog (terug naar boven)
+      // - Op laatste slide EN scroll omlaag (door naar footer)
+      if ((atFirstSlide && tryingToScrollUp) || (atLastSlide && tryingToScrollDown)) {
+        return; // Laat browser scroll toe
       }
+
+      // Anders: blokkeer scroll en navigeer slides
+      e.preventDefault();
+
+      if (isAnimating) return;
 
       wheelAccum += e.deltaY;
 
       if (wheelTimeout) clearTimeout(wheelTimeout);
       wheelTimeout = setTimeout(() => {
-        const threshold = 30;
-        if (wheelAccum > threshold) {
-          goToSlide(currentSlide + 1);
-        } else if (wheelAccum < -threshold) {
-          goToSlide(currentSlide - 1);
+        const threshold = 50;
+
+        if (Math.abs(wheelAccum) > threshold) {
+          isAnimating = true;
+
+          if (wheelAccum > 0) {
+            goToSlide(currentSlide + 1);
+          } else {
+            goToSlide(currentSlide - 1);
+          }
+
+          // Blokkeer nieuwe input tijdens animatie
+          setTimeout(() => {
+            isAnimating = false;
+          }, 400);
         }
+
         wheelAccum = 0;
-      }, 50);
+      }, 30);
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
+    // Luister op window niveau om alle scroll events te vangen
+    window.addEventListener('wheel', handleWheel, { passive: false });
     return () => {
-      container.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('wheel', handleWheel);
       if (wheelTimeout) clearTimeout(wheelTimeout);
     };
   }, [currentSlide, goToSlide]);
