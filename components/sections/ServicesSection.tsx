@@ -1100,101 +1100,74 @@ function SlideIndicators({ scrollYProgress }: { scrollYProgress: MotionValue<num
 }
 
 // =============================================================================
-// DESKTOP: STICKY HORIZONTAL SLIDESHOW - STABLE GHOST TRACK METHOD
+// DESKTOP: STICKY HORIZONTAL SLIDESHOW - PERFECT RHYTHM METHOD
 // =============================================================================
+//
+// WISKUNDE:
+// - TOTAL_SLIDES = 6
+// - SCROLL_PER_SLIDE = 100vh (de "zwaarte" van 1 stap)
+// - Stappen: 5 slide-transities + 1 exit-transitie = 6 stappen
+// - Container hoogte: (6 stappen × 100vh) + 100vh viewport = 700vh
+// - Scroll distance: 700vh - 100vh = 600vh
+//
+// ANIMATIE MAPPING:
+// - De horizontale beweging (-500vw) moet klaar zijn bij stap 5 van 6
+// - Input range: [0, 5/6] = [0, 0.833...]
+// - Output range: ["0%", "-500vw"]
+//
+// RITME:
+// - 0% → 83.3%: Slides bewegen horizontaal (5 transities)
+// - 83.3% → 100%: Slides staan stil op slide 6 (exit buffer)
+// - 100%: Sticky container laat los, footer verschijnt
+//
+// =============================================================================
+
+const SCROLL_PER_SLIDE = 100; // vh
+const TOTAL_STEPS = TOTAL_SLIDES; // 5 transities + 1 exit = 6 stappen
+const ANIMATION_END = (TOTAL_SLIDES - 1) / TOTAL_STEPS; // 5/6 = 0.833...
 
 function ServicesSectionDesktop() {
   const targetRef = useRef<HTMLElement>(null);
-  const isSnapping = useRef(false);
-  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 1. We gebruiken de 'native' scroll progress van de container
+  // Scroll progress van de hele sectie (0 = top raakt viewport top, 1 = bottom raakt viewport bottom)
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end end"],
   });
 
-  // 2. We mappen de verticale scroll direct naar horizontale beweging
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-500vw"]);
+  // Horizontale beweging: van 0% naar -500vw over de eerste 5/6 van de scroll
+  // Na 5/6 (83.3%) blijft x op -500vw (slide 6 zichtbaar) tijdens de exit buffer
+  const x = useTransform(
+    scrollYProgress,
+    [0, ANIMATION_END],
+    ["0%", "-500vw"]
+  );
 
-  // Active slide state
+  // Active slide berekening (voor UI indicators)
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // Scroll snap functie - scrollt naar de dichtstbijzijnde slide
-  const snapToSlide = useCallback((slideIndex: number) => {
-    if (!targetRef.current || isSnapping.current) return;
-
-    const section = targetRef.current;
-    const sectionTop = section.offsetTop;
-    const sectionHeight = section.offsetHeight;
-    const viewportHeight = window.innerHeight;
-    const scrollableDistance = sectionHeight - viewportHeight;
-
-    // Bereken de scroll positie voor deze slide
-    const targetProgress = slideIndex / (TOTAL_SLIDES - 1);
-    const targetScrollY = sectionTop + (scrollableDistance * targetProgress);
-
-    isSnapping.current = true;
-    window.scrollTo({
-      top: targetScrollY,
-      behavior: 'smooth'
-    });
-
-    // Reset snapping flag na animatie
-    setTimeout(() => {
-      isSnapping.current = false;
-    }, 500);
-  }, []);
-
-  // Detecteer wanneer scrolling stopt en snap naar dichtstbijzijnde slide
   useEffect(() => {
-    const handleScroll = () => {
-      if (isSnapping.current) return;
-
-      // Clear previous timeout
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-
-      // Set new timeout - snap na 150ms idle
-      scrollTimeout.current = setTimeout(() => {
-        const progress = scrollYProgress.get();
-        // Alleen snappen als we binnen de sectie zijn
-        if (progress > 0 && progress < 1) {
-          const nearestSlide = Math.round(progress * (TOTAL_SLIDES - 1));
-          snapToSlide(nearestSlide);
-        }
-      }, 150);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-    };
-  }, [scrollYProgress, snapToSlide]);
-
-  // Update active slide state
-  useEffect(() => {
-    return scrollYProgress.on("change", (latest: number) => {
+    return scrollYProgress.on("change", (progress: number) => {
+      // Normaliseer progress naar animatie-bereik (0 tot 5/6 → 0 tot 1)
+      const normalizedProgress = Math.min(progress / ANIMATION_END, 1);
+      // Bereken slide index (0-5)
       const slideIndex = Math.min(
-        Math.round(latest * (TOTAL_SLIDES - 1)),
+        Math.floor(normalizedProgress * TOTAL_SLIDES),
         TOTAL_SLIDES - 1
       );
       setActiveSlide(slideIndex);
     });
   }, [scrollYProgress]);
 
+  // Container hoogte: 6 stappen × 100vh + 100vh viewport = 700vh
+  const containerHeight = `${(TOTAL_STEPS * SCROLL_PER_SLIDE) + 100}vh`;
+
   return (
-    // TRACK: Container hoogte = 560vh
-    // - Scroll distance: 560vh - 100vh viewport = 460vh
-    // - 5 slide transitions over 460vh = ~92vh per transition
-    // - Goede balans tussen "magnetisch" gevoel en minimale dode zone
     <section
       ref={targetRef}
       id="oplossing"
       className="relative bg-midnight"
-      style={{ height: '560vh' }}
+      style={{ height: containerHeight }}
     >
       {/* CAMERA: Dit blok blijft plakken (sticky) zolang we in de track zitten */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
