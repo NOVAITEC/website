@@ -1155,53 +1155,48 @@ function ServicesSectionDesktop() {
     if (!container) return;
 
     const SCROLL_THRESHOLD = 50;
+    const EXIT_THRESHOLD = 100; // Higher threshold to exit section
 
     const handleWheel = (e: WheelEvent) => {
       const rect = container.getBoundingClientRect();
 
-      // Check if section is at top of viewport
-      const isAtTop = rect.top <= 10 && rect.top >= -10;
+      // Check if section is visible in viewport
+      const sectionTop = rect.top;
+      const sectionBottom = rect.bottom;
+      const viewportHeight = window.innerHeight;
 
-      // If scrolling down and section is coming into view, lock into it
-      if (!isLocked && e.deltaY > 0 && rect.top <= window.innerHeight && rect.top > 0) {
-        // Snap to section
+      // Section is "in view" when it covers most of the viewport
+      const isInView = sectionTop <= 100 && sectionBottom >= viewportHeight - 100;
+
+      // Not in the section area at all - let normal scroll happen
+      if (sectionBottom < 0 || sectionTop > viewportHeight) {
+        return;
+      }
+
+      // Scrolling DOWN and section is coming into view (section top is in lower half of screen)
+      if (!isLocked && e.deltaY > 0 && sectionTop > 0 && sectionTop < viewportHeight) {
+        e.preventDefault();
         container.scrollIntoView({ behavior: 'smooth' });
         setIsLocked(true);
-        e.preventDefault();
         return;
       }
 
-      // If not locked and not in view, let normal scroll happen
-      if (!isLocked && !isAtTop) {
-        return;
+      // Scrolling UP and section is below us (we're above the section)
+      if (!isLocked && e.deltaY < 0 && sectionTop >= viewportHeight) {
+        return; // Let normal scroll happen
       }
 
-      // Lock when we're at the top of the section
-      if (isAtTop && !isLocked) {
+      // If section is in view, lock it
+      if (isInView && !isLocked) {
         setIsLocked(true);
       }
 
       // If locked, handle slide navigation
-      if (isLocked) {
-        // Check if we should exit the section
+      if (isLocked || isInView) {
         const atFirstSlide = currentSlide === 0;
         const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-        // Allow exit when scrolling up on first slide or down on last slide
-        if ((atFirstSlide && e.deltaY < -SCROLL_THRESHOLD) ||
-            (atLastSlide && e.deltaY > SCROLL_THRESHOLD)) {
-          setIsLocked(false);
-          scrollAccumulatorRef.current = 0;
-          return;
-        }
-
-        // Prevent default scroll while locked
-        e.preventDefault();
-
-        // Don't accumulate if animating
-        if (isAnimatingRef.current) return;
-
-        // Accumulate scroll delta
+        // Accumulate scroll for exit detection
         scrollAccumulatorRef.current += e.deltaY;
 
         // Clear previous timeout
@@ -1212,12 +1207,37 @@ function ServicesSectionDesktop() {
         // Reset accumulator after inactivity
         scrollTimeoutRef.current = setTimeout(() => {
           scrollAccumulatorRef.current = 0;
-        }, 150);
+        }, 200);
+
+        // Check if we should exit the section (requires more scroll effort)
+        if (atFirstSlide && scrollAccumulatorRef.current < -EXIT_THRESHOLD) {
+          setIsLocked(false);
+          scrollAccumulatorRef.current = 0;
+          return; // Allow scroll up to exit
+        }
+
+        if (atLastSlide && scrollAccumulatorRef.current > EXIT_THRESHOLD) {
+          setIsLocked(false);
+          scrollAccumulatorRef.current = 0;
+          return; // Allow scroll down to exit
+        }
+
+        // Block all scroll while in section
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Don't navigate if animating
+        if (isAnimatingRef.current) return;
 
         // Navigate when threshold is reached
         if (Math.abs(scrollAccumulatorRef.current) >= SCROLL_THRESHOLD) {
           const direction = scrollAccumulatorRef.current > 0 ? 1 : -1;
-          goToSlide(currentSlide + direction);
+          const targetSlide = currentSlide + direction;
+
+          // Only navigate if within bounds
+          if (targetSlide >= 0 && targetSlide < TOTAL_SLIDES) {
+            goToSlide(targetSlide);
+          }
           scrollAccumulatorRef.current = 0;
         }
       }
@@ -1234,17 +1254,22 @@ function ServicesSectionDesktop() {
     };
   }, [isLocked, currentSlide, goToSlide]);
 
-  // Reset lock when scrolling away from section
+  // Reset state when section goes out of view
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
-      // If section is out of view, unlock
-      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+      const viewportHeight = window.innerHeight;
+
+      // If section is completely out of view, reset everything
+      if (rect.bottom < -50 || rect.top > viewportHeight + 50) {
         setIsLocked(false);
-        setCurrentSlide(0);
+        // Only reset slide if we scrolled up past the section
+        if (rect.top > viewportHeight) {
+          setCurrentSlide(0);
+        }
       }
     };
 
