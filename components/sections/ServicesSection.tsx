@@ -1116,6 +1116,8 @@ function ServicesSectionDesktop() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slideWidth, setSlideWidth] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  // Tunnel state: track entry direction for bi-directional scroll lock
+  const [entryDirection, setEntryDirection] = useState<'above' | 'below' | null>(null);
 
   // Meet slide breedte
   useEffect(() => {
@@ -1167,7 +1169,9 @@ function ServicesSectionDesktop() {
     goToSlide(targetSlide);
   }, [currentSlide, slideWidth, goToSlide]);
 
-  // Muiswiel handler - vangt scroll en zet om naar slide navigatie
+  // Muiswiel handler - BI-DIRECTIONELE TUNNEL
+  // Entry van boven: moet alle slides door, exit bij slide 6
+  // Entry van onder: moet alle slides terug, exit bij slide 1
   useEffect(() => {
     let wheelAccum = 0;
     let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -1181,22 +1185,43 @@ function ServicesSectionDesktop() {
       const rect = container.getBoundingClientRect();
       const sectionInView = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
 
-      if (!sectionInView) return;
+      // Reset entry direction als sectie niet in beeld
+      if (!sectionInView) {
+        if (entryDirection !== null) {
+          setEntryDirection(null);
+        }
+        return;
+      }
 
-      // Bepaal of we mogen "ontsnappen" uit de sectie
       const tryingToScrollUp = e.deltaY < 0;
       const tryingToScrollDown = e.deltaY > 0;
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      // Laat normale scroll toe als:
-      // - Op eerste slide EN scroll omhoog (terug naar boven)
-      // - Op laatste slide EN scroll omlaag (door naar footer)
-      if ((atFirstSlide && tryingToScrollUp) || (atLastSlide && tryingToScrollDown)) {
+      // Detecteer entry richting bij eerste scroll in de sectie
+      if (entryDirection === null) {
+        if (tryingToScrollDown) {
+          // Kwam van boven (ProblemSection), start bij slide 1
+          setEntryDirection('above');
+        } else {
+          // Kwam van onder (FAQSection), spring naar slide 6
+          setEntryDirection('below');
+          setCurrentSlide(TOTAL_SLIDES - 1);
+        }
+      }
+
+      // BI-DIRECTIONELE TUNNEL ESCAPE LOGICA:
+      // - Entry van boven: alleen exit bij slide 6 + scroll down
+      // - Entry van onder: alleen exit bij slide 1 + scroll up
+      const canExitDown = atLastSlide && tryingToScrollDown && entryDirection === 'above';
+      const canExitUp = atFirstSlide && tryingToScrollUp && entryDirection === 'below';
+
+      if (canExitDown || canExitUp) {
+        setEntryDirection(null); // Reset voor volgende keer
         return; // Laat browser scroll toe
       }
 
-      // Anders: blokkeer scroll en navigeer slides
+      // Blokkeer alle andere scroll aan de grenzen (tunnel lock)
       e.preventDefault();
 
       if (isAnimating) return;
@@ -1210,9 +1235,10 @@ function ServicesSectionDesktop() {
         if (Math.abs(wheelAccum) > threshold) {
           isAnimating = true;
 
-          if (wheelAccum > 0) {
+          // Navigeer alleen als niet aan de grens
+          if (wheelAccum > 0 && !atLastSlide) {
             goToSlide(currentSlide + 1);
-          } else {
+          } else if (wheelAccum < 0 && !atFirstSlide) {
             goToSlide(currentSlide - 1);
           }
 
@@ -1232,7 +1258,7 @@ function ServicesSectionDesktop() {
       window.removeEventListener('wheel', handleWheel);
       if (wheelTimeout) clearTimeout(wheelTimeout);
     };
-  }, [currentSlide, goToSlide]);
+  }, [currentSlide, goToSlide, entryDirection]);
 
   // Keyboard navigatie
   useEffect(() => {
