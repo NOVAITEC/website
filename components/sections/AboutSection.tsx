@@ -114,8 +114,8 @@ export default function AboutSection() {
               </p>
 
               <p className="font-inter text-base sm:text-lg text-slate-300 leading-relaxed">
-                Geen ingewikkelde verhalen, geen uurtje-factuurtje. Gewoon eerlijk
-                kijken naar wat jouw dag lichter maakt, en dat bouwen.
+                Geen ingewikkelde verhalen, geen uurtje-factuurtje. Eerlijk
+                kijken naar wat jouw dag lichter maakt. En dat bouwen.
               </p>
             </motion.div>
 
