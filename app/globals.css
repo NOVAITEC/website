@@ -104,11 +104,11 @@ canvas {
   }
 }
 
-/* LCP-optimized animations - content visible from start for fast LCP measurement */
+/* Hero animations - balanced between visual impact and LCP */
 @keyframes fade-in-up {
   from {
-    opacity: 0.7;
-    transform: translateY(10px);
+    opacity: 0;
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -117,7 +117,8 @@ canvas {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out forwards;
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0; /* Start invisible, animate to visible */
 }
 
 .animation-delay-100 {
