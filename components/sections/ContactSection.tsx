@@ -360,7 +360,7 @@ export function ContactSection() {
                   <CheckCircle className="w-10 h-10 text-teal" strokeWidth={1.5} />
                 </motion.div>
                 <h3 className="font-montserrat font-bold text-2xl text-white mb-3">
-                  Bericht Verzonden!
+                  Verstuurd bericht
                 </h3>
                 <p className="font-inter text-slate-400">
                   Bedankt voor je bericht. Ik neem zo snel mogelijk contact met je op.
