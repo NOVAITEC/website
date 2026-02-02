@@ -60,43 +60,14 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     // Expose globally for tunnel scroll control
     window.lenis = lenis;
 
-    // Optimized RAF loop - only runs when Lenis is actively animating
-    let isAnimating = false;
-
+    // Continuous RAF loop - required for Lenis to detect scroll events
     function raf(time: number) {
       lenis.raf(time);
-      // Only continue RAF loop if Lenis is still animating
-      if (isAnimating) {
-        rafIdRef.current = requestAnimationFrame(raf);
-      }
+      rafIdRef.current = requestAnimationFrame(raf);
     }
 
-    // Start/stop RAF based on Lenis scroll state
-    const handleScrollStart = () => {
-      if (!isAnimating) {
-        isAnimating = true;
-        rafIdRef.current = requestAnimationFrame(raf);
-      }
-    };
-
-    const handleScrollStop = () => {
-      isAnimating = false;
-    };
-
-    // Subscribe to Lenis scroll events
-    lenis.on('scroll', handleScrollStart);
-
-    // Use a timeout to detect scroll stop (Lenis doesn't have a native stop event)
-    let scrollStopTimeout: NodeJS.Timeout;
-    const handleScrollActivity = () => {
-      clearTimeout(scrollStopTimeout);
-      scrollStopTimeout = setTimeout(handleScrollStop, 150);
-    };
-    lenis.on('scroll', handleScrollActivity);
-
-    // Initial RAF to handle page load scroll position
+    // Start the RAF loop
     rafIdRef.current = requestAnimationFrame(raf);
-    scrollStopTimeout = setTimeout(handleScrollStop, 500);
 
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -120,8 +91,6 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
-      clearTimeout(scrollStopTimeout);
-      isAnimating = false;
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }
