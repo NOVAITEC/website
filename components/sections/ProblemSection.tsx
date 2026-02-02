@@ -595,7 +595,7 @@ function SlideTransition() {
             whileTap={{ scale: 0.95 }}
             className="group inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-bold text-xs sm:text-sm md:text-lg px-5 py-2.5 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-all"
           >
-            Ontdek de Oplossing
+            Ontdek de oplossing
             <ArrowRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
           </motion.a>
         </motion.div>

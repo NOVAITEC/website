@@ -302,16 +302,6 @@ const SlideAutomation = memo(function SlideAutomation() {
             <p className="font-inter text-sm lg:text-lg text-slate-400 max-w-lg mx-auto lg:mx-0">
               Je typt data over. Je sleept bestanden. Je checkt mailtjes. Stop daarmee. Ik koppel je systemen aan elkaar via API&apos;s.
             </p>
-
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-5 py-2.5 rounded-xl"
-            >
-              Bekijk cases
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
           </motion.div>
 
           <motion.div
@@ -357,16 +347,6 @@ const SlideAIAgents = memo(function SlideAIAgents() {
             <p className="font-inter text-sm lg:text-lg text-slate-400 max-w-lg mx-auto lg:mx-0">
               AI die met je meedenkt. Mailtjes beantwoorden, offertes voorbereiden of samenvattingen maken.
             </p>
-
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-5 py-2.5 rounded-xl"
-            >
-              Ontdek AI
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
           </motion.div>
 
           <motion.div
@@ -421,16 +401,6 @@ const SlideDashboards = memo(function SlideDashboards() {
             <p className="font-inter text-sm lg:text-lg text-slate-400 max-w-lg mx-auto lg:mx-0">
               Real-time inzichten. Zie direct hoeveel winst je vandaag hebt gemaakt. Custom dashboards die je écht begrijpt.
             </p>
-
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 border-2 border-amber text-amber font-inter font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-amber hover:text-midnight transition-all"
-            >
-              Zie voorbeeld
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
           </motion.div>
         </div>
       </div>
@@ -468,22 +438,10 @@ const SlideOwnership = memo(function SlideOwnership() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="font-inter text-sm sm:text-lg text-slate-400 mb-8 max-w-2xl mx-auto"
+          className="font-inter text-sm sm:text-lg text-slate-400 max-w-2xl mx-auto"
         >
           Je krijgt volledige toegang tot je eigen systemen. De broncode, de data, de handleidingen — alles is van jou. Wil je later zelf verder of met een andere partij? Prima. Ik werk met open standaarden, dus je zit nooit vast.
         </motion.p>
-
-        <motion.a
-          href="#contact"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-semibold text-sm sm:text-base px-6 py-3 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.6)]"
-        >
-          Start samenwerking
-          <ArrowRight className="w-5 h-5" />
-        </motion.a>
       </div>
     </div>
   );
