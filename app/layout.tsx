@@ -9,9 +9,8 @@ import { GoogleAnalytics, AnalyticsProvider } from "@/components/analytics";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 
 // Dynamic import for IntroAnimation - not needed for initial render
-const IntroAnimation = dynamic(
-  () => import("@/components/effects/IntroAnimation").then((mod) => mod.IntroAnimation),
-  { ssr: false }
+const IntroAnimation = dynamic(() =>
+  import("@/components/effects/IntroAnimation").then((mod) => mod.IntroAnimation)
 );
 
 const montserrat = Montserrat({
