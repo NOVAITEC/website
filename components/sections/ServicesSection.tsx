@@ -267,20 +267,12 @@ const SlideIntro = memo(function SlideIntro() {
         >
           <span className="font-inter text-sm hidden lg:inline">Scroll om te ontdekken</span>
           <span className="font-inter text-sm lg:hidden">Scroll om te ontdekken</span>
-          <motion.div
-            animate={{ x: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="hidden lg:block"
-          >
+          <div className="hidden lg:block animate-bounce-x">
             <ArrowRight className="w-4 h-4" />
-          </motion.div>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="lg:hidden"
-          >
+          </div>
+          <div className="lg:hidden animate-bounce-slow">
             <ArrowDown className="w-4 h-4" />
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </div>
@@ -590,7 +582,21 @@ export function ServicesSection() {
     }, 600);
   }, []);
 
-  // Tunnel scroll behavior for desktop
+  // Lock/unlock body scroll using CSS (better for INP than preventDefault)
+  useEffect(() => {
+    if (isInTunnel) {
+      document.body.style.overflow = 'hidden';
+      window.lenis?.stop();
+    } else {
+      document.body.style.overflow = '';
+      window.lenis?.start();
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isInTunnel]);
+
+  // Tunnel scroll behavior for desktop - using passive listener with CSS scroll lock
   useEffect(() => {
     // Only on desktop
     if (typeof window === 'undefined' || window.innerWidth < 1024) return;
@@ -616,8 +622,6 @@ export function ServicesSection() {
       const approachingFromBelow = rect.bottom > viewportHeight && rect.bottom < viewportHeight + APPROACH_ZONE && scrollingUp;
 
       if (approachingFromAbove) {
-        e.preventDefault();
-        window.lenis?.stop();
         section.scrollIntoView({ behavior: 'instant' });
         setIsInTunnel(true);
         isInTunnelRef.current = true;
@@ -628,8 +632,6 @@ export function ServicesSection() {
       }
 
       if (approachingFromBelow) {
-        e.preventDefault();
-        window.lenis?.stop();
         section.scrollIntoView({ behavior: 'instant' });
         setIsInTunnel(true);
         isInTunnelRef.current = true;
@@ -656,28 +658,22 @@ export function ServicesSection() {
           wheelAccumRef.current += e.deltaY;
         }
 
-        // Exit threshold reached - let scroll through
+        // Exit threshold reached - unlock scroll
         if (Math.abs(wheelAccumRef.current) >= EXIT_THRESHOLD) {
           setIsInTunnel(false);
           isInTunnelRef.current = false;
-          window.lenis?.start();
           wheelAccumRef.current = 0;
           // Start exit cooldown to prevent immediate re-lock
           exitCooldownRef.current = true;
           setTimeout(() => {
             exitCooldownRef.current = false;
           }, 800);
-          return; // Don't preventDefault - let the scroll happen
+          return;
         }
-
-        // Still under threshold - block scroll
-        e.preventDefault();
         return;
       }
 
-      // Regular tunnel behavior - block scroll and navigate slides
-      e.preventDefault();
-
+      // Regular tunnel behavior - navigate slides (scroll is already locked via CSS)
       // Skip if in cooldown period
       if (cooldownRef.current) return;
 
@@ -694,10 +690,10 @@ export function ServicesSection() {
       }
     };
 
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    // Passive listener - scroll blocking is handled via CSS overflow:hidden
+    window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
       window.removeEventListener('wheel', handleWheel);
-      window.lenis?.start();
     };
   }, [goToSlide]); // Using refs instead of state for immediate values
 

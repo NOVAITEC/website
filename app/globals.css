@@ -77,6 +77,33 @@ canvas {
   will-change: transform;
 }
 
+/* Performance hints for animated elements */
+[class*="animate-"] {
+  will-change: transform, opacity;
+}
+
+/* GPU acceleration for Framer Motion animated elements */
+[style*="transform"] {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Reduce motion for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-bounce-slow {
+    animation: none;
+  }
+}
+
 /* LCP-optimized animations - content visible from start for fast LCP measurement */
 @keyframes fade-in-up {
   from {
@@ -95,4 +122,51 @@ canvas {
 
 .animation-delay-100 {
   animation-delay: 0.1s;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Slow bounce animation for scroll indicator - uses CSS instead of JS for better performance */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(12px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 1.5s ease-in-out infinite;
+}
+
+/* Horizontal bounce animation for scroll indicators */
+@keyframes bounce-x {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.animate-bounce-x {
+  animation: bounce-x 1.5s ease-in-out infinite;
 }

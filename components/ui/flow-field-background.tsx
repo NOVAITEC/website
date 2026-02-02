@@ -25,8 +25,8 @@ export default function NeuralBackground({
   const animationRef = useRef<number | null>(null);
   const lastFrameTime = useRef<number>(0);
 
-  // Target 30fps instead of 60fps to reduce CPU usage
-  const targetFPS = 30;
+  // Target 24fps to significantly reduce CPU usage while maintaining smooth appearance
+  const targetFPS = 24;
   const frameInterval = 1000 / targetFPS;
 
   // Detect mobile on mount
@@ -63,10 +63,11 @@ export default function NeuralBackground({
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    // Reduce particles: mobile gets 25%, desktop gets 50% of requested
+    // Reduce particles significantly for better performance
+    // Mobile: max 50 particles, Desktop: max 100 particles
     const actualParticleCount = isMobile
-      ? Math.min(particleCount * 0.25, 100)
-      : Math.min(particleCount * 0.5, 200);
+      ? Math.min(particleCount * 0.1, 50)
+      : Math.min(particleCount * 0.2, 100);
 
     let width = container.clientWidth;
     let height = container.clientHeight;

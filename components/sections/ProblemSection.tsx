@@ -346,12 +346,9 @@ function SlideIntro() {
           className="flex items-center justify-center gap-2 text-slate-500"
         >
           <span className="font-inter text-[10px] sm:text-xs lg:text-sm">Scroll naar beneden</span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
+          <div className="animate-bounce-slow">
             <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </div>
@@ -728,14 +725,10 @@ function ProblemSectionDesktop() {
 
   return (
     <section id="probleem" className="relative bg-midnight">
-      {/* Background effects - use absolute to stay within section bounds */}
+      {/* Background effects - static for performance (no infinite animations) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <NoiseOverlay />
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/15 blur-[150px]"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-amber/15 blur-[150px] opacity-15" />
       </div>
 
       {/* Stacking slides */}
