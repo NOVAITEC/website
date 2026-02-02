@@ -208,7 +208,7 @@ function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: 
 
 const SlideIntro = memo(function SlideIntro() {
   return (
-    <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center px-4">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center justify-center lg:px-4">
       <div className="relative z-10 text-center max-w-5xl">
         {/* Background glow */}
         <div className="absolute -inset-32 bg-teal/10 blur-[100px] rounded-full pointer-events-none" />
@@ -263,7 +263,7 @@ const SlideIntro = memo(function SlideIntro() {
           className="relative flex items-center justify-center gap-2 text-slate-500"
         >
           <span className="font-inter text-sm hidden lg:inline">Scroll om te ontdekken</span>
-          <span className="font-inter text-sm lg:hidden">Swipe om te ontdekken</span>
+          <span className="font-inter text-sm lg:hidden">Scroll om te ontdekken</span>
           <motion.div
             animate={{ x: [0, 8, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
@@ -286,7 +286,7 @@ const SlideIntro = memo(function SlideIntro() {
 
 const SlideAutomation = memo(function SlideAutomation() {
   return (
-    <div className="snap-center flex-shrink-0 w-screen h-full flex items-center px-4 lg:px-8">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center lg:px-8">
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
@@ -338,7 +338,7 @@ const SlideAutomation = memo(function SlideAutomation() {
 
 const SlideAIAgents = memo(function SlideAIAgents() {
   return (
-    <div className="snap-center flex-shrink-0 w-screen h-full flex items-center px-4 lg:px-8">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center lg:px-8">
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
@@ -393,7 +393,7 @@ const SlideAIAgents = memo(function SlideAIAgents() {
 
 const SlideDashboards = memo(function SlideDashboards() {
   return (
-    <div className="snap-center flex-shrink-0 w-screen h-full flex items-center px-4 lg:px-8">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center lg:px-8">
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
@@ -445,7 +445,7 @@ const SlideDashboards = memo(function SlideDashboards() {
 
 const SlideOwnership = memo(function SlideOwnership() {
   return (
-    <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center px-4">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center justify-center lg:px-4">
       <div className="text-center max-w-3xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -496,7 +496,7 @@ const SlideOwnership = memo(function SlideOwnership() {
 
 const SlideFinale = memo(function SlideFinale() {
   return (
-    <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center px-4">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center justify-center lg:px-4">
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.15)_0%,transparent_60%)]" />
 
@@ -760,22 +760,22 @@ export function ServicesSection() {
 
       {/* Mobile: Vertical stack */}
       <div className="lg:hidden">
-        <div className="py-20 px-4 flex flex-col items-center justify-center min-h-[80vh]">
+        <div className="py-16 px-4 flex flex-col items-center justify-center min-h-[70vh]">
           <SlideIntro />
         </div>
-        <div className="py-16 px-4">
+        <div className="py-12 px-4">
           <SlideAutomation />
         </div>
-        <div className="py-16 px-4">
+        <div className="py-12 px-4">
           <SlideAIAgents />
         </div>
-        <div className="py-16 px-4">
+        <div className="py-12 px-4">
           <SlideDashboards />
         </div>
-        <div className="py-16 px-4">
+        <div className="py-12 px-4">
           <SlideOwnership />
         </div>
-        <div className="py-20 px-4 min-h-[60vh] flex items-center justify-center">
+        <div className="py-16 px-4 min-h-[60vh] flex items-center justify-center">
           <SlideFinale />
         </div>
       </div>
