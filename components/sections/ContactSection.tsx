@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import type HCaptchaType from '@hcaptcha/react-hcaptcha';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { Mail, Linkedin, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
@@ -36,7 +35,7 @@ export function ContactSection() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const captchaRef = useRef<HCaptchaType>(null);
+  const [captchaKey, setCaptchaKey] = useState(0); // Used to reset captcha by remounting
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -93,7 +92,7 @@ export function ContactSection() {
         setIsSuccess(true);
         setFormData({ naam: '', email: '', bedrijf: '', bericht: '' });
         setCaptchaToken(null);
-        captchaRef.current?.resetCaptcha();
+        setCaptchaKey((k: number) => k + 1); // Reset captcha by remounting
       } else {
         setSubmitError('Er ging iets mis. Probeer het opnieuw of mail direct naar kyan@novaitec.nl');
       }
@@ -448,7 +447,7 @@ export function ContactSection() {
                   className="flex justify-center"
                 >
                   <HCaptcha
-                    ref={captchaRef}
+                    key={captchaKey}
                     sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
                     reCaptchaCompat={false}
                     theme="dark"
