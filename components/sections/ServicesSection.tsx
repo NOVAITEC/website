@@ -255,7 +255,7 @@ const SlideIntro = memo(function SlideIntro() {
           transition={{ delay: 0.3 }}
           className="relative font-inter text-sm text-slate-500 mb-12 max-w-2xl mx-auto"
         >
-          Door de kracht van AI bouw ik complete software oplossingen — tegen een fractie van de traditionele kosten.
+          Door de kracht van AI bouw ik complete software oplossingen tegen een fractie van de traditionele kosten.
         </motion.p>
 
         <motion.div
@@ -440,7 +440,7 @@ const SlideOwnership = memo(function SlideOwnership() {
           transition={{ delay: 0.2 }}
           className="font-inter text-sm sm:text-lg text-slate-400 max-w-2xl mx-auto"
         >
-          Je krijgt volledige toegang tot je eigen systemen. De broncode, de data, de handleidingen — alles is van jou. Wil je later zelf verder of met een andere partij? Prima. Ik werk met open standaarden, dus je zit nooit vast.
+          Je krijgt volledige toegang tot je eigen systemen. De broncode, de data, de handleidingen: alles is van jou. Wil je later zelf verder of met een andere partij? Prima. Ik werk met open standaarden, dus je zit nooit vast.
         </motion.p>
       </div>
     </div>

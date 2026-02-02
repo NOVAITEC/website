@@ -18,7 +18,7 @@ const organizationSchema = {
   },
   image: "https://novaitec.nl/images/og-image.jpg",
   description:
-    "De motor achter jouw ambitie. Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.",
+    "De motor achter jouw ambitie. Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept voor groei, niet voor gedoe.",
   slogan: "De motor achter jouw ambitie",
   foundingDate: "2025",
   founder: {
