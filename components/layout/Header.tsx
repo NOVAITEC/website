@@ -186,7 +186,7 @@ export function Header() {
             <p className="text-paper/60 text-sm font-inter">
               NOVAITEC © 2026
             </p>
-            <p className="text-paper/40 text-xs font-inter mt-1">
+            <p className="text-paper/60 text-xs font-inter mt-1">
               AI-gedreven Automatisering
             </p>
           </div>
