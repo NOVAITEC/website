@@ -297,7 +297,7 @@ function OpportunityMockup() {
 
 function SlideIntro() {
   return (
-    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center justify-center rounded-2xl sm:rounded-3xl overflow-hidden bg-midnight py-8 sm:py-12 lg:py-20">
+    <div className="relative w-full min-h-[500px] sm:min-h-[550px] lg:min-h-[700px] flex items-center justify-center rounded-2xl sm:rounded-3xl overflow-hidden bg-midnight py-8 sm:py-12 lg:py-20">
       <div className="absolute top-1/4 left-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-amber/10 blur-[100px] sm:blur-[150px]" />
       <div className="absolute bottom-1/4 right-1/4 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-amber/5 blur-[80px] sm:blur-[120px]" />
 
@@ -364,7 +364,7 @@ function SlideIntro() {
 
 function SlideAdmin() {
   return (
-    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 py-6 sm:py-12 lg:py-20">
+    <div className="relative w-full min-h-[500px] sm:min-h-[550px] lg:min-h-[700px] flex items-center rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 py-6 sm:py-12 lg:py-20">
       <div className="absolute top-0 right-0 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-amber/10 blur-[80px] sm:blur-[120px]" />
 
       <div className="container mx-auto px-3 sm:px-6">
@@ -419,7 +419,7 @@ function SlideAdmin() {
 
 function SlideStaff() {
   return (
-    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-800">
+    <div className="relative w-full min-h-[500px] sm:min-h-[550px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute bottom-0 left-0 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-red-500/10 blur-[80px] sm:blur-[120px]" />
       <div className="absolute top-0 right-0 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] rounded-full bg-amber/10 blur-[70px] sm:blur-[100px]" />
 
@@ -479,7 +479,7 @@ function SlideStaff() {
 
 function SlideResearch() {
   return (
-    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900">
+    <div className="relative w-full min-h-[500px] sm:min-h-[550px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-amber/5 blur-[100px] sm:blur-[150px]" />
 
       <div className="container mx-auto px-3 sm:px-6">
@@ -534,7 +534,7 @@ function SlideResearch() {
 
 function SlideTransition() {
   return (
-    <div className="relative w-full min-h-[420px] sm:min-h-[500px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 justify-center rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-800">
+    <div className="relative w-full min-h-[500px] sm:min-h-[550px] lg:min-h-[700px] flex items-center py-6 sm:py-12 lg:py-20 justify-center rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-800">
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber/10 to-transparent" />
       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-teal/20 to-transparent" />
       <div className="absolute bottom-1/4 right-1/4 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-teal/20 blur-[100px] sm:blur-[150px]" />
@@ -787,7 +787,7 @@ function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
   return (
     <div
       ref={cardRef}
-      className="sticky min-h-[480px] h-[85svh] max-h-[600px] w-full flex items-center justify-center px-2"
+      className="sticky min-h-[520px] h-[92svh] max-h-[800px] w-full flex items-center justify-center px-2"
       style={{
         top: `${topOffset}px`,
         zIndex: 10 + index,
@@ -832,7 +832,7 @@ function ProblemSectionMobile() {
       ))}
 
       {/* Extra spacing at the end */}
-      <div className="h-[85svh] max-h-[600px]" />
+      <div className="h-[92svh] max-h-[800px]" />
     </section>
   );
 }
