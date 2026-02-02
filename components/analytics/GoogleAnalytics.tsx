@@ -44,14 +44,14 @@ export function GoogleAnalytics() {
 
   return (
     <>
-      {/* Google Analytics Script */}
+      {/* Google Analytics Script - lazyOnload to not block main thread */}
       <Script
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
       <Script
         id="google-analytics"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];

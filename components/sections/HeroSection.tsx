@@ -1,10 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import Link from "next/link";
-import NeuralBackground from "@/components/ui/flow-field-background";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+
+// Dynamic import NeuralBackground - heavy canvas animation, load after initial paint
+const NeuralBackground = dynamic(
+  () => import("@/components/ui/flow-field-background"),
+  { ssr: false }
+);
 
 export function HeroSection() {
   return (
