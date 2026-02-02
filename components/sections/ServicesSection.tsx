@@ -591,8 +591,8 @@ export function ServicesSection() {
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
-      // Lock as soon as section touches viewport edges
-      const sectionCentered = rect.top <= 0 && rect.bottom >= window.innerHeight;
+      // Small margin to allow lock while keeping white bar minimal
+      const sectionCentered = rect.top <= 10 && rect.bottom >= window.innerHeight - 10;
 
       // Not in view - let normal scroll happen
       if (!sectionCentered) {
