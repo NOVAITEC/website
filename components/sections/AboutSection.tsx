@@ -94,7 +94,7 @@ export default function AboutSection() {
                 Waarom ik doe wat ik doe
               </p>
               <h2 className="font-montserrat font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-paper leading-tight">
-                De mens achter de techniek.
+                Jouw tijd, mijn missie.
               </h2>
             </div>
 
