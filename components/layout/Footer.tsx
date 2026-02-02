@@ -60,9 +60,9 @@ export function Footer() {
               <Image
                 src="/images/novaitec_logo_transparant_wit_tekst-wit.png"
                 alt="NOVAITEC Logo"
-                width={240}
-                height={60}
-                className="h-12 sm:h-16 w-auto"
+                width={384}
+                height={96}
+                className="h-20 sm:h-24 w-auto"
               />
             </Link>
             <p className="text-xs sm:text-sm text-slate-400 font-inter">
