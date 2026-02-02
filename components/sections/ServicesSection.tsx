@@ -565,7 +565,9 @@ const APPROACH_ZONE = 300; // Pixels from section to trigger snap (larger to cat
 export function ServicesSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const currentSlideRef = useRef(0); // Sync ref for closure access
   const [isInTunnel, setIsInTunnel] = useState(false);
+  const isInTunnelRef = useRef(false); // Sync ref for closure access
   const wheelAccumRef = useRef(0);
   const cooldownRef = useRef(false);
   const exitCooldownRef = useRef(false); // Prevent immediate re-entry after exit
@@ -574,6 +576,7 @@ export function ServicesSection() {
   const goToSlide = useCallback((index: number) => {
     const clamped = Math.max(0, Math.min(index, TOTAL_SLIDES - 1));
     setCurrentSlide(clamped);
+    currentSlideRef.current = clamped; // Keep ref in sync
 
     // Start cooldown - ignore scroll for 600ms after slide change
     cooldownRef.current = true;
@@ -614,7 +617,9 @@ export function ServicesSection() {
         window.lenis?.stop();
         section.scrollIntoView({ behavior: 'instant' });
         setIsInTunnel(true);
+        isInTunnelRef.current = true;
         setCurrentSlide(0);
+        currentSlideRef.current = 0;
         wheelAccumRef.current = 0;
         return;
       }
@@ -624,18 +629,21 @@ export function ServicesSection() {
         window.lenis?.stop();
         section.scrollIntoView({ behavior: 'instant' });
         setIsInTunnel(true);
+        isInTunnelRef.current = true;
         setCurrentSlide(TOTAL_SLIDES - 1);
+        currentSlideRef.current = TOTAL_SLIDES - 1;
         wheelAccumRef.current = 0;
         return;
       }
 
-      // Not in tunnel - let normal scroll happen
-      if (!isInTunnel) {
+      // Not in tunnel - let normal scroll happen (use ref for immediate check)
+      if (!isInTunnelRef.current) {
         return;
       }
 
-      const atFirstSlide = currentSlide === 0;
-      const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
+      // Use refs for immediate values
+      const atFirstSlide = currentSlideRef.current === 0;
+      const atLastSlide = currentSlideRef.current === TOTAL_SLIDES - 1;
 
       // At boundaries: accumulate and check exit threshold
       const atExitBoundary = (atFirstSlide && scrollingUp) || (atLastSlide && scrollingDown);
@@ -648,6 +656,7 @@ export function ServicesSection() {
         // Exit threshold reached - let scroll through
         if (Math.abs(wheelAccumRef.current) >= EXIT_THRESHOLD) {
           setIsInTunnel(false);
+          isInTunnelRef.current = false;
           window.lenis?.start();
           wheelAccumRef.current = 0;
           // Start exit cooldown to prevent immediate re-lock
@@ -675,9 +684,9 @@ export function ServicesSection() {
       // Change slide when threshold reached
       if (Math.abs(wheelAccumRef.current) >= SCROLL_THRESHOLD) {
         if (wheelAccumRef.current > 0 && !atLastSlide) {
-          goToSlide(currentSlide + 1);
+          goToSlide(currentSlideRef.current + 1);
         } else if (wheelAccumRef.current < 0 && !atFirstSlide) {
-          goToSlide(currentSlide - 1);
+          goToSlide(currentSlideRef.current - 1);
         }
       }
     };
@@ -687,24 +696,24 @@ export function ServicesSection() {
       window.removeEventListener('wheel', handleWheel);
       window.lenis?.start();
     };
-  }, [currentSlide, isInTunnel, goToSlide]);
+  }, [goToSlide]); // Using refs instead of state for immediate values
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isInTunnel) return;
+      if (!isInTunnelRef.current) return;
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault();
-        goToSlide(currentSlide + 1);
+        goToSlide(currentSlideRef.current + 1);
       }
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
-        goToSlide(currentSlide - 1);
+        goToSlide(currentSlideRef.current - 1);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide, isInTunnel, goToSlide]);
+  }, [goToSlide]);
 
   return (
     <section ref={sectionRef} id="oplossing" className="relative bg-midnight">
