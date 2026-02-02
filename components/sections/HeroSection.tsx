@@ -65,40 +65,42 @@ export function HeroSection() {
               <span>Bekijk wat ik doe</span>
             </Link>
           </motion.div>
-
-          {/* Trust Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-paper/10"
-          >
-            <p className="text-paper/50 text-sm font-inter mb-4">
-              Vertrouwd door ondernemers die hun tijd terug willen
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-paper/70 max-w-2xl mx-auto">
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-montserrat font-bold text-teal">
-                  4 uur
-                </p>
-                <p className="text-sm font-inter">per week bespaard</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-montserrat font-bold text-teal">
-                  2 weken
-                </p>
-                <p className="text-sm font-inter">eerste resultaat</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-montserrat font-bold text-teal">
-                  100%
-                </p>
-                <p className="text-sm font-inter">persoonlijke service</p>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
+
+      {/* Trust Indicator - positioned at bottom */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.9 }}
+        className="absolute bottom-24 md:bottom-28 left-0 right-0 px-4 sm:px-6"
+      >
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-paper/50 text-sm font-inter mb-4">
+            Vertrouwd door ondernemers die hun tijd terug willen
+          </p>
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 text-paper/70">
+            <div className="text-center">
+              <p className="text-lg sm:text-2xl font-montserrat font-bold text-teal">
+                4 uur
+              </p>
+              <p className="text-xs sm:text-sm font-inter">per week bespaard</p>
+            </div>
+            <div className="text-center">
+              <p className="text-lg sm:text-2xl font-montserrat font-bold text-teal">
+                2 weken
+              </p>
+              <p className="text-xs sm:text-sm font-inter">eerste resultaat</p>
+            </div>
+            <div className="text-center">
+              <p className="text-lg sm:text-2xl font-montserrat font-bold text-teal">
+                100%
+              </p>
+              <p className="text-xs sm:text-sm font-inter">persoonlijke service</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Scroll Indicator - hidden on mobile for performance */}
       <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2">
