@@ -109,7 +109,7 @@ export function IntroAnimation() {
                 src="/images/novaitec_beeldmerk_transparant_kleur.png"
                 alt="NOVAITEC"
                 width={200}
-                height={200}
+                height={150}
                 priority
                 className="w-36 h-36 md:w-48 md:h-48"
               />
@@ -138,7 +138,7 @@ export function IntroAnimation() {
                 src="/images/novaitec_beeldmerk_transparant_kleur.png"
                 alt="NOVAITEC"
                 width={200}
-                height={200}
+                height={150}
                 priority
                 className="relative w-36 h-36 md:w-48 md:h-48"
               />
@@ -176,6 +176,7 @@ export function IntroAnimation() {
                   alt=""
                   width={200}
                   height={200}
+                  priority
                   className="w-36 h-36 md:w-48 md:h-48"
                 />
               </motion.div>

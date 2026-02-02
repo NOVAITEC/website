@@ -51,9 +51,9 @@ export function Header() {
                 <Image
                   src="/images/novaitec_beeldmerk_transparant_wit.png"
                   alt="NOVAITEC Icon"
-                  width={48}
+                  width={64}
                   height={48}
-                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+                  className="w-10 h-auto sm:w-12 md:w-14"
                   sizes="(max-width: 640px) 40px, (max-width: 768px) 48px, 56px"
                 />
                 <span className="text-xl sm:text-2xl md:text-3xl font-montserrat font-bold text-paper tracking-tight">
