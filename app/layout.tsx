@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
+import dynamic from "next/dynamic";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Footer } from "@/components/layout/Footer";
-import { IntroAnimation } from "@/components/effects/IntroAnimation";
 import { AllSchemas } from "@/components/seo/JsonLd";
 import { GoogleAnalytics, AnalyticsProvider } from "@/components/analytics";
+import { MotionProvider } from "@/components/providers/MotionProvider";
+
+// Dynamic import for IntroAnimation - not needed for initial render
+const IntroAnimation = dynamic(
+  () => import("@/components/effects/IntroAnimation").then((mod) => mod.IntroAnimation),
+  { ssr: false }
+);
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -139,11 +146,13 @@ export default function RootLayout({
         <AnalyticsProvider />
         {/* JSON-LD Structured Data voor SEO en AI-zichtbaarheid */}
         <AllSchemas />
-        <SmoothScroll>
-          <IntroAnimation />
-          {children}
-          <Footer />
-        </SmoothScroll>
+        <MotionProvider>
+          <SmoothScroll>
+            <IntroAnimation />
+            {children}
+            <Footer />
+          </SmoothScroll>
+        </MotionProvider>
       </body>
     </html>
   );
