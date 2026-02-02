@@ -789,7 +789,7 @@ function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
       ref={cardRef}
       className="sticky min-h-[520px] h-[92svh] max-h-[800px] w-full flex items-center justify-center px-2"
       style={{
-        top: `calc(4svh + ${stackOffset}px)`,
+        top: `calc(8svh + ${stackOffset}px)`,
         zIndex: 10 + index,
       }}
     >
