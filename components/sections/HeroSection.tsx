@@ -73,7 +73,7 @@ export function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.9 }}
-        className="absolute bottom-24 md:bottom-28 left-0 right-0 px-4 sm:px-6"
+        className="absolute bottom-8 sm:bottom-16 md:bottom-28 left-0 right-0 px-4 sm:px-6"
       >
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-paper/50 text-sm font-inter mb-4">
