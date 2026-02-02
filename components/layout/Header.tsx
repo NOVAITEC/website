@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { name: "Over Mij", href: "#over" },
+  { name: "Over mij", href: "#over" },
   { name: "Services", href: "#oplossing" },
   { name: "FAQ", href: "#faq" },
   { name: "Contact", href: "#contact" },
@@ -89,7 +89,7 @@ export function Header() {
               >
                 <Button asChild className="hover:scale-105">
                   <Link href="#contact">
-                    Start Gesprek
+                    Start gesprek
                   </Link>
                 </Button>
               </motion.div>
@@ -177,7 +177,7 @@ export function Header() {
                         href="#contact"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        Start Gesprek
+                        Start gesprek
                       </Link>
                     </Button>
                   </motion.div>

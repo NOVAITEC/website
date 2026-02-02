@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 import { Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const menuLinks = [
   { name: "Home", href: "/" },
-  { name: "Over Mij", href: "/#over" },
+  { name: "Over mij", href: "/#over" },
   { name: "Services", href: "/#oplossing" },
   { name: "FAQ", href: "/#faq" },
 ];
@@ -133,6 +134,13 @@ export function Footer() {
                   <social.icon className="w-5 h-5" strokeWidth={1.5} />
                 </motion.a>
               ))}
+            </div>
+            <div className="mt-6">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/#faq">
+                  Bekijk FAQ
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>
