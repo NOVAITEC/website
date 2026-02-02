@@ -29,28 +29,18 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-montserrat font-extrabold text-white mb-6 sm:mb-8 leading-tight"
-          >
+          {/* Main Heading - no opacity animation for faster LCP */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-montserrat font-extrabold text-white mb-6 sm:mb-8 leading-tight animate-fade-in-up">
             De <span className="text-teal">motor</span> achter
             <br />
             jouw ambitie.
-          </motion.h1>
+          </h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-paper/80 font-inter mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed"
-          >
+          {/* Subtitle - no opacity animation for faster LCP */}
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-paper/80 font-inter mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100">
             Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien.
             Slimme automatisering die ruimte schept — voor groei, niet voor gedoe.
-          </motion.p>
+          </p>
 
           {/* CTA Buttons */}
           <motion.div
