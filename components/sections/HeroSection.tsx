@@ -8,7 +8,7 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 
 export function HeroSection() {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-midnight">
+    <section className="relative h-[100svh] flex items-center justify-center overflow-hidden bg-midnight">
       {/* Flow Field Background */}
       <div className="absolute inset-0 pointer-events-none">
         <NeuralBackground
