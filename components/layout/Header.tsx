@@ -83,7 +83,7 @@ export function Header() {
                 style={{ animationDelay: "0.4s" }}
               >
                 <Button asChild className="hover:scale-105 transition-transform">
-                  <a href="https://wa.me/31636472570" target="_blank" rel="noopener noreferrer">
+                  <a href="https://wa.me/31638472570" target="_blank" rel="noopener noreferrer">
                     Start gesprek
                   </a>
                 </Button>
@@ -172,7 +172,7 @@ export function Header() {
             >
               <Button asChild className="w-full">
                 <a
-                  href="https://wa.me/31636472570"
+                  href="https://wa.me/31638472570"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
