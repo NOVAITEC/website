@@ -5,30 +5,15 @@ import { cn } from "@/lib/utils";
 
 interface NeuralBackgroundProps {
   className?: string;
-  /**
-   * Color of the particles.
-   * Defaults to a cyan/indigo mix if not specified.
-   */
   color?: string;
-  /**
-   * The opacity of the trails (0.0 to 1.0).
-   * Lower = longer trails. Higher = shorter trails.
-   * Default: 0.1
-   */
   trailOpacity?: number;
-  /**
-   * Number of particles. Default: 800
-   */
   particleCount?: number;
-  /**
-   * Speed multiplier. Default: 1
-   */
   speed?: number;
 }
 
 export default function NeuralBackground({
   className,
-  color = "#6366f1", // Default Indigo
+  color = "#6366f1",
   trailOpacity = 0.15,
   particleCount = 600,
   speed = 1,
@@ -36,6 +21,13 @@ export default function NeuralBackground({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const animationRef = useRef<number | null>(null);
+  const lastFrameTime = useRef<number>(0);
+
+  // Target 30fps instead of 60fps to reduce CPU usage
+  const targetFPS = 30;
+  const frameInterval = 1000 / targetFPS;
 
   // Detect mobile on mount
   useEffect(() => {
@@ -47,25 +39,40 @@ export default function NeuralBackground({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Intersection Observer - pause animation when not visible
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    // Reduce particles significantly on mobile for better performance
-    const actualParticleCount = isMobile ? Math.min(particleCount * 0.25, 100) : particleCount;
+    // Reduce particles: mobile gets 25%, desktop gets 50% of requested
+    const actualParticleCount = isMobile
+      ? Math.min(particleCount * 0.25, 100)
+      : Math.min(particleCount * 0.5, 200);
 
-    // --- CONFIGURATION ---
     let width = container.clientWidth;
     let height = container.clientHeight;
     let particles: Particle[] = [];
-    let animationFrameId: number;
-    let mouse = { x: -1000, y: -1000 }; // Start off-screen
+    let mouse = { x: -1000, y: -1000 };
 
-    // --- PARTICLE CLASS ---
     class Particle {
       x: number;
       y: number;
@@ -80,20 +87,14 @@ export default function NeuralBackground({
         this.vx = 0;
         this.vy = 0;
         this.age = 0;
-        // Random lifespan to create natural recycling
         this.life = Math.random() * 200 + 100;
       }
 
       update() {
-        // 1. Flow Field Math (Simplex-ish noise)
-        // We calculate an angle based on position to create the "flow"
         const angle = (Math.cos(this.x * 0.005) + Math.sin(this.y * 0.005)) * Math.PI;
-
-        // 2. Add force from flow field
         this.vx += Math.cos(angle) * 0.2 * speed;
         this.vy += Math.sin(angle) * 0.2 * speed;
 
-        // 3. Mouse Repulsion/Attraction
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -101,24 +102,20 @@ export default function NeuralBackground({
 
         if (distance < interactionRadius) {
           const force = (interactionRadius - distance) / interactionRadius;
-          // Push away
           this.vx -= dx * force * 0.05;
           this.vy -= dy * force * 0.05;
         }
 
-        // 4. Apply Velocity & Friction
         this.x += this.vx;
         this.y += this.vy;
-        this.vx *= 0.95; // Friction to stop infinite acceleration
+        this.vx *= 0.95;
         this.vy *= 0.95;
 
-        // 5. Aging
         this.age++;
         if (this.age > this.life) {
           this.reset();
         }
 
-        // 6. Wrap around screen
         if (this.x < 0) this.x = width;
         if (this.x > width) this.x = 0;
         if (this.y < 0) this.y = height;
@@ -136,17 +133,14 @@ export default function NeuralBackground({
 
       draw(context: CanvasRenderingContext2D) {
         context.fillStyle = color;
-        // Fade in and out based on age
         const alpha = 1 - Math.abs((this.age / this.life) - 0.5) * 2;
         context.globalAlpha = alpha;
-        context.fillRect(this.x, this.y, 1.5, 1.5); // Tiny dots are faster than arcs
+        context.fillRect(this.x, this.y, 1.5, 1.5);
       }
     }
 
-    // --- INITIALIZATION ---
     const init = () => {
-      // Handle High-DPI screens (Retina)
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR at 2 for performance
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
@@ -159,12 +153,21 @@ export default function NeuralBackground({
       }
     };
 
-    // --- ANIMATION LOOP ---
-    const animate = () => {
-      // "Fade" effect: Instead of clearing the canvas, we draw a semi-transparent rect
-      // This creates the "Trails" look.
-      // We use the background color of the parent or a dark overlay.
-      // Assuming dark mode for this effect usually:
+    const animate = (currentTime: number) => {
+      // Only animate if visible
+      if (!isVisible) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      // Throttle to target FPS
+      const elapsed = currentTime - lastFrameTime.current;
+      if (elapsed < frameInterval) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime.current = currentTime - (elapsed % frameInterval);
+
       ctx.fillStyle = `rgba(0, 0, 0, ${trailOpacity})`;
       ctx.fillRect(0, 0, width, height);
 
@@ -173,15 +176,13 @@ export default function NeuralBackground({
         p.draw(ctx);
       });
 
-      animationFrameId = requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
-    // --- EVENT LISTENERS ---
     const handleResize = () => {
       const newWidth = container.clientWidth;
       const newHeight = container.clientHeight;
 
-      // Only reinitialize if dimensions changed significantly (not just address bar hiding)
       const widthChanged = Math.abs(newWidth - width) > 50;
       const heightChanged = Math.abs(newHeight - height) > 100;
 
@@ -199,13 +200,12 @@ export default function NeuralBackground({
     };
 
     const handleMouseLeave = () => {
-        mouse.x = -1000;
-        mouse.y = -1000;
-    }
+      mouse.x = -1000;
+      mouse.y = -1000;
+    };
 
-    // Start
     init();
-    animate();
+    animationRef.current = requestAnimationFrame(animate);
 
     window.addEventListener("resize", handleResize);
     container.addEventListener("mousemove", handleMouseMove);
@@ -215,9 +215,11 @@ export default function NeuralBackground({
       window.removeEventListener("resize", handleResize);
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
-  }, [color, trailOpacity, particleCount, speed, isMobile]);
+  }, [color, trailOpacity, particleCount, speed, isMobile, isVisible, frameInterval]);
 
   return (
     <div
