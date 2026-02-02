@@ -759,7 +759,7 @@ export function ServicesSection() {
       </div>
 
       {/* Mobile: Vertical stack */}
-      <div className="lg:hidden">
+      <div className="lg:hidden overflow-x-hidden">
         <div className="py-16 px-4 flex flex-col items-center justify-center min-h-[70vh]">
           <SlideIntro />
         </div>
