@@ -4,6 +4,7 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Footer } from "@/components/layout/Footer";
 import { IntroAnimation } from "@/components/effects/IntroAnimation";
 import { AllSchemas } from "@/components/seo/JsonLd";
+import { GoogleAnalytics, AnalyticsProvider } from "@/components/analytics";
 
 const baseUrl = "https://novaitec.nl";
 
@@ -111,7 +112,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl">
+      <GoogleAnalytics />
       <body className="antialiased">
+        <AnalyticsProvider />
         {/* JSON-LD Structured Data voor SEO en AI-zichtbaarheid */}
         <AllSchemas />
         <SmoothScroll>
