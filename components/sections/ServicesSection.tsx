@@ -292,7 +292,7 @@ const SlideAutomation = memo(function SlideAutomation() {
           >
             <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5">
               <Bot className="w-4 h-4 text-teal" />
-              <span className="font-mono text-xs text-teal uppercase tracking-wide">Workflow Automatisering</span>
+              <span className="font-mono text-xs text-teal uppercase tracking-wide">Workflow automatisering</span>
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">
@@ -334,7 +334,7 @@ const SlideAIAgents = memo(function SlideAIAgents() {
           >
             <div className="inline-flex items-center gap-2 bg-teal/10 border border-teal/30 rounded-full px-3 py-1.5">
               <MessageSquare className="w-4 h-4 text-teal" />
-              <span className="font-mono text-xs text-teal uppercase tracking-wide">AI Agents</span>
+              <span className="font-mono text-xs text-teal uppercase tracking-wide">AI agents</span>
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">
@@ -391,7 +391,7 @@ const SlideDashboards = memo(function SlideDashboards() {
           >
             <div className="inline-flex items-center gap-2 bg-amber/10 border border-amber/30 rounded-full px-3 py-1.5">
               <LayoutDashboard className="w-4 h-4 text-amber" />
-              <span className="font-mono text-xs text-amber uppercase tracking-wide">Slimme Dashboards</span>
+              <span className="font-mono text-xs text-amber uppercase tracking-wide">Slimme dashboards</span>
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">

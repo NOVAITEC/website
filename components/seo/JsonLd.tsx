@@ -93,7 +93,7 @@ const serviceSchema = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Workflow Automatisering",
+          name: "Workflow automatisering",
           description:
             "Koppel je systemen aan elkaar via API's. Stop met handmatig data overtypen, bestanden slepen en mailtjes checken. Ik bouw geautomatiseerde workflows met n8n.",
         },
@@ -102,7 +102,7 @@ const serviceSchema = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "AI Agents",
+          name: "AI agents",
           description:
             "AI die met je meedenkt. Mailtjes beantwoorden, offertes voorbereiden of samenvattingen maken. Jouw tweede brein dat 24/7 doorwerkt.",
         },
@@ -111,7 +111,7 @@ const serviceSchema = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Slimme Dashboards",
+          name: "Slimme dashboards",
           description:
             "Stuur op data, niet op gevoel. Real-time inzichten met custom dashboards die je écht begrijpt. Zie direct hoeveel winst je vandaag hebt gemaakt.",
         },
