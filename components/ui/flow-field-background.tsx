@@ -178,9 +178,18 @@ export default function NeuralBackground({
 
     // --- EVENT LISTENERS ---
     const handleResize = () => {
-      width = container.clientWidth;
-      height = container.clientHeight;
-      init();
+      const newWidth = container.clientWidth;
+      const newHeight = container.clientHeight;
+
+      // Only reinitialize if dimensions changed significantly (not just address bar hiding)
+      const widthChanged = Math.abs(newWidth - width) > 50;
+      const heightChanged = Math.abs(newHeight - height) > 100;
+
+      if (widthChanged || heightChanged) {
+        width = newWidth;
+        height = newHeight;
+        init();
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
