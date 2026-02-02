@@ -161,7 +161,7 @@ export default function AboutSection() {
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
-                quality={75}
+                quality={70}
               />
 
               {/* Subtle overlay gradient for depth */}
