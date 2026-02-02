@@ -55,6 +55,7 @@ export function Header() {
                   height={48}
                   className="w-10 h-auto sm:w-12 md:w-14"
                   sizes="(max-width: 640px) 40px, (max-width: 768px) 48px, 56px"
+                  priority
                 />
                 <span className="text-xl sm:text-2xl md:text-3xl font-montserrat font-bold text-paper tracking-tight">
                   NOVAITEC<span className="text-teal">.</span>

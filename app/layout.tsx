@@ -157,6 +157,13 @@ export default function RootLayout({
       </head>
       <GoogleAnalytics />
       <body className="antialiased">
+        {/* Skip link voor toegankelijkheid - zichtbaar bij focus */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-teal focus:text-midnight focus:px-4 focus:py-2 focus:rounded-lg focus:font-inter focus:font-semibold"
+        >
+          Ga naar hoofdinhoud
+        </a>
         <AnalyticsProvider />
         {/* JSON-LD Structured Data voor SEO en AI-zichtbaarheid */}
         <AllSchemas />

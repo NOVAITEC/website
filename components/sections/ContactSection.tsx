@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Linkedin, MapPin, Send, CheckCircle } from 'lucide-react';
+import { Mail, Linkedin, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
@@ -209,7 +209,7 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-inter text-base sm:text-lg md:text-xl text-slate-400 leading-relaxed"
+            className="font-inter text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed"
           >
             Ik geloof in korte lijnen en heldere afspraken. Ik kijk graag met je mee naar waar voor jou de winst ligt.
           </motion.p>
@@ -267,17 +267,17 @@ export function ContactSection() {
         >
           {/* Glass Card Container */}
           <div className="relative bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl">
-            {/* Tech corner accents */}
-            <div className="absolute top-4 left-4 font-mono text-[10px] text-slate-600 opacity-50">
+            {/* Tech corner accents - decorative */}
+            <div className="absolute top-4 left-4 font-mono text-[10px] text-slate-600 opacity-50" aria-hidden="true">
               [
             </div>
-            <div className="absolute top-4 right-4 font-mono text-[10px] text-slate-600 opacity-50">
+            <div className="absolute top-4 right-4 font-mono text-[10px] text-slate-600 opacity-50" aria-hidden="true">
               ]
             </div>
-            <div className="absolute bottom-4 left-4 font-mono text-[10px] text-slate-600 opacity-50">
+            <div className="absolute bottom-4 left-4 font-mono text-[10px] text-slate-600 opacity-50" aria-hidden="true">
               +
             </div>
-            <div className="absolute bottom-4 right-4 font-mono text-[10px] text-slate-600 opacity-50">
+            <div className="absolute bottom-4 right-4 font-mono text-[10px] text-slate-600 opacity-50" aria-hidden="true">
               +
             </div>
 
@@ -287,6 +287,8 @@ export function ContactSection() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-12"
+                role="status"
+                aria-live="polite"
               >
                 <motion.div
                   initial={{ scale: 0 }}
@@ -319,7 +321,7 @@ export function ContactSection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <label htmlFor="naam" className="block font-inter text-sm text-slate-400 mb-2">
+                  <label htmlFor="naam" className="block font-inter text-sm text-slate-300 mb-2">
                     Naam <span className="text-teal">*</span>
                   </label>
                   <input
@@ -334,7 +336,10 @@ export function ContactSection() {
                     }`}
                   />
                   {errors.naam && (
-                    <p className="mt-1 text-sm text-red-400">{errors.naam}</p>
+                    <p className="mt-1 text-sm text-red-400 flex items-center gap-1.5" role="alert">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      {errors.naam}
+                    </p>
                   )}
                 </motion.div>
 
@@ -345,7 +350,7 @@ export function ContactSection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <label htmlFor="email" className="block font-inter text-sm text-slate-400 mb-2">
+                  <label htmlFor="email" className="block font-inter text-sm text-slate-300 mb-2">
                     Email <span className="text-teal">*</span>
                   </label>
                   <input
@@ -360,7 +365,10 @@ export function ContactSection() {
                     }`}
                   />
                   {errors.email && (
-                    <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                    <p className="mt-1 text-sm text-red-400 flex items-center gap-1.5" role="alert">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      {errors.email}
+                    </p>
                   )}
                 </motion.div>
 
@@ -371,7 +379,7 @@ export function ContactSection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
-                  <label htmlFor="bedrijf" className="block font-inter text-sm text-slate-400 mb-2">
+                  <label htmlFor="bedrijf" className="block font-inter text-sm text-slate-300 mb-2">
                     Bedrijf <span className="text-slate-600">(optioneel)</span>
                   </label>
                   <input
@@ -392,7 +400,7 @@ export function ContactSection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.6 }}
                 >
-                  <label htmlFor="bericht" className="block font-inter text-sm text-slate-400 mb-2">
+                  <label htmlFor="bericht" className="block font-inter text-sm text-slate-300 mb-2">
                     Bericht <span className="text-teal">*</span>
                   </label>
                   <textarea
@@ -407,7 +415,10 @@ export function ContactSection() {
                     }`}
                   />
                   {errors.bericht && (
-                    <p className="mt-1 text-sm text-red-400">{errors.bericht}</p>
+                    <p className="mt-1 text-sm text-red-400 flex items-center gap-1.5" role="alert">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      {errors.bericht}
+                    </p>
                   )}
                 </motion.div>
 
@@ -435,8 +446,13 @@ export function ContactSection() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg"
+                    role="alert"
+                    aria-live="polite"
                   >
-                    <p className="text-sm text-red-400">{submitError}</p>
+                    <p className="text-sm text-red-400 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      {submitError}
+                    </p>
                   </motion.div>
                 )}
 

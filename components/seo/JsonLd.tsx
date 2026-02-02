@@ -197,6 +197,81 @@ const webSiteSchema = {
   inLanguage: "nl-NL",
 };
 
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://novaitec.nl/#localbusiness",
+  name: "NOVAITEC",
+  description:
+    "AI-gedreven automatisering voor MKB-ondernemers. Workflow automatisering, AI agents en slimme dashboards.",
+  url: "https://novaitec.nl",
+  telephone: "+31638472570",
+  email: "kyan@novaitec.nl",
+  image: "https://novaitec.nl/images/og-image.jpg",
+  logo: "https://novaitec.nl/images/novaitec_logo_transparant_kleur.png",
+  priceRange: "€€",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Drunen",
+    addressRegion: "Noord-Brabant",
+    addressCountry: "NL",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 51.6833,
+    longitude: 5.1333,
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "09:00",
+    closes: "17:00",
+  },
+  sameAs: ["https://www.linkedin.com/in/kyancordes"],
+  areaServed: {
+    "@type": "Country",
+    name: "Netherlands",
+  },
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "https://novaitec.nl/#breadcrumb",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://novaitec.nl",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Over mij",
+      item: "https://novaitec.nl/#over",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Oplossingen",
+      item: "https://novaitec.nl/#oplossing",
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      name: "FAQ",
+      item: "https://novaitec.nl/#faq",
+    },
+    {
+      "@type": "ListItem",
+      position: 5,
+      name: "Contact",
+      item: "https://novaitec.nl/#contact",
+    },
+  ],
+};
+
 // Gecombineerde schema's in één graph
 const combinedSchema = {
   "@context": "https://schema.org",
@@ -206,6 +281,8 @@ const combinedSchema = {
     serviceSchema,
     faqSchema,
     webSiteSchema,
+    localBusinessSchema,
+    breadcrumbSchema,
   ],
 };
 

@@ -5,6 +5,7 @@ import {
   trackScrollDepth,
   trackSectionView,
   trackOutboundLink,
+  trackCTAClick,
 } from "@/lib/analytics";
 
 /**
@@ -134,8 +135,6 @@ export function useTrackCTA(
   buttonText: string,
   destination?: string
 ) {
-  const { trackCTAClick } = require("@/lib/analytics");
-
   return useCallback(() => {
     trackCTAClick(location, buttonText, destination);
   }, [location, buttonText, destination]);

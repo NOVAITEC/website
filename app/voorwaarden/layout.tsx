@@ -1,23 +1,9 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Algemene Voorwaarden",
   description:
-    "Algemene voorwaarden van NOVAITEC. Lees de voorwaarden die van toepassing zijn op alle diensten en overeenkomsten.",
-  alternates: {
-    canonical: "https://novaitec.nl/voorwaarden",
-  },
-  openGraph: {
-    title: "Algemene Voorwaarden | NOVAITEC",
-    description:
-      "Algemene voorwaarden van NOVAITEC voor AI-gedreven automatiseringsdiensten.",
-    url: "https://novaitec.nl/voorwaarden",
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "De algemene voorwaarden van NOVAITEC voor dienstverlening op het gebied van AI automatisering en workflow optimalisatie.",
 };
 
 export default function VoorwaardenLayout({
