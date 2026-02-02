@@ -1,10 +1,21 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { Mail, Linkedin, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+
+// Lazy load hCaptcha - only loads when form section becomes visible (~410 KiB savings on initial load)
+const HCaptcha = dynamic(() => import('@hcaptcha/react-hcaptcha'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[78px] w-[303px] bg-slate-800/50 rounded-md animate-pulse flex items-center justify-center">
+      <span className="text-slate-500 text-sm">Captcha laden...</span>
+    </div>
+  ),
+});
 
 interface FormData {
   naam: string;
@@ -25,7 +36,7 @@ export function ContactSection() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const captchaRef = useRef<HCaptcha>(null);
+  const captchaRef = useRef<HCaptchaType>(null);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

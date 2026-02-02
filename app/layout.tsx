@@ -144,9 +144,15 @@ export default function RootLayout({
         {/* Preconnect to Google services for faster analytics loading */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
+        {/* Preconnect to hCaptcha for faster captcha loading */}
+        <link rel="preconnect" href="https://js.hcaptcha.com" />
+        <link rel="preconnect" href="https://api.hcaptcha.com" />
+        <link rel="preconnect" href="https://newassets.hcaptcha.com" crossOrigin="anonymous" />
         {/* DNS prefetch as fallback for older browsers */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://js.hcaptcha.com" />
+        <link rel="dns-prefetch" href="https://api.hcaptcha.com" />
         {/* Preload critical header logo for faster LCP */}
         <link
           rel="preload"

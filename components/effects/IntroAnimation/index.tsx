@@ -161,7 +161,6 @@ export function IntroAnimation() {
                 alt="NOVAITEC"
                 width={192}
                 height={192}
-                priority
                 quality={70}
                 sizes="(max-width: 768px) 144px, 192px"
                 className="relative w-36 h-36 md:w-48 md:h-48"
@@ -200,7 +199,6 @@ export function IntroAnimation() {
                   alt="NOVAITEC logo zoom animatie"
                   width={192}
                   height={192}
-                  priority
                   quality={70}
                   sizes="(max-width: 768px) 144px, 192px"
                   className="w-36 h-36 md:w-48 md:h-48"
