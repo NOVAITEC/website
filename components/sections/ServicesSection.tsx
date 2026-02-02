@@ -594,21 +594,6 @@ export function ServicesSection() {
       const rect = section.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // Check if section is approaching from above (within snap distance)
-      // Only snap when scrolling DOWN into the section, not when scrolling UP from below
-      const approachingFromAbove = rect.top > 0 && rect.top < 150 && e.deltaY > 0;
-
-      // Snap to section when approaching from above (scrolling down)
-      if (approachingFromAbove) {
-        e.preventDefault();
-        window.lenis?.stop();
-        section.scrollIntoView({ behavior: 'instant' });
-        setIsInTunnel(true);
-        setCurrentSlide(0);
-        wheelAccumRef.current = 0;
-        return;
-      }
-
       // Check if section is centered (locked in tunnel)
       const sectionCentered = rect.top <= 10 && rect.bottom >= viewportHeight - 10;
 
