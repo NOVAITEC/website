@@ -64,78 +64,15 @@ export function ContactSection() {
         },
         body: JSON.stringify({
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
-          subject: `🚀 Nieuw contactverzoek van ${formData.naam}`,
+          subject: `Nieuw contactverzoek van ${formData.naam}`,
           from_name: 'NOVAITEC Website',
           replyto: formData.email,
           'h-captcha-response': captchaToken,
-          // Custom HTML email template
-          message: `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f172a; border-radius: 16px; overflow: hidden;">
-
-  <!-- Header -->
-  <div style="background: linear-gradient(135deg, #14b8a6 0%, #22d3ee 100%); padding: 32px; text-align: center;">
-    <h1 style="color: #0f172a; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">
-      NOVAITEC
-    </h1>
-    <p style="color: #0f172a; margin: 8px 0 0 0; font-size: 14px; opacity: 0.8;">
-      Nieuw bericht via de website
-    </p>
-  </div>
-
-  <!-- Content -->
-  <div style="padding: 32px;">
-
-    <!-- Contact Info Card -->
-    <div style="background-color: #1e293b; border-radius: 12px; padding: 24px; margin-bottom: 24px; border-left: 4px solid #14b8a6;">
-      <h2 style="color: #14b8a6; margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
-        Contactgegevens
-      </h2>
-
-      <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-          <td style="color: #94a3b8; padding: 8px 0; font-size: 14px; width: 100px;">Naam</td>
-          <td style="color: #f1f5f9; padding: 8px 0; font-size: 14px; font-weight: 500;">${formData.naam}</td>
-        </tr>
-        <tr>
-          <td style="color: #94a3b8; padding: 8px 0; font-size: 14px;">Email</td>
-          <td style="color: #f1f5f9; padding: 8px 0; font-size: 14px;">
-            <a href="mailto:${formData.email}" style="color: #22d3ee; text-decoration: none;">${formData.email}</a>
-          </td>
-        </tr>
-        <tr>
-          <td style="color: #94a3b8; padding: 8px 0; font-size: 14px;">Bedrijf</td>
-          <td style="color: #f1f5f9; padding: 8px 0; font-size: 14px;">${formData.bedrijf || '—'}</td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- Message Card -->
-    <div style="background-color: #1e293b; border-radius: 12px; padding: 24px;">
-      <h2 style="color: #14b8a6; margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
-        Bericht
-      </h2>
-      <p style="color: #f1f5f9; margin: 0; font-size: 15px; line-height: 1.6; white-space: pre-wrap;">${formData.bericht}</p>
-    </div>
-
-    <!-- Action Button -->
-    <div style="text-align: center; margin-top: 32px;">
-      <a href="mailto:${formData.email}?subject=Re: Uw bericht aan NOVAITEC"
-         style="display: inline-block; background: linear-gradient(135deg, #14b8a6 0%, #22d3ee 100%); color: #0f172a; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
-        Beantwoorden →
-      </a>
-    </div>
-
-  </div>
-
-  <!-- Footer -->
-  <div style="background-color: #1e293b; padding: 20px 32px; text-align: center; border-top: 1px solid #334155;">
-    <p style="color: #64748b; margin: 0; font-size: 12px;">
-      Dit bericht is verzonden via het contactformulier op novaitec.nl
-    </p>
-  </div>
-
-</div>
-          `.trim(),
+          // Form fields - Web3Forms formats these nicely
+          Naam: formData.naam,
+          Email: formData.email,
+          Bedrijf: formData.bedrijf || 'Niet opgegeven',
+          Bericht: formData.bericht,
         }),
       });
 
