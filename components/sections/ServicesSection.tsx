@@ -499,9 +499,9 @@ const SlideOwnership = memo(function SlideOwnership() {
 
 const SlideFinale = memo(function SlideFinale() {
   return (
-    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center justify-center lg:px-4">
+    <div className="lg:snap-center lg:flex-shrink-0 w-full lg:w-screen lg:h-full flex items-center justify-center lg:px-4 relative">
       {/* Background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.15)_0%,transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.15)_0%,transparent_60%)] pointer-events-none" />
 
       <div className="relative z-10 text-center max-w-4xl">
         <motion.p
