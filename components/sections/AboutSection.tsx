@@ -160,7 +160,8 @@ export default function AboutSection() {
                 alt="Kyan Cordes - Founder NOVAITEC"
                 fill
                 className="object-cover"
-                priority
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
+                quality={75}
               />
 
               {/* Subtle overlay gradient for depth */}

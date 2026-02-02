@@ -736,24 +736,30 @@ export function ServicesSection() {
         </div>
 
         {/* Progress indicators */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        <nav className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-1 z-10" aria-label="Slide navigatie">
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
             <button
               key={i}
               onClick={() => goToSlide(i)}
-              className={cn(
-                'h-2 rounded-full transition-all duration-300',
-                i === currentSlide ? 'bg-teal w-6' : 'bg-white/20 hover:bg-white/40 w-2'
-              )}
-            />
+              aria-label={`Ga naar slide ${i + 1} van ${TOTAL_SLIDES}`}
+              aria-current={i === currentSlide ? 'step' : undefined}
+              className="h-8 w-8 flex items-center justify-center group"
+            >
+              <span
+                className={cn(
+                  'h-2 rounded-full transition-all duration-300',
+                  i === currentSlide ? 'bg-teal w-6' : 'bg-white/20 group-hover:bg-white/40 w-2'
+                )}
+              />
+            </button>
           ))}
-        </div>
+        </nav>
 
         {/* Slide counter */}
-        <div className="absolute bottom-8 left-8 font-mono text-sm z-10">
+        <div className="absolute bottom-8 left-8 font-mono text-sm z-10" aria-live="polite">
           <span className="text-teal font-medium">{String(currentSlide + 1).padStart(2, '0')}</span>
-          <span className="text-slate-600">/</span>
-          <span className="text-slate-600">{String(TOTAL_SLIDES).padStart(2, '0')}</span>
+          <span className="text-slate-400">/</span>
+          <span className="text-slate-400">{String(TOTAL_SLIDES).padStart(2, '0')}</span>
         </div>
       </div>
 

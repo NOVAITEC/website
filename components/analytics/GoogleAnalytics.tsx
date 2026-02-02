@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useState } from "react";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -38,20 +38,48 @@ function PageViewTracker() {
 }
 
 export function GoogleAnalytics() {
-  if (!GA_MEASUREMENT_ID) {
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  // Delay loading until user interaction or after 5 seconds
+  useEffect(() => {
+    if (!GA_MEASUREMENT_ID) return;
+
+    const events = ['scroll', 'click', 'touchstart', 'keydown'];
+    let loaded = false;
+
+    const loadGA = () => {
+      if (loaded) return;
+      loaded = true;
+      setShouldLoad(true);
+      events.forEach(event => window.removeEventListener(event, loadGA, { capture: true }));
+    };
+
+    // Load after user interaction
+    events.forEach(event => window.addEventListener(event, loadGA, { capture: true, passive: true }));
+
+    // Fallback: load after 5 seconds if no interaction
+    const timer = setTimeout(loadGA, 5000);
+
+    return () => {
+      clearTimeout(timer);
+      events.forEach(event => window.removeEventListener(event, loadGA, { capture: true }));
+    };
+  }, []);
+
+  if (!GA_MEASUREMENT_ID || !shouldLoad) {
     return null;
   }
 
   return (
     <>
-      {/* Google Analytics Script - lazyOnload to not block main thread */}
+      {/* Google Analytics Script - loads after user interaction */}
       <Script
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
       <Script
         id="google-analytics"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
