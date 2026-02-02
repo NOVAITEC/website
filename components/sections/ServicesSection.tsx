@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -8,7 +8,6 @@ import {
   Bot,
   LayoutDashboard,
   ShieldCheck,
-  Mail,
   Calendar,
   ChevronDown,
   Car,
@@ -17,6 +16,7 @@ import {
   BarChart3,
   TrendingUp,
   MessageSquare,
+  Mail,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -203,10 +203,10 @@ function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: 
 }
 
 // =============================================================================
-// SLIDES
+// SLIDES (memoized to prevent unnecessary re-renders)
 // =============================================================================
 
-function SlideIntro() {
+const SlideIntro = memo(function SlideIntro() {
   return (
     <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center px-4">
       <div className="relative z-10 text-center max-w-5xl">
@@ -282,9 +282,9 @@ function SlideIntro() {
       </div>
     </div>
   );
-}
+});
 
-function SlideAutomation() {
+const SlideAutomation = memo(function SlideAutomation() {
   return (
     <div className="snap-center flex-shrink-0 w-screen h-full flex items-center px-4 lg:px-8">
       <div className="container mx-auto max-w-6xl">
@@ -334,9 +334,9 @@ function SlideAutomation() {
       </div>
     </div>
   );
-}
+});
 
-function SlideAIAgents() {
+const SlideAIAgents = memo(function SlideAIAgents() {
   return (
     <div className="snap-center flex-shrink-0 w-screen h-full flex items-center px-4 lg:px-8">
       <div className="container mx-auto max-w-6xl">
@@ -389,9 +389,9 @@ function SlideAIAgents() {
       </div>
     </div>
   );
-}
+});
 
-function SlideDashboards() {
+const SlideDashboards = memo(function SlideDashboards() {
   return (
     <div className="snap-center flex-shrink-0 w-screen h-full flex items-center px-4 lg:px-8">
       <div className="container mx-auto max-w-6xl">
@@ -441,9 +441,9 @@ function SlideDashboards() {
       </div>
     </div>
   );
-}
+});
 
-function SlideOwnership() {
+const SlideOwnership = memo(function SlideOwnership() {
   return (
     <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center px-4">
       <div className="text-center max-w-3xl">
@@ -492,9 +492,9 @@ function SlideOwnership() {
       </div>
     </div>
   );
-}
+});
 
-function SlideFinale() {
+const SlideFinale = memo(function SlideFinale() {
   return (
     <div className="snap-center flex-shrink-0 w-screen h-full flex items-center justify-center px-4">
       {/* Background glow */}
@@ -551,7 +551,7 @@ function SlideFinale() {
       </div>
     </div>
   );
-}
+});
 
 // =============================================================================
 // MAIN COMPONENT - DESKTOP WITH TUNNEL SCROLL
