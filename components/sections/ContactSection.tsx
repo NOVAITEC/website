@@ -331,6 +331,8 @@ export function ContactSection() {
                     value={formData.naam}
                     onChange={handleChange}
                     placeholder="Je naam"
+                    autoComplete="name"
+                    aria-required="true"
                     className={`w-full bg-midnight/50 border rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 ${
                       errors.naam ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal'
                     }`}
@@ -360,6 +362,8 @@ export function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="je@email.nl"
+                    autoComplete="email"
+                    aria-required="true"
                     className={`w-full bg-midnight/50 border rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 ${
                       errors.email ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal'
                     }`}
@@ -389,6 +393,7 @@ export function ContactSection() {
                     value={formData.bedrijf}
                     onChange={handleChange}
                     placeholder="Je bedrijf"
+                    autoComplete="organization"
                     className="w-full bg-midnight/50 border border-slate-700 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300"
                   />
                 </motion.div>
@@ -410,6 +415,7 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder="Waar kan ik je mee helpen?"
                     rows={4}
+                    aria-required="true"
                     className={`w-full bg-midnight/50 border rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-paper placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal/20 transition-all duration-300 resize-none ${
                       errors.bericht ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-teal'
                     }`}

@@ -25,12 +25,17 @@ export function IntroAnimation() {
   const [shouldShow, setShouldShow] = useState(false);
   const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'fade' | 'done'>('drop');
 
-  // Check if first visit
+  // Check if first visit - with fallback for private browsing
   useEffect(() => {
-    const hasVisited = localStorage.getItem(STORAGE_KEY);
-    if (!hasVisited) {
+    try {
+      const hasVisited = localStorage.getItem(STORAGE_KEY);
+      if (!hasVisited) {
+        setShouldShow(true);
+        localStorage.setItem(STORAGE_KEY, 'true');
+      }
+    } catch {
+      // localStorage not available (private browsing) - show animation anyway
       setShouldShow(true);
-      localStorage.setItem(STORAGE_KEY, 'true');
     }
   }, []);
 
@@ -192,7 +197,7 @@ export function IntroAnimation() {
               >
                 <Image
                   src="/images/novaitec_beeldmerk_transparant_kleur.png"
-                  alt=""
+                  alt="NOVAITEC logo zoom animatie"
                   width={192}
                   height={192}
                   priority
