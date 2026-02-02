@@ -394,7 +394,7 @@ export function ContactSection() {
                       </>
                     ) : (
                       <>
-                        Verstuur Bericht
+                        Verstuur bericht
                         <Send className="w-5 h-5" strokeWidth={2} />
                       </>
                     )}

@@ -304,7 +304,7 @@ const SlideAutomation = memo(function SlideAutomation() {
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">
-              <span className="text-teal">Slimme</span> Workflows.
+              <span className="text-teal">Slimme</span> workflows.
             </h3>
 
             <p className="font-inter text-sm lg:text-lg text-slate-400 max-w-lg mx-auto lg:mx-0">
@@ -317,7 +317,7 @@ const SlideAutomation = memo(function SlideAutomation() {
               whileTap={{ scale: 0.95 }}
               className="inline-flex items-center gap-2 bg-teal text-midnight font-inter font-semibold text-sm px-5 py-2.5 rounded-xl"
             >
-              Bekijk Cases
+              Bekijk cases
               <ArrowRight className="w-4 h-4" />
             </motion.a>
           </motion.div>
@@ -358,7 +358,7 @@ const SlideAIAgents = memo(function SlideAIAgents() {
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">
               Jouw{' '}
               <span className="bg-gradient-to-r from-teal via-cyan-300 to-teal bg-clip-text text-transparent">
-                Tweede Brein.
+                tweede brein.
               </span>
             </h3>
 
@@ -423,7 +423,7 @@ const SlideDashboards = memo(function SlideDashboards() {
             </div>
 
             <h3 className="font-montserrat font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">
-              Stuur op <span className="text-amber">Data</span>, niet op gevoel.
+              Stuur op <span className="text-amber">data</span>, niet op gevoel.
             </h3>
 
             <p className="font-inter text-sm lg:text-lg text-slate-400 max-w-lg mx-auto lg:mx-0">
@@ -436,7 +436,7 @@ const SlideDashboards = memo(function SlideDashboards() {
               whileTap={{ scale: 0.95 }}
               className="inline-flex items-center gap-2 border-2 border-amber text-amber font-inter font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-amber hover:text-midnight transition-all"
             >
-              Zie Voorbeeld
+              Zie voorbeeld
               <ArrowRight className="w-4 h-4" />
             </motion.a>
           </motion.div>
@@ -468,7 +468,7 @@ const SlideOwnership = memo(function SlideOwnership() {
           transition={{ delay: 0.1 }}
           className="font-montserrat font-extrabold text-3xl sm:text-5xl lg:text-7xl text-white mb-4 leading-tight"
         >
-          Geen <span className="text-amber">Gijzeling.</span>
+          Geen <span className="text-amber">gijzeling.</span>
         </motion.h3>
 
         <motion.p
@@ -489,7 +489,7 @@ const SlideOwnership = memo(function SlideOwnership() {
           transition={{ delay: 0.3 }}
           className="inline-flex items-center gap-2 bg-teal text-midnight font-montserrat font-semibold text-sm sm:text-base px-6 py-3 rounded-xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.6)]"
         >
-          Start Samenwerking
+          Start samenwerking
           <ArrowRight className="w-5 h-5" />
         </motion.a>
       </div>
@@ -548,7 +548,7 @@ const SlideFinale = memo(function SlideFinale() {
           className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.6)]"
         >
           <Calendar className="w-5 h-5" />
-          Plan je Strategie Sessie
+          Plan je strategie sessie
           <ArrowRight className="w-5 h-5" />
         </motion.a>
       </div>
