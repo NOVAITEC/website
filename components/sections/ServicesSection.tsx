@@ -34,7 +34,7 @@ interface CaseExample {
 
 const workflowCases: CaseExample[] = [
   {
-    title: 'Auto Import Adviseur',
+    title: 'Auto import adviseur',
     subtitle: 'Voor autobedrijven die Duitse occasions importeren',
     Icon: Car,
     accentColor: 'teal',
@@ -47,7 +47,7 @@ const workflowCases: CaseExample[] = [
     ],
   },
   {
-    title: 'Factuur & Offerte Automaat',
+    title: 'Factuur & offerte automaat',
     subtitle: 'Complete administratie automatisering',
     Icon: FileText,
     accentColor: 'teal',
@@ -63,7 +63,7 @@ const workflowCases: CaseExample[] = [
 
 const aiAgentCases: CaseExample[] = [
   {
-    title: 'Social Media Autopilot',
+    title: 'Social media autopilot',
     subtitle: 'Een agent die je hele social media overneemt',
     Icon: Share2,
     accentColor: 'teal',
@@ -76,7 +76,7 @@ const aiAgentCases: CaseExample[] = [
     ],
   },
   {
-    title: 'Persoonlijke Email Assistent',
+    title: 'Persoonlijke email assistent',
     subtitle: 'AI die jouw inbox afhandelt',
     Icon: Mail,
     accentColor: 'teal',
@@ -92,7 +92,7 @@ const aiAgentCases: CaseExample[] = [
 
 const dashboardCases: CaseExample[] = [
   {
-    title: 'Real-time Business Intelligence',
+    title: 'Real-time business intelligence',
     subtitle: 'Dashboard dat al je data verbindt',
     Icon: BarChart3,
     accentColor: 'amber',
@@ -105,7 +105,7 @@ const dashboardCases: CaseExample[] = [
     ],
   },
   {
-    title: 'Marketing Performance Centrum',
+    title: 'Marketing performance centrum',
     subtitle: 'Al je marketing data op één plek',
     Icon: TrendingUp,
     accentColor: 'amber',
