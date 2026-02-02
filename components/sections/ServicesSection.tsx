@@ -592,8 +592,25 @@ export function ServicesSection() {
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
-      // Larger margin to catch fast scrolling
-      const sectionCentered = rect.top <= 50 && rect.bottom >= window.innerHeight - 50;
+      const viewportHeight = window.innerHeight;
+
+      // Check if section is approaching (within snap distance)
+      const approachingFromAbove = rect.top > 0 && rect.top < 150 && e.deltaY > 0;
+      const approachingFromBelow = rect.bottom > viewportHeight && rect.bottom < viewportHeight + 150 && e.deltaY < 0;
+
+      // Snap to section when approaching
+      if (approachingFromAbove || approachingFromBelow) {
+        e.preventDefault();
+        window.lenis?.stop();
+        section.scrollIntoView({ behavior: 'instant' });
+        setIsInTunnel(true);
+        setCurrentSlide(approachingFromAbove ? 0 : TOTAL_SLIDES - 1);
+        wheelAccumRef.current = 0;
+        return;
+      }
+
+      // Check if section is centered (locked in tunnel)
+      const sectionCentered = rect.top <= 10 && rect.bottom >= viewportHeight - 10;
 
       // Not in view - let normal scroll happen
       if (!sectionCentered) {
