@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Linkedin, MapPin, Send, CheckCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 interface FormData {
   naam: string;
@@ -23,6 +24,8 @@ export function ContactSection() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -40,6 +43,12 @@ export function ContactSection() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    // Captcha validatie
+    if (!captchaToken) {
+      setSubmitError('Vul de captcha in om te bewijzen dat je geen robot bent.');
       return;
     }
 
@@ -61,6 +70,7 @@ export function ContactSection() {
           email: formData.email,
           bedrijf: formData.bedrijf || 'Niet opgegeven',
           message: formData.bericht,
+          'h-captcha-response': captchaToken,
         }),
       });
 
@@ -69,6 +79,8 @@ export function ContactSection() {
       if (result.success) {
         setIsSuccess(true);
         setFormData({ naam: '', email: '', bedrijf: '', bericht: '' });
+        setCaptchaToken(null);
+        captchaRef.current?.resetCaptcha();
       } else {
         setSubmitError('Er ging iets mis. Probeer het opnieuw of mail direct naar kyan@novaitec.nl');
       }
@@ -395,6 +407,24 @@ export function ContactSection() {
                   {errors.bericht && (
                     <p className="mt-1 text-sm text-red-400">{errors.bericht}</p>
                   )}
+                </motion.div>
+
+                {/* hCaptcha */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.65 }}
+                  className="flex justify-center"
+                >
+                  <HCaptcha
+                    ref={captchaRef}
+                    sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
+                    reCaptchaCompat={false}
+                    theme="dark"
+                    onVerify={(token: string) => setCaptchaToken(token)}
+                    onExpire={() => setCaptchaToken(null)}
+                  />
                 </motion.div>
 
                 {/* Error Message */}
