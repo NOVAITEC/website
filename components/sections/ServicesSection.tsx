@@ -559,6 +559,7 @@ const SlideFinale = memo(function SlideFinale() {
 
 const TOTAL_SLIDES = 6;
 const SCROLL_THRESHOLD = 400; // Pixels of scroll needed to change slide
+const EXIT_THRESHOLD = 300; // Pixels of scroll needed to exit tunnel at boundaries
 
 export function ServicesSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -609,13 +610,8 @@ export function ServicesSection() {
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      // Allow exit at boundaries
-      if ((atFirstSlide && scrollingUp) || (atLastSlide && scrollingDown)) {
-        setIsInTunnel(false);
-        window.lenis?.start();
-        wheelAccumRef.current = 0;
-        return;
-      }
+      // At boundaries: still capture scroll but allow exit after threshold
+      const atExitBoundary = (atFirstSlide && scrollingUp) || (atLastSlide && scrollingDown);
 
       // We're in the tunnel - capture scroll
       e.preventDefault();
@@ -627,6 +623,16 @@ export function ServicesSection() {
 
       // Accumulate scroll
       wheelAccumRef.current += e.deltaY;
+
+      // At boundaries: exit only after reaching exit threshold
+      if (atExitBoundary) {
+        if (Math.abs(wheelAccumRef.current) >= EXIT_THRESHOLD) {
+          setIsInTunnel(false);
+          window.lenis?.start();
+          wheelAccumRef.current = 0;
+        }
+        return;
+      }
 
       // Change slide when threshold reached
       if (Math.abs(wheelAccumRef.current) >= SCROLL_THRESHOLD) {
