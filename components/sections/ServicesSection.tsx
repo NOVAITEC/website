@@ -148,6 +148,8 @@ function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: 
     },
   }[accentColor];
 
+  const toggleOpen = useCallback(() => setIsOpen((prev: boolean) => !prev), []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -155,12 +157,14 @@ function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: 
       viewport={{ once: true }}
       transition={{ delay, duration: 0.5 }}
       className={cn(
-        'rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300',
+        'rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 select-none',
         colors.bg,
         colors.border,
         colors.hoverBorder
       )}
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={toggleOpen}
+      onTap={toggleOpen}
+      whileTap={{ scale: 0.98 }}
     >
       <div className="flex items-center gap-3 p-4">
         <div className={cn('flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center', colors.iconBg)}>
