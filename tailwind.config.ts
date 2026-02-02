@@ -17,9 +17,9 @@ const config: Config = {
         "slate-text": "#334155",
       },
       fontFamily: {
-        montserrat: ["Montserrat", "sans-serif"],
-        inter: ["Inter", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        montserrat: ["var(--font-montserrat)", "sans-serif"],
+        inter: ["var(--font-inter)", "sans-serif"],
+        mono: ["var(--font-jetbrains-mono)", "monospace"],
       },
       borderRadius: {
         lg: "var(--radius)",

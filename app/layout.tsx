@@ -1,10 +1,32 @@
 import type { Metadata } from "next";
+import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Footer } from "@/components/layout/Footer";
 import { IntroAnimation } from "@/components/effects/IntroAnimation";
 import { AllSchemas } from "@/components/seo/JsonLd";
 import { GoogleAnalytics, AnalyticsProvider } from "@/components/analytics";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 const baseUrl = "https://novaitec.nl";
 
@@ -111,7 +133,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="nl">
+    <html lang="nl" className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <GoogleAnalytics />
       <body className="antialiased">
         <AnalyticsProvider />
