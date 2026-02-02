@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { name: "Over mij", href: "#over" },
-  { name: "Services", href: "#oplossing" },
+  { name: "Oplossingen", href: "#oplossing" },
   { name: "FAQ", href: "#faq" },
   { name: "Contact", href: "#contact" },
 ];
@@ -83,9 +83,9 @@ export function Header() {
                 style={{ animationDelay: "0.4s" }}
               >
                 <Button asChild className="hover:scale-105 transition-transform">
-                  <Link href="#contact">
+                  <a href="https://wa.me/31636472570" target="_blank" rel="noopener noreferrer">
                     Start gesprek
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </div>
@@ -171,12 +171,14 @@ export function Header() {
               style={{ transitionDelay: isMobileMenuOpen ? "0.4s" : "0s" }}
             >
               <Button asChild className="w-full">
-                <Link
-                  href="#contact"
+                <a
+                  href="https://wa.me/31636472570"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Start gesprek
-                </Link>
+                </a>
               </Button>
             </div>
           </nav>
