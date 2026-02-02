@@ -3,6 +3,7 @@
 // =============================================================================
 // INTRO ANIMATION - Spectaculaire Logo Zoom-Through
 // =============================================================================
+// Only shows on FIRST visit (uses localStorage)
 // 1. Logo drops in met bounce
 // 2. Logo pulst en gloeit op
 // 3. Logo zoomt DOOR je heen (je vliegt erin)
@@ -12,6 +13,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
+const STORAGE_KEY = 'novaitec_visited';
+
 // Check if mobile - runs once on mount
 const checkIsMobile = () => {
   if (typeof window === 'undefined') return false;
@@ -19,7 +22,17 @@ const checkIsMobile = () => {
 };
 
 export function IntroAnimation() {
+  const [shouldShow, setShouldShow] = useState(false);
   const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'fade' | 'done'>('drop');
+
+  // Check if first visit
+  useEffect(() => {
+    const hasVisited = localStorage.getItem(STORAGE_KEY);
+    if (!hasVisited) {
+      setShouldShow(true);
+      localStorage.setItem(STORAGE_KEY, 'true');
+    }
+  }, []);
 
   // Memoize timing based on mobile detection at mount
   // Mobile: ultra-fast for better LCP (target: ~0.8s total)
@@ -56,7 +69,8 @@ export function IntroAnimation() {
     return () => timers.forEach(clearTimeout);
   }, [TIMING]);
 
-  if (phase === 'done') {
+  // Don't show if: returning visitor OR animation completed
+  if (!shouldShow || phase === 'done') {
     return null;
   }
 
