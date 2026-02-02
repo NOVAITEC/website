@@ -228,7 +228,7 @@ function OpportunityMockup() {
         </div>
         <div>
           <p className="font-mono text-xs text-slate-500 uppercase tracking-wider">Innovatie Backlog</p>
-          <p className="font-montserrat font-bold text-base md:text-lg text-white">Gemiste Kansen</p>
+          <p className="font-montserrat font-bold text-base md:text-lg text-white">Gemiste kansen</p>
         </div>
       </div>
 
