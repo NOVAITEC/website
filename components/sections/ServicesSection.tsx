@@ -591,7 +591,8 @@ export function ServicesSection() {
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
-      const sectionCentered = rect.top <= 50 && rect.bottom >= window.innerHeight - 50;
+      // More generous margins to lock in earlier when scrolling from below
+      const sectionCentered = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
 
       // Not in view - let normal scroll happen
       if (!sectionCentered) {
