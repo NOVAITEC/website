@@ -610,10 +610,30 @@ export function ServicesSection() {
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      // At boundaries: still capture scroll but allow exit after threshold
+      // At boundaries: accumulate and check exit threshold BEFORE blocking scroll
       const atExitBoundary = (atFirstSlide && scrollingUp) || (atLastSlide && scrollingDown);
 
-      // We're in the tunnel - capture scroll
+      if (atExitBoundary) {
+        if (!cooldownRef.current) {
+          wheelAccumRef.current += e.deltaY;
+        }
+
+        // Exit threshold reached - let scroll through
+        if (Math.abs(wheelAccumRef.current) >= EXIT_THRESHOLD) {
+          setIsInTunnel(false);
+          window.lenis?.start();
+          wheelAccumRef.current = 0;
+          return; // Don't preventDefault - let the scroll happen
+        }
+
+        // Still under threshold - block scroll
+        e.preventDefault();
+        setIsInTunnel(true);
+        window.lenis?.stop();
+        return;
+      }
+
+      // Regular tunnel behavior - block scroll
       e.preventDefault();
       setIsInTunnel(true);
       window.lenis?.stop();
@@ -623,16 +643,6 @@ export function ServicesSection() {
 
       // Accumulate scroll
       wheelAccumRef.current += e.deltaY;
-
-      // At boundaries: exit only after reaching exit threshold
-      if (atExitBoundary) {
-        if (Math.abs(wheelAccumRef.current) >= EXIT_THRESHOLD) {
-          setIsInTunnel(false);
-          window.lenis?.start();
-          wheelAccumRef.current = 0;
-        }
-        return;
-      }
 
       // Change slide when threshold reached
       if (Math.abs(wheelAccumRef.current) >= SCROLL_THRESHOLD) {
