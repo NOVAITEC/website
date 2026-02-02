@@ -140,6 +140,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl" className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        {/* Preload critical header logo for faster LCP */}
+        <link
+          rel="preload"
+          href="/images/novaitec_beeldmerk_transparant_wit.png"
+          as="image"
+          type="image/png"
+        />
+      </head>
       <GoogleAnalytics />
       <body className="antialiased">
         <AnalyticsProvider />
