@@ -781,15 +781,15 @@ function StackingSlideMobile({ children, index }: StackingSlideMobileProps) {
     return () => observer.disconnect();
   }, []);
 
-  // Smaller offset for mobile screens
-  const topOffset = index * 8;
+  // Smaller offset for mobile screens, with base offset to center cards vertically
+  const stackOffset = index * 8;
 
   return (
     <div
       ref={cardRef}
       className="sticky min-h-[520px] h-[92svh] max-h-[800px] w-full flex items-center justify-center px-2"
       style={{
-        top: `${topOffset}px`,
+        top: `calc(4svh + ${stackOffset}px)`,
         zIndex: 10 + index,
       }}
     >
