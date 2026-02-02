@@ -560,6 +560,7 @@ const SlideFinale = memo(function SlideFinale() {
 const TOTAL_SLIDES = 6;
 const SCROLL_THRESHOLD = 400; // Pixels of scroll needed to change slide
 const EXIT_THRESHOLD = 150; // Pixels of scroll needed to exit tunnel at boundaries
+const APPROACH_ZONE = 150; // Pixels from section to trigger snap
 
 export function ServicesSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -567,6 +568,7 @@ export function ServicesSection() {
   const [isInTunnel, setIsInTunnel] = useState(false);
   const wheelAccumRef = useRef(0);
   const cooldownRef = useRef(false);
+  const exitCooldownRef = useRef(false); // Prevent immediate re-entry after exit
 
   // Navigate to specific slide with cooldown
   const goToSlide = useCallback((index: number) => {
@@ -596,9 +598,16 @@ export function ServicesSection() {
       const scrollingDown = e.deltaY > 0;
       const scrollingUp = e.deltaY < 0;
 
+      // Skip approach detection during exit cooldown (prevents re-lock after exiting)
+      if (exitCooldownRef.current) {
+        return;
+      }
+
       // Approach detection - snap to section when getting close
-      const approachingFromAbove = rect.top > 0 && rect.top < 150 && scrollingDown;
-      const approachingFromBelow = rect.bottom < viewportHeight && rect.bottom > viewportHeight - 150 && scrollingUp;
+      // From above: section top is within approach zone, scrolling down
+      const approachingFromAbove = rect.top > 0 && rect.top < APPROACH_ZONE && scrollingDown;
+      // From below: section bottom is below viewport but within approach zone, scrolling up
+      const approachingFromBelow = rect.bottom > viewportHeight && rect.bottom < viewportHeight + APPROACH_ZONE && scrollingUp;
 
       if (approachingFromAbove) {
         e.preventDefault();
@@ -641,6 +650,11 @@ export function ServicesSection() {
           setIsInTunnel(false);
           window.lenis?.start();
           wheelAccumRef.current = 0;
+          // Start exit cooldown to prevent immediate re-lock
+          exitCooldownRef.current = true;
+          setTimeout(() => {
+            exitCooldownRef.current = false;
+          }, 800);
           return; // Don't preventDefault - let the scroll happen
         }
 
