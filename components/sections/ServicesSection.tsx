@@ -593,26 +593,42 @@ export function ServicesSection() {
 
       const rect = section.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      const scrollingDown = e.deltaY > 0;
+      const scrollingUp = e.deltaY < 0;
 
-      // Check if section is centered (locked in tunnel)
-      const sectionCentered = rect.top <= 10 && rect.bottom >= viewportHeight - 10;
+      // Approach detection - snap to section when getting close
+      const approachingFromAbove = rect.top > 0 && rect.top < 150 && scrollingDown;
+      const approachingFromBelow = rect.bottom < viewportHeight && rect.bottom > viewportHeight - 150 && scrollingUp;
 
-      // Not in view - let normal scroll happen
-      if (!sectionCentered) {
-        if (isInTunnel) {
-          setIsInTunnel(false);
-          window.lenis?.start();
-        }
+      if (approachingFromAbove) {
+        e.preventDefault();
+        window.lenis?.stop();
+        section.scrollIntoView({ behavior: 'instant' });
+        setIsInTunnel(true);
+        setCurrentSlide(0);
         wheelAccumRef.current = 0;
         return;
       }
 
-      const scrollingDown = e.deltaY > 0;
-      const scrollingUp = e.deltaY < 0;
+      if (approachingFromBelow) {
+        e.preventDefault();
+        window.lenis?.stop();
+        section.scrollIntoView({ behavior: 'instant' });
+        setIsInTunnel(true);
+        setCurrentSlide(TOTAL_SLIDES - 1);
+        wheelAccumRef.current = 0;
+        return;
+      }
+
+      // Not in tunnel - let normal scroll happen
+      if (!isInTunnel) {
+        return;
+      }
+
       const atFirstSlide = currentSlide === 0;
       const atLastSlide = currentSlide === TOTAL_SLIDES - 1;
 
-      // At boundaries: accumulate and check exit threshold BEFORE blocking scroll
+      // At boundaries: accumulate and check exit threshold
       const atExitBoundary = (atFirstSlide && scrollingUp) || (atLastSlide && scrollingDown);
 
       if (atExitBoundary) {
@@ -630,15 +646,11 @@ export function ServicesSection() {
 
         // Still under threshold - block scroll
         e.preventDefault();
-        setIsInTunnel(true);
-        window.lenis?.stop();
         return;
       }
 
-      // Regular tunnel behavior - block scroll
+      // Regular tunnel behavior - block scroll and navigate slides
       e.preventDefault();
-      setIsInTunnel(true);
-      window.lenis?.stop();
 
       // Skip if in cooldown period
       if (cooldownRef.current) return;
