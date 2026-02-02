@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 import Link from "next/link";
 import NeuralBackground from "@/components/ui/flow-field-background";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
@@ -23,19 +23,6 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center space-x-2 bg-slate-800/80 border border-teal/30 rounded-full px-4 py-2 mb-8"
-          >
-            <Sparkles className="w-4 h-4 text-teal" />
-            <span className="text-teal text-sm font-inter font-medium">
-              AI-gedreven Automatisering voor MKB
-            </span>
-          </motion.div>
-
           {/* Main Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
