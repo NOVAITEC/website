@@ -22,14 +22,15 @@ export function IntroAnimation() {
   const [phase, setPhase] = useState<'drop' | 'pulse' | 'zoom' | 'fade' | 'done'>('drop');
 
   // Memoize timing based on mobile detection at mount
+  // Mobile: ultra-fast for better LCP (target: ~0.8s total)
   const TIMING = useMemo(() => {
     const isMobile = checkIsMobile();
     return {
-      logoDrop: isMobile ? 0.3 : 0.6,
-      logoHold: isMobile ? 0.2 : 0.4,
-      logoPulse: isMobile ? 0.25 : 0.5,
-      zoomThrough: isMobile ? 0.4 : 0.8,
-      fadeOut: isMobile ? 0.25 : 0.5,
+      logoDrop: isMobile ? 0.2 : 0.6,
+      logoHold: isMobile ? 0.1 : 0.4,
+      logoPulse: isMobile ? 0.15 : 0.5,
+      zoomThrough: isMobile ? 0.25 : 0.8,
+      fadeOut: isMobile ? 0.15 : 0.5,
     };
   }, []);
 
