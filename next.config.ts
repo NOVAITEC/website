@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   },
   // Enable compression
   compress: true,
+  // Strict mode for React to catch issues
+  reactStrictMode: true,
+  // Power optimizations for production
+  poweredByHeader: false,
   typescript: {
     ignoreBuildErrors: false,
   },
@@ -16,7 +20,7 @@ const nextConfig: NextConfig = {
   },
   // Optimize package imports for better tree-shaking
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'lenis'],
   },
   // Headers for caching static assets
   async headers() {

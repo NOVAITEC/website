@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +45,7 @@ const itemVariants = {
 export function Footer() {
   return (
     <footer className="bg-[#050f1a] border-t border-slate-800">
-      <motion.div
+      <m.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -55,7 +55,7 @@ export function Footer() {
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
           {/* Column 1: Brand */}
-          <motion.div variants={itemVariants} className="space-y-4">
+          <m.div variants={itemVariants} className="space-y-4">
             <Link href="/" className="inline-block">
               <Image
                 src="/images/novaitec_logo_transparant_wit_tekst-wit.png"
@@ -68,10 +68,10 @@ export function Footer() {
             <p className="text-xs sm:text-sm text-slate-400 font-inter">
               AI-Driven Automation
             </p>
-          </motion.div>
+          </m.div>
 
           {/* Column 2: Menu */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <h3 className="text-paper font-semibold font-montserrat mb-4">
               Menu
             </h3>
@@ -87,10 +87,10 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </m.div>
 
           {/* Column 3: Legal */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <h3 className="text-paper font-semibold font-montserrat mb-4">
               Juridisch
             </h3>
@@ -111,16 +111,16 @@ export function Footer() {
                 </span>
               </li>
             </ul>
-          </motion.div>
+          </m.div>
 
           {/* Column 4: Socials */}
-          <motion.div variants={itemVariants}>
+          <m.div variants={itemVariants}>
             <h3 className="text-paper font-semibold font-montserrat mb-4">
               Volg NOVAITEC
             </h3>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
-                <motion.a
+                <m.a
                   key={social.name}
                   href={social.href}
                   target="_blank"
@@ -131,22 +131,22 @@ export function Footer() {
                   aria-label={social.name}
                 >
                   <social.icon className="w-5 h-5" strokeWidth={1.5} />
-                </motion.a>
+                </m.a>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Copyright Bar */}
-        <motion.div
+        <m.div
           variants={itemVariants}
           className="mt-12 pt-8 border-t border-slate-800/50"
         >
           <p className="text-center text-sm text-slate-600 font-inter">
             &copy; {new Date().getFullYear()} NOVAITEC. Alle rechten voorbehouden.
           </p>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </footer>
   );
 }

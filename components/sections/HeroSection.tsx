@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Zap } from "lucide-react";
 import Link from "next/link";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
@@ -43,7 +43,7 @@ export function HeroSection() {
           </p>
 
           {/* CTA Buttons */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
@@ -60,12 +60,12 @@ export function HeroSection() {
               <Zap className="w-5 h-5 text-teal" />
               <span>Bekijk wat ik doe</span>
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </div>
 
       {/* Trust Indicator - positioned at bottom */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.9 }}
@@ -96,7 +96,7 @@ export function HeroSection() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Scroll Indicator - CSS animation for better performance */}
       <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 animate-fade-in animation-delay-1000">

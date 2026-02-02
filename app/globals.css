@@ -104,23 +104,22 @@ canvas {
   }
 }
 
-/* Hero animations - mobile-first: subtle for better LCP */
-@keyframes fade-in-up-mobile {
+/* Hero animations - optimized for LCP */
+/* Mobile: NO opacity animation, only subtle transform for instant LCP */
+@keyframes slide-up-mobile {
   from {
-    opacity: 0.7;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Desktop: stronger animation for visual impact */
+/* Desktop: add opacity animation for visual impact (not LCP-critical) */
 @keyframes fade-in-up-desktop {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -129,13 +128,14 @@ canvas {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up-mobile 0.5s ease-out forwards;
+  /* Mobile: visible immediately, only subtle slide */
+  animation: slide-up-mobile 0.4s ease-out forwards;
 }
 
-/* Desktop: use stronger animation */
+/* Desktop: use opacity animation */
 @media (min-width: 1024px) {
   .animate-fade-in-up {
-    animation: fade-in-up-desktop 0.6s ease-out forwards;
+    animation: fade-in-up-desktop 0.5s ease-out forwards;
     opacity: 0;
   }
 }
