@@ -592,8 +592,8 @@ export function ServicesSection() {
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
-      // Small margin to allow lock while keeping white bar minimal
-      const sectionCentered = rect.top <= 10 && rect.bottom >= window.innerHeight - 10;
+      // Larger margin to catch fast scrolling
+      const sectionCentered = rect.top <= 50 && rect.bottom >= window.innerHeight - 50;
 
       // Not in view - let normal scroll happen
       if (!sectionCentered) {
