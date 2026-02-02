@@ -21,6 +21,7 @@ export function ContactSection() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
 
   const validateEmail = (email: string) => {
@@ -44,13 +45,38 @@ export function ContactSection() {
 
     setIsSubmitting(true);
     setErrors({});
+    setSubmitError(null);
 
-    // Simuleer verzending (later te vervangen door echte API call)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+          subject: `Nieuw bericht van ${formData.naam} via NovaITec.nl`,
+          from_name: formData.naam,
+          name: formData.naam,
+          email: formData.email,
+          bedrijf: formData.bedrijf || 'Niet opgegeven',
+          message: formData.bericht,
+        }),
+      });
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    setFormData({ naam: '', email: '', bedrijf: '', bericht: '' });
+      const result = await response.json();
+
+      if (result.success) {
+        setIsSuccess(true);
+        setFormData({ naam: '', email: '', bedrijf: '', bericht: '' });
+      } else {
+        setSubmitError('Er ging iets mis. Probeer het opnieuw of mail direct naar kyan@novaitec.nl');
+      }
+    } catch {
+      setSubmitError('Kon geen verbinding maken. Controleer je internetverbinding.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -370,6 +396,17 @@ export function ContactSection() {
                     <p className="mt-1 text-sm text-red-400">{errors.bericht}</p>
                   )}
                 </motion.div>
+
+                {/* Error Message */}
+                {submitError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg"
+                  >
+                    <p className="text-sm text-red-400">{submitError}</p>
+                  </motion.div>
+                )}
 
                 {/* Submit Button */}
                 <motion.div
