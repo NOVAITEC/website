@@ -559,7 +559,7 @@ const SlideFinale = memo(function SlideFinale() {
 
 const TOTAL_SLIDES = 6;
 const SCROLL_THRESHOLD = 400; // Pixels of scroll needed to change slide
-const EXIT_THRESHOLD = 300; // Pixels of scroll needed to exit tunnel at boundaries
+const EXIT_THRESHOLD = 150; // Pixels of scroll needed to exit tunnel at boundaries
 
 export function ServicesSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
