@@ -72,7 +72,7 @@ export function Header() {
                 >
                   <Link
                     href={link.href}
-                    className="text-paper/80 hover:text-teal transition-colors duration-200 font-inter font-medium"
+                    className="text-paper/90 hover:text-teal transition-colors duration-200 font-inter font-medium"
                   >
                     {link.name}
                   </Link>

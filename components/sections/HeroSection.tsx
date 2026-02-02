@@ -37,7 +37,7 @@ export function HeroSection() {
           </h1>
 
           {/* Subtitle - no opacity animation for faster LCP */}
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-paper/80 font-inter mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-paper/90 font-inter mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100">
             Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien.
             Slimme automatisering die ruimte schept voor groei, niet voor gedoe.
           </p>
