@@ -86,9 +86,10 @@ export function GoogleAnalytics() {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            // Cookieless/anonymized configuration
+            // Functional analytics with privacy settings
+            // Analytics storage is granted for functional analytics only
             gtag('consent', 'default', {
-              'analytics_storage': 'denied',
+              'analytics_storage': 'granted',
               'ad_storage': 'denied',
               'ad_user_data': 'denied',
               'ad_personalization': 'denied'
