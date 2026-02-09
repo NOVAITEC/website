@@ -9,7 +9,7 @@ const faqs = [
   {
     question: "Wat doet NOVAITEC precies?",
     answer:
-      "NOVAITEC helpt MKB-ondernemers met AI-gedreven automatisering. Ik bouw geautomatiseerde workflows, AI agents en slimme dashboards. Het doel? Jouw 'busy work' elimineren zodat je je kunt focussen op werk dat er echt toe doet.",
+      "NOVAITEC helpt MKB-ondernemers met AI-gedreven automatisering. Ik bouw geautomatiseerde workflows, AI agents en slimme dashboards. Het doel? Jouw repetitieve werk wegnemen zodat je je kunt focussen op werk dat er echt toe doet.",
   },
   {
     question: "Voor wie is NOVAITEC geschikt?",
@@ -19,12 +19,12 @@ const faqs = [
   {
     question: "Wat kost AI automatisering bij NOVAITEC?",
     answer:
-      "Ik werk niet op basis van uurtje-factuurtje, maar op basis van waarde. Je betaalt voor de oplossing en de rust, niet voor de tijd. Na een gratis strategie sessie krijg je een helder voorstel met vaste prijs - geen verrassingen achteraf.",
+      "Ik werk niet op basis van uurtje-factuurtje, maar op basis van waarde. Je betaalt voor de oplossing en de rust, niet voor de tijd. Na een vrijblijvend kennismakingsgesprek krijg je een helder voorstel met vaste prijs - geen verrassingen achteraf.",
   },
   {
     question: "Heb ik toegang tot mijn code en data?",
     answer:
-      "Absoluut. Alle code en workflows die ik voor jou bouw, worden opgeslagen op een privé GitHub server waar jij volledige toegang toe krijgt. Geen vendor lock-in, geen gedoe. Jij bent en blijft 100% eigenaar van alles wat ik voor je maak.",
+      "Absoluut. Alle code en workflows die ik voor jou bouw, worden opgeslagen in een privé GitHub repository waar jij volledige toegang toe krijgt. Geen vendor lock-in, geen gedoe. Jij bent en blijft 100% eigenaar van alles wat ik voor je maak.",
   },
   {
     question: "Kan ik mijn automatisering zelf beheren na oplevering?",

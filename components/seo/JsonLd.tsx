@@ -20,7 +20,7 @@ const organizationSchema = {
   description:
     "De motor achter jouw ambitie. Terwijl jij bouwt aan je visie, zorg ik dat alles blijft draaien. Slimme automatisering die ruimte schept voor groei, niet voor gedoe.",
   slogan: "De motor achter jouw ambitie",
-  foundingDate: "2025",
+  foundingDate: "2026",
   founder: {
     "@id": "https://novaitec.nl/#kyan-cordes",
   },
@@ -52,9 +52,9 @@ const personSchema = {
   "@type": "Person",
   "@id": "https://novaitec.nl/#kyan-cordes",
   name: "Kyan Cordes",
-  jobTitle: "Process Engineer & AI Automation Specialist",
+  jobTitle: "Automation Engineer",
   description:
-    "Founder van NOVAITEC. Helpt MKB-ondernemers met AI-gedreven automatisering. Combineert technische expertise met een coachende aanpak.",
+    "Oprichter van NOVAITEC. Helpt MKB-ondernemers met AI-gedreven automatisering. Combineert technische expertise met een coachende aanpak.",
   url: "https://novaitec.nl",
   image: "https://novaitec.nl/images/kyan-cordes.JPG",
   worksFor: {

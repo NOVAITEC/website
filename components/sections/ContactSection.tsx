@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { Mail, Linkedin, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Linkedin, MapPin, Phone, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
 
 // Lazy load hCaptcha - only loads when form section becomes visible (~410 KiB savings on initial load)
@@ -117,6 +117,12 @@ export function ContactSection() {
       icon: Mail,
       label: 'kyan@novaitec.nl',
       href: 'mailto:kyan@novaitec.nl',
+      external: false,
+    },
+    {
+      icon: Phone,
+      label: '06-38472570',
+      href: 'tel:+31638472570',
       external: false,
     },
     {

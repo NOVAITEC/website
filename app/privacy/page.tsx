@@ -36,7 +36,7 @@ export default function PrivacyPage() {
             </div>
 
             <p className="text-slate-400 font-inter mb-12">
-              Laatst bijgewerkt: januari 2025
+              Laatst bijgewerkt: februari 2026
             </p>
 
             {/* Content */}
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
                 <p className="text-sm sm:text-base leading-relaxed">
                   NOVAITEC, gevestigd in Nederland en ingeschreven bij de Kamer van Koophandel
                   onder nummer 99541807, respecteert de privacy van alle bezoekers van deze website.
-                  Ik draag er zorg voor dat de persoonlijke informatie die u mij verschaft
+                  Ik draag er zorg voor dat de persoonlijke informatie die je mij verschaft
                   vertrouwelijk wordt behandeld.
                 </p>
               </section>
@@ -97,7 +97,28 @@ export default function PrivacyPage() {
 
               <section>
                 <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
-                  5. Bewaartermijn
+                  5. hCaptcha
+                </h2>
+                <p className="text-sm sm:text-base leading-relaxed">
+                  Het contactformulier op deze website maakt gebruik van hCaptcha om spam te voorkomen.
+                  hCaptcha kan hierbij technische gegevens verzamelen zoals je IP-adres en browserinformatie
+                  om te bepalen of je een mens bent. Deze gegevens worden verwerkt door Intuition Machines, Inc.
+                  Lees het{" "}
+                  <a
+                    href="https://www.hcaptcha.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-teal hover:underline"
+                  >
+                    privacybeleid van hCaptcha
+                  </a>{" "}
+                  voor meer informatie.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
+                  6. Bewaartermijn
                 </h2>
                 <p className="text-sm sm:text-base leading-relaxed">
                   Ik bewaar je persoonsgegevens niet langer dan strikt noodzakelijk is om
@@ -109,7 +130,7 @@ export default function PrivacyPage() {
 
               <section>
                 <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
-                  6. Jouw rechten
+                  7. Jouw rechten
                 </h2>
                 <p className="text-sm sm:text-base leading-relaxed mb-4">
                   Op grond van de Algemene Verordening Gegevensbescherming (AVG) heb je de volgende rechten:
@@ -124,7 +145,7 @@ export default function PrivacyPage() {
 
               <section>
                 <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
-                  7. Beveiliging
+                  8. Beveiliging
                 </h2>
                 <p className="text-sm sm:text-base leading-relaxed">
                   Ik neem passende technische en organisatorische maatregelen om je
@@ -136,7 +157,7 @@ export default function PrivacyPage() {
 
               <section>
                 <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
-                  8. Contact
+                  9. Contact
                 </h2>
                 <p className="text-sm sm:text-base leading-relaxed">
                   Heb je vragen over deze privacyverklaring of wil je een beroep doen op
@@ -154,6 +175,7 @@ export default function PrivacyPage() {
                 <p className="text-sm text-slate-500">
                   NOVAITEC<br />
                   KVK: 99541807<br />
+                  BTW: NL005394359B21<br />
                   E-mail: kyan@novaitec.nl
                 </p>
               </section>

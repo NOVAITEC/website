@@ -36,7 +36,7 @@ export default function CookiesPage() {
             </div>
 
             <p className="text-slate-400 font-inter mb-12">
-              Laatst bijgewerkt: januari 2025
+              Laatst bijgewerkt: februari 2026
             </p>
 
             {/* Content */}
@@ -169,7 +169,7 @@ export default function CookiesPage() {
                 <h2 className="text-xl sm:text-2xl font-montserrat font-semibold text-paper mb-4">
                   Cookies van derden
                 </h2>
-                <p className="text-sm sm:text-base leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed mb-4">
                   De analytische cookies van Google Analytics worden geplaatst door Google LLC.
                   Google kan deze informatie aan derden verstrekken indien Google hiertoe
                   wettelijk wordt verplicht, of voor zover derden de informatie namens Google
@@ -184,6 +184,20 @@ export default function CookiesPage() {
                   </a>{" "}
                   voor meer informatie.
                 </p>
+                <p className="text-sm sm:text-base leading-relaxed">
+                  Daarnaast maakt het contactformulier gebruik van hCaptcha (Intuition Machines, Inc.)
+                  voor spampreventie. hCaptcha kan hierbij cookies plaatsen om te bepalen of je een mens bent.
+                  Lees het{" "}
+                  <a
+                    href="https://www.hcaptcha.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-teal hover:underline"
+                  >
+                    privacybeleid van hCaptcha
+                  </a>{" "}
+                  voor meer informatie.
+                </p>
               </section>
 
               <section>
@@ -191,7 +205,7 @@ export default function CookiesPage() {
                   Contact
                 </h2>
                 <p className="text-sm sm:text-base leading-relaxed">
-                  Heeft u vragen over ons cookiebeleid? Neem dan contact met ons op via{" "}
+                  Heb je vragen over het cookiebeleid? Neem dan contact met me op via{" "}
                   <a
                     href="mailto:kyan@novaitec.nl"
                     className="text-teal hover:underline"
@@ -205,6 +219,7 @@ export default function CookiesPage() {
                 <p className="text-sm text-slate-500">
                   NOVAITEC<br />
                   KVK: 99541807<br />
+                  BTW: NL005394359B21<br />
                   E-mail: kyan@novaitec.nl
                 </p>
               </section>

@@ -109,13 +109,15 @@ export default function AboutSection() {
               <p className="font-inter text-base sm:text-lg text-slate-300 leading-relaxed">
                 Techniek vind ik mooi, maar het gaat er niet om wat ik kan bouwen.
                 Het gaat erom dat het <span className="text-teal">jou</span> helpt.
-                Ik sta naast je, niet boven je. Net zoals ik al jaren als coach op
-                het sportveld sta: samen kijken wat werkt, en dan gewoon doen.
+                Ik ben het bruggetje tussen wat mogelijk is met AI en jouw dagelijkse praktijk.
+                Net zoals ik al jaren als coach op het sportveld sta: samen kijken
+                wat werkt, en dan gewoon doen.
               </p>
 
               <p className="font-inter text-base sm:text-lg text-slate-300 leading-relaxed">
-                Geen ingewikkelde verhalen, geen uurtje-factuurtje. Eerlijk
-                kijken naar wat jouw dag lichter maakt. En dat bouwen.
+                Geen ingewikkelde verhalen, geen uurtje-factuurtje. Ik kies altijd
+                de beste tool voor jouw situatie &mdash; niet wat ik toevallig ken.
+                Eerlijk kijken naar wat jouw dag lichter maakt. En dat bouwen.
               </p>
             </motion.div>
 
@@ -157,7 +159,7 @@ export default function AboutSection() {
               {/* Photo */}
               <Image
                 src="/images/kyan-cordes.JPG"
-                alt="Kyan Cordes - Founder NOVAITEC"
+                alt="Kyan Cordes - Oprichter NOVAITEC"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"

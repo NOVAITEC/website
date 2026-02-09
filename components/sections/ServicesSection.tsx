@@ -111,9 +111,9 @@ const dashboardCases: CaseExample[] = [
     accentColor: 'amber',
     features: [
       'ROI per campagne en kanaal',
-      'Customer acquisition cost berekening',
-      'Conversie funnel visualisatie',
-      'A/B test resultaten real-time',
+      'Kosten per nieuwe klant inzichtelijk',
+      'Van bezoeker tot klant: de hele reis in beeld',
+      'Test-resultaten direct zichtbaar',
       'Voorspelling beste posting tijden',
     ],
   },
@@ -245,7 +245,7 @@ const SlideIntro = memo(function SlideIntro() {
           transition={{ delay: 0.2 }}
           className="relative font-inter text-base sm:text-xl text-slate-400 mb-4"
         >
-          Stop met handmatig werk. Start met schalen.
+          Minder handmatig werk. Meer ruimte om te groeien.
         </motion.p>
 
         <motion.p
@@ -440,7 +440,7 @@ const SlideOwnership = memo(function SlideOwnership() {
           transition={{ delay: 0.2 }}
           className="font-inter text-sm sm:text-lg text-slate-400 max-w-2xl mx-auto"
         >
-          Je krijgt volledige toegang tot je eigen systemen. De broncode, de data, de handleidingen: alles is van jou. Wil je later zelf verder of met een andere partij? Prima. Ik werk met open standaarden, dus je zit nooit vast.
+          Je krijgt volledige toegang tot je eigen systemen. De broncode, de data, de handleidingen: alles is van jou. Wil je later zelf verder of met een andere partij? Prima. Ik werk met open standaarden, dus je zit nooit vast. En met een onderhoudspakket zorg ik dat alles blijft draaien.
         </motion.p>
       </div>
     </div>
@@ -460,7 +460,7 @@ const SlideFinale = memo(function SlideFinale() {
           viewport={{ once: true }}
           className="font-mono text-xs sm:text-sm uppercase tracking-wider text-teal mb-4"
         >
-          READY?
+          KLAAR?
         </motion.p>
 
         <motion.h2
@@ -483,8 +483,7 @@ const SlideFinale = memo(function SlideFinale() {
           transition={{ delay: 0.2 }}
           className="font-inter text-base sm:text-xl text-slate-400 mb-10"
         >
-          Je weet nu wat er kan. De enige vraag is:{' '}
-          <span className="text-white font-medium">wanneer start jij?</span>
+          Benieuwd wat dit voor jou kan betekenen?
         </motion.p>
 
         <motion.a
@@ -498,7 +497,7 @@ const SlideFinale = memo(function SlideFinale() {
           className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.6)]"
         >
           <Calendar className="w-5 h-5" />
-          Plan je strategie sessie
+          Plan een vrijblijvend gesprek
           <ArrowRight className="w-5 h-5" />
         </motion.a>
       </div>

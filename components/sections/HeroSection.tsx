@@ -73,14 +73,14 @@ export function HeroSection() {
       >
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-paper/50 text-sm font-inter mb-4">
-            Vertrouwd door ondernemers die hun tijd terug willen
+            Voor ondernemers die hun tijd terug willen
           </p>
           <div className="grid grid-cols-3 gap-4 sm:gap-8 text-paper/70">
             <div className="text-center">
               <p className="text-lg sm:text-2xl font-montserrat font-bold text-teal">
                 4 uur
               </p>
-              <p className="text-xs sm:text-sm font-inter">per week bespaard</p>
+              <p className="text-xs sm:text-sm font-inter">per week te besparen</p>
             </div>
             <div className="text-center">
               <p className="text-lg sm:text-2xl font-montserrat font-bold text-teal">

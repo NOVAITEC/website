@@ -66,7 +66,7 @@ export function Footer() {
               />
             </Link>
             <p className="text-xs sm:text-sm text-slate-400 font-inter">
-              AI-Driven Automation
+              AI-gedreven Automatisering
             </p>
           </m.div>
 

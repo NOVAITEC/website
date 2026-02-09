@@ -36,7 +36,7 @@ export default function VoorwaardenPage() {
             </div>
 
             <p className="text-slate-400 font-inter mb-12">
-              Laatst bijgewerkt: januari 2025
+              Laatst bijgewerkt: februari 2026
             </p>
 
             {/* Content */}
@@ -107,9 +107,9 @@ export default function VoorwaardenPage() {
                   Artikel 6 - Intellectueel Eigendom
                 </h2>
                 <ol className="list-decimal list-inside space-y-3 text-slate-400">
-                  <li>Alle rechten van intellectuele eigendom op de door NOVAITEC ontwikkelde producten, waaronder software, documentatie en werkprocessen, berusten bij NOVAITEC, tenzij schriftelijk anders is overeengekomen.</li>
-                  <li>Na volledige betaling verkrijgt Opdrachtgever een niet-exclusief gebruiksrecht op de geleverde producten.</li>
-                  <li>Het is Opdrachtgever niet toegestaan de geleverde producten te vermenigvuldigen, openbaar te maken of aan derden ter beschikking te stellen zonder voorafgaande schriftelijke toestemming van NOVAITEC.</li>
+                  <li>Na volledige betaling van het overeengekomen bedrag gaan alle rechten van intellectuele eigendom op de door NOVAITEC ontwikkelde producten, waaronder software, documentatie en werkprocessen, over naar Opdrachtgever.</li>
+                  <li>Opdrachtgever verkrijgt na volledige betaling het volledige eigendomsrecht op de geleverde producten, inclusief broncode, data en documentatie. Opdrachtgever mag de producten vrij gebruiken, aanpassen, vermenigvuldigen en overdragen.</li>
+                  <li>NOVAITEC behoudt het recht om algemene kennis, technieken en ervaring die zijn opgedaan tijdens de uitvoering van de opdracht te gebruiken voor andere projecten, mits hierbij geen vertrouwelijke informatie van Opdrachtgever wordt gedeeld.</li>
                 </ol>
               </section>
 
@@ -159,6 +159,7 @@ export default function VoorwaardenPage() {
                 <p className="text-sm text-slate-500">
                   NOVAITEC<br />
                   KVK: 99541807<br />
+                  BTW: NL005394359B21<br />
                   E-mail: kyan@novaitec.nl
                 </p>
               </section>
