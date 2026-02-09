@@ -9,6 +9,7 @@ const menuLinks = [
   { name: "Home", href: "/" },
   { name: "Over mij", href: "/#over" },
   { name: "Services", href: "/#oplossing" },
+  { name: "Blog", href: "/blog" },
   { name: "FAQ", href: "/#faq" },
 ];
 
