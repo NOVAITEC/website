@@ -7,11 +7,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { name: "Over mij", href: "#over" },
-  { name: "Oplossingen", href: "#oplossing" },
+  { name: "Over mij", href: "/#over" },
+  { name: "Oplossingen", href: "/#oplossing" },
   { name: "Blog", href: "/blog" },
-  { name: "FAQ", href: "#faq" },
-  { name: "Contact", href: "#contact" },
+  { name: "FAQ", href: "/#faq" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export function Header() {
