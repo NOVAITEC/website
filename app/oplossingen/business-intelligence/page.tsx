@@ -172,7 +172,7 @@ export default function BusinessIntelligencePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-6"
+            className="mb-6 relative z-20"
           >
             <Link
               href="/#oplossing"
