@@ -542,6 +542,53 @@ export function ServicesSection() {
   const cooldownRef = useRef(false);
   const exitCooldownRef = useRef(false); // Prevent immediate re-entry after exit
 
+  // Save current slide to sessionStorage when clicking a demo link
+  // so we can restore position when the user returns
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (typeof window === 'undefined' || window.innerWidth < 1024) return;
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href^="/oplossingen/"]');
+      if (link) {
+        sessionStorage.setItem('oplossing-slide', String(currentSlideRef.current));
+      }
+    };
+
+    section.addEventListener('click', handleClick);
+    return () => section.removeEventListener('click', handleClick);
+  }, []);
+
+  // Restore slide from sessionStorage on mount (returning from demo page)
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth < 1024) return;
+
+    const saved = sessionStorage.getItem('oplossing-slide');
+    if (saved === null) return;
+    sessionStorage.removeItem('oplossing-slide');
+
+    const idx = parseInt(saved, 10);
+    if (isNaN(idx) || idx < 0 || idx >= TOTAL_SLIDES) return;
+
+    // Set the correct slide immediately
+    setCurrentSlide(idx);
+    currentSlideRef.current = idx;
+
+    // Activate tunnel after SmoothScroll has positioned the page
+    const timer = setTimeout(() => {
+      const section = sectionRef.current;
+      if (!section) return;
+      section.scrollIntoView({ behavior: 'instant' });
+      setIsInTunnel(true);
+      isInTunnelRef.current = true;
+      wheelAccumRef.current = 0;
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // Navigate to specific slide with cooldown
   const goToSlide = useCallback((index: number) => {
     const clamped = Math.max(0, Math.min(index, TOTAL_SLIDES - 1));
