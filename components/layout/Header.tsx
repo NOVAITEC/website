@@ -9,7 +9,7 @@ import { trackNavClick, trackCTAClick } from "@/lib/analytics";
 
 const navLinks = [
   { name: "Over mij", href: "/#over" },
-  { name: "Oplossingen", href: "/#oplossing" },
+  { name: "Oplossingen", href: "/oplossingen" },
   { name: "Blog", href: "/blog" },
   { name: "FAQ", href: "/#faq" },
   { name: "Contact", href: "/#contact" },

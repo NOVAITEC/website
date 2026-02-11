@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 // Expose Lenis type globally for tunnel scroll control
 declare global {
@@ -16,13 +18,15 @@ interface SmoothScrollProps {
 
 export function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
-  const rafIdRef = useRef<number | null>(null);
+  const pathname = usePathname();
 
+  // Initialize Lenis once
   useEffect(() => {
     // Disable Lenis on mobile/touch devices for better performance
-    const isMobile = window.matchMedia("(max-width: 768px)").matches ||
-                     'ontouchstart' in window ||
-                     navigator.maxTouchPoints > 0;
+    const isMobile =
+      window.matchMedia("(max-width: 768px)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0;
 
     if (isMobile) {
       // On mobile, just handle anchor clicks with native smooth scroll
@@ -46,6 +50,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     // Desktop: use Lenis for smooth scrolling
     const lenis = new Lenis({
+      autoRaf: true,
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
@@ -56,23 +61,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     });
 
     lenisRef.current = lenis;
-
-    // Expose globally for tunnel scroll control
     window.lenis = lenis;
-
-    // RAF loop for Lenis
-    function raf(time: number) {
-      lenis.raf(time);
-      rafIdRef.current = requestAnimationFrame(raf);
-    }
-
-    rafIdRef.current = requestAnimationFrame(raf);
-
-    // Resize Lenis when DOM content changes (tab switches, expanding sections)
-    const resizeObserver = new ResizeObserver(() => {
-      lenis.resize();
-    });
-    resizeObserver.observe(document.body);
 
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -96,15 +85,26 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
-      resizeObserver.disconnect();
-      if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current);
-      }
       lenis.destroy();
       lenisRef.current = null;
       window.lenis = null;
     };
   }, []);
+
+  // Reset scroll and resize Lenis on route changes
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+
+    // Ensure Lenis is running (not stopped/locked)
+    lenis.start();
+
+    // Let the new page render, then resize Lenis to detect new content height
+    requestAnimationFrame(() => {
+      lenis.resize();
+      lenis.scrollTo(0, { immediate: true });
+    });
+  }, [pathname]);
 
   return <>{children}</>;
 }
