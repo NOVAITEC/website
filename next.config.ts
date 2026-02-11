@@ -26,6 +26,22 @@ const nextConfig: NextConfig = {
   async headers() {
     const securityHeaders = [
       {
+        key: 'Content-Security-Policy',
+        value: [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://js.hcaptcha.com https://*.hcaptcha.com",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com",
+          "font-src 'self' https://fonts.gstatic.com",
+          "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://api.web3forms.com https://api.hcaptcha.com https://*.hcaptcha.com",
+          "frame-src https://newassets.hcaptcha.com https://*.hcaptcha.com",
+          "worker-src 'self' blob:",
+          "child-src blob:",
+          "base-uri 'self'",
+          "form-action 'self' https://api.web3forms.com",
+        ].join('; '),
+      },
+      {
         key: 'X-Frame-Options',
         value: 'DENY',
       },

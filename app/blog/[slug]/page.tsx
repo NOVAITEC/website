@@ -54,6 +54,8 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
+  const wordCount = post.content.split(/\s+/).length;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -61,10 +63,18 @@ export default async function BlogPostPage({ params }: PageProps) {
     description: post.description,
     datePublished: post.date,
     dateModified: post.date,
+    wordCount,
+    inLanguage: "nl-NL",
+    image: `https://novaitec.nl/blog/${slug}/opengraph-image`,
     author: {
       "@type": "Person",
       name: "Kyan Cordes",
       url: "https://linkedin.com/in/kyancordes",
+      jobTitle: "Oprichter",
+      worksFor: {
+        "@type": "Organization",
+        name: "NOVAITEC",
+      },
     },
     publisher: {
       "@type": "Organization",
@@ -79,6 +89,8 @@ export default async function BlogPostPage({ params }: PageProps) {
       "@type": "WebPage",
       "@id": `https://novaitec.nl/blog/${slug}`,
     },
+    keywords: post.tags.join(", "),
+    isAccessibleForFree: true,
   };
 
   return (

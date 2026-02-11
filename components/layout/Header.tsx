@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { trackNavClick, trackCTAClick } from "@/lib/analytics";
 
 const navLinks = [
   { name: "Over mij", href: "/#over" },
@@ -17,6 +18,7 @@ const navLinks = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -34,6 +36,44 @@ export function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Focus trap for mobile menu - keeps Tab/Shift+Tab within menu
+  useEffect(() => {
+    if (!isMobileMenuOpen || !menuRef.current) return;
+
+    const menu = menuRef.current;
+    const focusableEls = menu.querySelectorAll<HTMLElement>(
+      'a[href], button, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstEl = focusableEls[0];
+    const lastEl = focusableEls[focusableEls.length - 1];
+
+    // Focus first element when menu opens
+    firstEl?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl?.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl?.focus();
+        }
+      }
+    };
+
+    menu.addEventListener('keydown', handleKeyDown);
+    return () => menu.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
 
   return (
     <>
@@ -74,6 +114,7 @@ export function Header() {
                 >
                   <Link
                     href={link.href}
+                    onClick={() => trackNavClick(link.name, link.href)}
                     className="text-paper/90 hover:text-teal transition-colors duration-200 font-inter font-medium"
                   >
                     {link.name}
@@ -85,7 +126,7 @@ export function Header() {
                 style={{ animationDelay: "0.4s" }}
               >
                 <Button asChild className="hover:scale-105 transition-transform">
-                  <a href="https://wa.me/31638472570" target="_blank" rel="noopener noreferrer">
+                  <a href="https://wa.me/31638472570" target="_blank" rel="noopener noreferrer" onClick={() => trackCTAClick('header', 'Start gesprek', 'whatsapp')}>
                     Start gesprek
                   </a>
                 </Button>
@@ -120,6 +161,7 @@ export function Header() {
 
       {/* Menu Content */}
       <div
+        ref={menuRef}
         className={`fixed top-0 right-0 bottom-0 w-full sm:w-80 bg-midnight z-50 md:hidden shadow-2xl transition-transform duration-300 ease-out ${
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
@@ -154,7 +196,7 @@ export function Header() {
                 >
                   <Link
                     href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => { trackNavClick(link.name, link.href); setIsMobileMenuOpen(false); }}
                     className="block text-paper text-xl font-inter font-medium py-3 px-4 rounded-lg hover:bg-teal/20 hover:text-teal transition-all duration-200"
                   >
                     {link.name}
@@ -177,7 +219,7 @@ export function Header() {
                   href="https://wa.me/31638472570"
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => { trackCTAClick('mobile_menu', 'Start gesprek', 'whatsapp'); setIsMobileMenuOpen(false); }}
                 >
                   Start gesprek
                 </a>

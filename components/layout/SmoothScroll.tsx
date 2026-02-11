@@ -60,14 +60,33 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     // Expose globally for tunnel scroll control
     window.lenis = lenis;
 
-    // Continuous RAF loop - required for Lenis to detect scroll events
+    // Idle-aware RAF loop - pauses after 2s of no scroll to save CPU
+    let idleTimer: ReturnType<typeof setTimeout> | null = null;
+    let isRunning = false;
+
     function raf(time: number) {
       lenis.raf(time);
-      rafIdRef.current = requestAnimationFrame(raf);
+      if (isRunning) {
+        rafIdRef.current = requestAnimationFrame(raf);
+      }
     }
 
-    // Start the RAF loop
-    rafIdRef.current = requestAnimationFrame(raf);
+    function startRAF() {
+      if (!isRunning) {
+        isRunning = true;
+        rafIdRef.current = requestAnimationFrame(raf);
+      }
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        isRunning = false;
+        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      }, 2000);
+    }
+
+    // Start initially and on any scroll/wheel activity
+    startRAF();
+    window.addEventListener('scroll', startRAF, { passive: true });
+    window.addEventListener('wheel', startRAF, { passive: true });
 
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -91,6 +110,10 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
+      window.removeEventListener('scroll', startRAF);
+      window.removeEventListener('wheel', startRAF);
+      if (idleTimer) clearTimeout(idleTimer);
+      isRunning = false;
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }

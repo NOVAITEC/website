@@ -5,6 +5,7 @@ import { m } from "framer-motion";
 import { Zap } from "lucide-react";
 import Link from "next/link";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { trackCTAClick } from "@/lib/analytics";
 
 // Dynamic import NeuralBackground - heavy canvas animation, load after initial paint
 const NeuralBackground = dynamic(
@@ -49,12 +50,13 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           >
-            <Link href="#contact">
+            <Link href="#contact" onClick={() => trackCTAClick('hero', 'Start je automatisering', '#contact')}>
               <InteractiveHoverButton text="Start je automatisering" />
             </Link>
 
             <Link
               href="#oplossing"
+              onClick={() => trackCTAClick('hero', 'Bekijk wat ik doe', '#oplossing')}
               className="group inline-flex items-center space-x-2 bg-paper/5 border-2 border-paper/20 text-paper px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-inter font-semibold text-base sm:text-lg hover:bg-paper/10 hover:border-teal/50 transition-all duration-200 w-full sm:w-auto justify-center"
             >
               <Zap className="w-5 h-5 text-teal" />

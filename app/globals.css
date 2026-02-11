@@ -249,6 +249,25 @@ canvas {
   animation-delay: 0.4s;
 }
 
+/* Decorative glow animations - CSS replaces Framer Motion for zero JS overhead */
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.08; }
+  50% { transform: scale(1.1); opacity: 0.15; }
+}
+
+@keyframes glow-pulse-slow {
+  0%, 100% { transform: scale(1.1); opacity: 0.05; }
+  50% { transform: scale(1); opacity: 0.1; }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 8s ease-in-out infinite;
+}
+
+.animate-glow-pulse-slow {
+  animation: glow-pulse-slow 10s ease-in-out infinite;
+}
+
 /* Content visibility for off-screen optimization */
 .content-auto {
   content-visibility: auto;

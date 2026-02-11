@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { Mail, Linkedin, MapPin, Phone, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
+import { trackFormSubmit } from '@/lib/analytics';
 
 // Lazy load hCaptcha - only loads when contact section enters viewport (~410 KiB + 1.4s CPU savings)
 const HCaptcha = dynamic(() => import('@hcaptcha/react-hcaptcha'), {
@@ -108,11 +109,13 @@ export function ContactSection() {
       const result = await response.json();
 
       if (result.success) {
+        trackFormSubmit('contact', true);
         setIsSuccess(true);
         setFormData({ naam: '', email: '', bedrijf: '', bericht: '' });
         setCaptchaToken(null);
         setCaptchaKey((k: number) => k + 1); // Reset captcha by remounting
       } else {
+        trackFormSubmit('contact', false);
         setSubmitError('Er ging iets mis. Probeer het opnieuw of mail direct naar kyan@novaitec.nl');
       }
     } catch {
@@ -164,35 +167,11 @@ export function ContactSection() {
       <div ref={sectionRef} className="absolute top-0 left-0 w-0 h-0" aria-hidden="true" />
       {/* === Background Effects === */}
 
-      {/* Amber glow - static on mobile, animated on desktop */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[600px] md:h-[600px] rounded-full bg-amber/10 blur-[120px] -z-10 opacity-10 md:hidden" />
-      <motion.div
-        className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber/10 blur-[120px] -z-10"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.08, 0.15, 0.08],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
+      {/* Amber glow - CSS animation replaces Framer Motion for better TBT */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[600px] md:h-[600px] rounded-full bg-amber/10 blur-[120px] -z-10 opacity-10 md:animate-glow-pulse" />
 
-      {/* Teal accent - static on mobile, animated on desktop */}
-      <div className="absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full bg-teal/5 blur-[100px] -z-10 opacity-[0.07] md:hidden" />
-      <motion.div
-        className="hidden md:block absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full bg-teal/5 blur-[100px] -z-10"
-        animate={{
-          scale: [1.1, 1, 1.1],
-          opacity: [0.05, 0.1, 0.05],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
+      {/* Teal accent - CSS animation replaces Framer Motion for better TBT */}
+      <div className="absolute left-0 top-1/3 w-[400px] h-[400px] rounded-full bg-teal/5 blur-[100px] -z-10 opacity-[0.07] md:animate-glow-pulse-slow" />
 
       {/* Grid Overlay Pattern */}
       <div
