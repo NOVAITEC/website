@@ -196,7 +196,7 @@ export default function BusinessIntelligencePage() {
               </div>
 
               {/* Period selector */}
-              <div className="relative">
+              <div className="relative z-30">
                 <button
                   onClick={() => setPeriodOpen(!periodOpen)}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-amber/30 transition-colors text-sm text-white font-inter"
@@ -205,18 +205,24 @@ export default function BusinessIntelligencePage() {
                   {periodLabels[period]}
                   <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${periodOpen ? "rotate-180" : ""}`} />
                 </button>
+                {periodOpen && (
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setPeriodOpen(false)}
+                  />
+                )}
                 <AnimatePresence>
                   {periodOpen && (
                     <motion.div
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -5 }}
-                      className="absolute right-0 mt-1 w-44 bg-[#0d2035] border border-white/10 rounded-lg shadow-xl z-20 overflow-hidden"
+                      className="absolute right-0 mt-1 w-44 bg-[#0d2035] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden"
                     >
                       {(Object.keys(periodLabels) as Period[]).map((p) => (
                         <button
                           key={p}
-                          onClick={() => { setPeriod(p); setPeriodOpen(false); }}
+                          onClick={(e) => { e.stopPropagation(); setPeriod(p); setPeriodOpen(false); }}
                           className={`w-full text-left px-4 py-2.5 text-sm font-inter transition-colors ${
                             p === period ? "bg-amber/10 text-amber" : "text-slate-300 hover:bg-white/5"
                           }`}
