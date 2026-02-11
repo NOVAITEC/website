@@ -18,6 +18,7 @@ import {
   MessageSquare,
   Mail,
 } from 'lucide-react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 // =============================================================================
@@ -30,6 +31,7 @@ interface CaseExample {
   Icon: React.ElementType;
   features: string[];
   accentColor: 'teal' | 'amber';
+  demoUrl: string;
 }
 
 const workflowCases: CaseExample[] = [
@@ -38,6 +40,7 @@ const workflowCases: CaseExample[] = [
     subtitle: 'Voor autobedrijven die Duitse occasions importeren',
     Icon: Car,
     accentColor: 'teal',
+    demoUrl: '/oplossingen/auto-import',
     features: [
       'Scrapet auto\'s van Duitse platforms op basis van een link',
       'Onderzoekt automatisch de Nederlandse marktwaarde',
@@ -51,6 +54,7 @@ const workflowCases: CaseExample[] = [
     subtitle: 'Complete administratie automatisering',
     Icon: FileText,
     accentColor: 'teal',
+    demoUrl: '/oplossingen/factuur-offerte',
     features: [
       'Haalt projectdata uit je CRM of projecttool',
       'Genereert offertes automatisch in jouw huisstijl',
@@ -67,6 +71,7 @@ const aiAgentCases: CaseExample[] = [
     subtitle: 'Een agent die je hele social media overneemt',
     Icon: Share2,
     accentColor: 'teal',
+    demoUrl: '/oplossingen/social-media',
     features: [
       'Scant dagelijks nieuws in jouw branche',
       'Checkt het weer, feestdagen en speciale dagen',
@@ -80,6 +85,7 @@ const aiAgentCases: CaseExample[] = [
     subtitle: 'AI die jouw inbox afhandelt',
     Icon: Mail,
     accentColor: 'teal',
+    demoUrl: '/oplossingen/email-assistent',
     features: [
       'Leert jouw schrijfstijl en voorkeuren',
       'Beantwoordt standaard vragen automatisch',
@@ -96,6 +102,7 @@ const dashboardCases: CaseExample[] = [
     subtitle: 'Dashboard dat al je data verbindt',
     Icon: BarChart3,
     accentColor: 'amber',
+    demoUrl: '/oplossingen/business-intelligence',
     features: [
       'Live omzet per klant, project en medewerker',
       'Voorspelling cashflow komende 3 maanden',
@@ -109,6 +116,7 @@ const dashboardCases: CaseExample[] = [
     subtitle: 'Al je marketing data op één plek',
     Icon: TrendingUp,
     accentColor: 'amber',
+    demoUrl: '/oplossingen/marketing-dashboard',
     features: [
       'ROI per campagne en kanaal',
       'Kosten per nieuwe klant inzichtelijk',
@@ -125,7 +133,7 @@ const dashboardCases: CaseExample[] = [
 
 function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: number }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { title, subtitle, Icon, features, accentColor } = example;
+  const { title, subtitle, Icon, features, accentColor, demoUrl } = example;
 
   const colors = {
     teal: {
@@ -198,6 +206,16 @@ function ExpandableCard({ example, delay = 0 }: { example: CaseExample; delay?: 
                 </li>
               ))}
             </ul>
+            <Link
+              href={demoUrl}
+              className={cn(
+                'inline-flex items-center gap-1.5 mt-3 font-inter text-xs sm:text-sm font-medium transition-colors',
+                accentColor === 'teal' ? 'text-teal hover:text-cyan-300' : 'text-amber hover:text-yellow-300'
+              )}
+            >
+              Bekijk demo
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </motion.div>
