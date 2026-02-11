@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { Mail, Linkedin, MapPin, Phone, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { SectionWrapper } from '@/components/ui/SectionWrapper';
 
-// Lazy load hCaptcha - only loads when form section becomes visible (~410 KiB savings on initial load)
+// Lazy load hCaptcha - only loads when contact section enters viewport (~410 KiB + 1.4s CPU savings)
 const HCaptcha = dynamic(() => import('@hcaptcha/react-hcaptcha'), {
   ssr: false,
   loading: () => (
@@ -36,6 +36,25 @@ export function ContactSection() {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaKey, setCaptchaKey] = useState(0); // Used to reset captcha by remounting
+  const [captchaReady, setCaptchaReady] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Only load hCaptcha when contact section enters viewport - prevents ~1.4s CPU blocking on initial load
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCaptchaReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -141,6 +160,8 @@ export function ContactSection() {
 
   return (
     <SectionWrapper className="bg-midnight" id="contact">
+      {/* Intersection observer trigger for deferred hCaptcha loading */}
+      <div ref={sectionRef} className="absolute top-0 left-0 w-0 h-0" aria-hidden="true" />
       {/* === Background Effects === */}
 
       {/* Amber glow - static on mobile, animated on desktop */}
@@ -452,14 +473,20 @@ export function ContactSection() {
                   transition={{ duration: 0.5, delay: 0.65 }}
                   className="flex justify-center"
                 >
-                  <HCaptcha
-                    key={captchaKey}
-                    sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
-                    reCaptchaCompat={false}
-                    theme="dark"
-                    onVerify={(token: string) => setCaptchaToken(token)}
-                    onExpire={() => setCaptchaToken(null)}
-                  />
+                  {captchaReady ? (
+                    <HCaptcha
+                      key={captchaKey}
+                      sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
+                      reCaptchaCompat={false}
+                      theme="dark"
+                      onVerify={(token: string) => setCaptchaToken(token)}
+                      onExpire={() => setCaptchaToken(null)}
+                    />
+                  ) : (
+                    <div className="h-[78px] w-[303px] bg-slate-800/50 rounded-md flex items-center justify-center">
+                      <span className="text-slate-500 text-sm">Captcha laden...</span>
+                    </div>
+                  )}
                 </motion.div>
 
                 {/* Error Message */}

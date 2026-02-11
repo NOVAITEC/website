@@ -141,25 +141,9 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
-        {/* Preconnect to Google services for faster analytics loading */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" />
-        {/* Preconnect to hCaptcha for faster captcha loading */}
-        <link rel="preconnect" href="https://js.hcaptcha.com" />
-        <link rel="preconnect" href="https://api.hcaptcha.com" />
-        <link rel="preconnect" href="https://newassets.hcaptcha.com" crossOrigin="anonymous" />
-        {/* DNS prefetch as fallback for older browsers */}
+        {/* DNS prefetch for deferred third-party resources (no preconnect - they load after interaction) */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://js.hcaptcha.com" />
-        <link rel="dns-prefetch" href="https://api.hcaptcha.com" />
-        {/* Preload critical header logo for faster LCP */}
-        <link
-          rel="preload"
-          href="/images/novaitec_beeldmerk_transparant_wit.png"
-          as="image"
-          type="image/png"
-        />
       </head>
       <GoogleAnalytics />
       <body className="antialiased">
