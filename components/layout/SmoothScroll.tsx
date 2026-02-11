@@ -16,6 +16,29 @@ interface SmoothScrollProps {
   children: ReactNode;
 }
 
+/**
+ * Extract hash from an href string.
+ * Handles both "#section" and "/#section" formats.
+ * Returns null if no valid hash found.
+ */
+function extractHash(href: string): string | null {
+  const hashIndex = href.indexOf("#");
+  if (hashIndex === -1) return null;
+  const hash = href.substring(hashIndex);
+  return hash && hash !== "#" ? hash : null;
+}
+
+/**
+ * Check if a /#hash link targets the current page.
+ * Pure #hash links always target the current page.
+ * /#hash links only target the homepage.
+ */
+function isCurrentPageHash(href: string): boolean {
+  if (href.startsWith("#")) return true;
+  if (href.startsWith("/#")) return window.location.pathname === "/";
+  return false;
+}
+
 export function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
   const pathname = usePathname();
@@ -29,19 +52,28 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       navigator.maxTouchPoints > 0;
 
     if (isMobile) {
-      // On mobile, just handle anchor clicks with native smooth scroll
+      // On mobile, handle anchor clicks with native smooth scroll
+      // Supports both #hash and /#hash links
       const handleAnchorClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
-        const anchor = target.closest('a[href^="#"]');
-        if (anchor) {
-          const href = anchor.getAttribute("href");
-          if (href && href !== "#") {
-            const element = document.querySelector(href);
-            if (element) {
-              e.preventDefault();
-              element.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-          }
+        const anchor = target.closest(
+          'a[href^="#"], a[href^="/#"]'
+        ) as HTMLAnchorElement | null;
+        if (!anchor) return;
+
+        const href = anchor.getAttribute("href");
+        if (!href) return;
+
+        const hash = extractHash(href);
+        if (!hash) return;
+
+        // For /#hash links, only handle on the matching page
+        if (!isCurrentPageHash(href)) return;
+
+        const element = document.querySelector(hash);
+        if (element) {
+          e.preventDefault();
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       };
       document.addEventListener("click", handleAnchorClick);
@@ -63,21 +95,30 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     lenisRef.current = lenis;
     window.lenis = lenis;
 
+    // Handle anchor clicks - supports both #hash and /#hash (same-page)
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      const anchor = target.closest('a[href^="#"]');
-      if (anchor) {
-        const href = anchor.getAttribute("href");
-        if (href && href !== "#") {
-          const element = document.querySelector(href);
-          if (element) {
-            e.preventDefault();
-            lenis.scrollTo(element as HTMLElement, {
-              offset: -80,
-              duration: 1.2,
-            });
-          }
-        }
+      const anchor = target.closest(
+        'a[href^="#"], a[href^="/#"]'
+      ) as HTMLAnchorElement | null;
+      if (!anchor) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+
+      const hash = extractHash(href);
+      if (!hash) return;
+
+      // For /#hash links, only handle on the matching page
+      if (!isCurrentPageHash(href)) return;
+
+      const element = document.querySelector(hash);
+      if (element) {
+        e.preventDefault();
+        lenis.scrollTo(element as HTMLElement, {
+          offset: -80,
+          duration: 1.2,
+        });
       }
     };
 
@@ -91,19 +132,45 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     };
   }, []);
 
-  // Reset scroll and resize Lenis on route changes
+  // Handle scroll position on route changes (including hash navigation)
   useEffect(() => {
+    const hash = window.location.hash;
     const lenis = lenisRef.current;
-    if (!lenis) return;
 
-    // Ensure Lenis is running (not stopped/locked)
-    lenis.start();
+    if (lenis) {
+      // Ensure Lenis is running (not stopped/locked by tunnel scroll)
+      lenis.start();
 
-    // Let the new page render, then resize Lenis to detect new content height
-    requestAnimationFrame(() => {
-      lenis.resize();
-      lenis.scrollTo(0, { immediate: true });
-    });
+      // Let the new page render, then handle scroll position
+      requestAnimationFrame(() => {
+        lenis.resize();
+
+        if (hash) {
+          const element = document.querySelector(hash);
+          if (element) {
+            // Scroll to hash target immediately on route changes
+            lenis.scrollTo(element as HTMLElement, {
+              offset: -80,
+              immediate: true,
+            });
+            return;
+          }
+        }
+
+        // No hash or element not found - scroll to top
+        lenis.scrollTo(0, { immediate: true });
+      });
+    } else {
+      // Mobile: handle hash scrolling after route change
+      if (hash) {
+        requestAnimationFrame(() => {
+          const element = document.querySelector(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      }
+    }
   }, [pathname]);
 
   return <>{children}</>;
