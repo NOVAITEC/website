@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -41,6 +41,31 @@ function BoodschappenAppInner() {
   const [showListPicker, setShowListPicker] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [isShoppingMode, setIsShoppingMode] = useState(false);
+  const appContainerRef = useRef<HTMLDivElement>(null);
+
+  // Prevent mouse wheel from scrolling the page when hovering over the app
+  useEffect(() => {
+    const container = appContainerRef.current;
+    if (!container) return;
+
+    const onWheel = (e: WheelEvent) => {
+      let target = e.target as HTMLElement | null;
+      while (target && target !== container) {
+        if (target.scrollHeight > target.clientHeight + 1) {
+          const { scrollTop, scrollHeight, clientHeight } = target;
+          const atTop = scrollTop <= 0 && e.deltaY < 0;
+          const atBottom =
+            scrollTop + clientHeight >= scrollHeight - 1 && e.deltaY > 0;
+          if (!atTop && !atBottom) return;
+        }
+        target = target.parentElement;
+      }
+      e.preventDefault();
+    };
+
+    container.addEventListener("wheel", onWheel, { passive: false });
+    return () => container.removeEventListener("wheel", onWheel);
+  }, []);
 
   // Apply dark mode within the demo
   useEffect(() => {
@@ -146,6 +171,7 @@ function BoodschappenAppInner() {
 
           {/* App Container */}
           <motion.div
+            ref={appContainerRef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -425,6 +451,35 @@ function BoodschappenAppInner() {
             <p className="text-xs text-slate-500 font-inter text-center pt-3 border-t border-teal/10">
               Dit is wat mogelijk is in één dag. Stel je voor wat ik kan bouwen voor <span className="text-teal font-semibold">jouw</span> project.
             </p>
+          </motion.div>
+
+          {/* Demo vs Volledige versie */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-4 grid grid-cols-2 gap-3"
+          >
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <p className="text-xs text-slate-500 font-inter uppercase tracking-wider mb-2">
+                Deze demo
+              </p>
+              <div className="space-y-1.5">
+                <p className="text-slate-300 font-inter text-sm font-semibold">30 recepten</p>
+                <p className="text-slate-300 font-inter text-sm font-semibold">100+ producten</p>
+                <p className="text-slate-300 font-inter text-sm font-semibold">Lokale opslag</p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-teal/5 border border-teal/20">
+              <p className="text-xs text-teal font-inter uppercase tracking-wider mb-2">
+                Volledige versie
+              </p>
+              <div className="space-y-1.5">
+                <p className="text-paper font-inter text-sm font-semibold">800+ recepten</p>
+                <p className="text-paper font-inter text-sm font-semibold">1000 producten</p>
+                <p className="text-paper font-inter text-sm font-semibold">Cloud sync & meer</p>
+              </div>
+            </div>
           </motion.div>
 
           {/* CTA */}
