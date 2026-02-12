@@ -40,29 +40,28 @@ function BoodschappenAppInner() {
   const [isShoppingMode, setIsShoppingMode] = useState(false);
   const appContainerRef = useRef<HTMLDivElement>(null);
 
-  // Prevent mouse wheel from scrolling the page when hovering over the app
+  // Trap mouse wheel inside the app — prevent page scroll, manually scroll inner content
   useEffect(() => {
     const container = appContainerRef.current;
     if (!container) return;
 
     const onWheel = (e: WheelEvent) => {
-      // Walk up from event target to find an actually scrollable element
+      e.preventDefault();
+
+      // Find nearest scrollable ancestor of the event target
       let el = e.target as HTMLElement | null;
       while (el && el !== container) {
-        const style = window.getComputedStyle(el);
-        if (style.overflowY === "auto" || style.overflowY === "scroll") {
-          if (el.scrollHeight > el.clientHeight) {
-            const atTop = el.scrollTop <= 0 && e.deltaY < 0;
-            const atBottom =
-              el.scrollTop + el.clientHeight >= el.scrollHeight - 1 &&
-              e.deltaY > 0;
-            if (!atTop && !atBottom) return; // Inner element can scroll
+        if (el.scrollHeight > el.clientHeight) {
+          const style = window.getComputedStyle(el);
+          if (style.overflowY === "auto" || style.overflowY === "scroll") {
+            let dy = e.deltaY;
+            if (e.deltaMode === 1) dy *= 16;
+            el.scrollTop += dy;
+            return;
           }
-          break; // Found scroll container but at boundary
         }
         el = el.parentElement;
       }
-      e.preventDefault();
     };
 
     container.addEventListener("wheel", onWheel, { passive: false });
