@@ -133,9 +133,14 @@ function BoodschappenAppInner() {
                 Boodschappen App
               </h1>
             </div>
-            <p className="text-slate-400 font-inter text-sm">
-              Maak boodschappenlijsten, blader door producten, zoek recepten, plan je weekmenu
-              en gebruik de winkelmodus. Alles wordt per sessie opgeslagen in je browser.
+            <p className="text-slate-400 font-inter text-sm sm:text-base mb-3">
+              Van papiertje naar moderne oplossing. Gebouwd in <span className="text-teal font-semibold">minder dan 1 dag</span> om
+              te laten zien wat mogelijk is: complete boodschappenlijsten, 30+ recepten, weekplanner,
+              winkelmodus, en meer. Alles lokaal opgeslagen in je browser.
+            </p>
+            <p className="text-slate-500 font-inter text-xs sm:text-sm italic">
+              💡 Oorspronkelijk gebouwd voor mijn moeder — geen gezeik meer over wat er niet in huis is.
+              Als het niet op het lijstje staat, heb je pech.
             </p>
           </motion.div>
 
@@ -402,13 +407,23 @@ function BoodschappenAppInner() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-6 p-4 rounded-xl bg-teal/5 border border-teal/20"
+            className="mt-6 p-5 rounded-xl bg-gradient-to-br from-teal/10 to-amber/5 border border-teal/20"
           >
-            <p className="text-sm text-slate-400 font-inter text-center">
-              <span className="font-semibold text-teal">Demo</span> — 6 tabbladen: boodschappenlijst,
-              productbrowser, 30 recepten, weekplanner, aankoopgeschiedenis en instellingen.
-              Gebruik de winkelmodus voor een handige in-store checkout. Alles wordt per
-              browser-sessie opgeslagen.
+            <div className="flex items-start gap-3 mb-3">
+              <div className="text-2xl">⚡</div>
+              <div className="flex-1">
+                <h3 className="text-teal font-semibold font-inter mb-1 text-sm">
+                  Gebouwd in &lt;1 dag — Perfecte afwerking
+                </h3>
+                <p className="text-xs text-slate-400 font-inter leading-relaxed">
+                  6 volledig werkende tabs • 30+ recepten met ingrediënten • Weekplanner •
+                  Winkelmodus voor in de supermarkt • Aankoopgeschiedenis • Dark mode •
+                  Favorieten • Meerdere lijsten • Responsive design
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 font-inter text-center pt-3 border-t border-teal/10">
+              Dit is wat mogelijk is in één dag. Stel je voor wat ik kan bouwen voor <span className="text-teal font-semibold">jouw</span> project.
             </p>
           </motion.div>
 
@@ -419,12 +434,16 @@ function BoodschappenAppInner() {
             viewport={{ once: true }}
             className="mt-8 text-center"
           >
-            <p className="text-slate-400 font-inter mb-4 text-sm">
-              Wil je een vergelijkbare app voor jouw bedrijf?
+            <p className="text-slate-300 font-inter mb-2 text-base font-semibold">
+              Geïnspireerd?
+            </p>
+            <p className="text-slate-400 font-inter mb-6 text-sm max-w-lg mx-auto">
+              Deze demo laat zien wat er mogelijk is met moderne web technologie, snelle prototyping
+              en oog voor detail. Heb je een eigen idee of uitdaging? Laten we praten.
             </p>
             <Link
               href="/#contact"
-              className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold text-sm px-8 py-4 rounded-xl hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-shadow"
+              className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold text-sm px-8 py-4 rounded-xl hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-all hover:scale-105 active:scale-95"
             >
               Neem contact op
             </Link>
