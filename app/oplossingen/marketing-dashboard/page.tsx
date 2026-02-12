@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowRight,
   TrendingUp,
   BarChart3,
@@ -22,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
+import { SolutionBackButton } from "@/components/ui/SolutionBackButton";
 
 // =============================================================================
 // DATA
@@ -166,13 +166,7 @@ export default function MarketingDashboardPage() {
             transition={{ duration: 0.6 }}
             className="mb-6"
           >
-            <Link
-              href="/#oplossing"
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-amber transition-colors mb-6 font-inter text-sm"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Terug naar oplossingen
-            </Link>
+            <SolutionBackButton hoverColor="amber" className="mb-6" />
 
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-amber/10 border border-amber/20">

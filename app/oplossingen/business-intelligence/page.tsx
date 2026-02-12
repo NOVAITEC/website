@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowRight,
   BarChart3,
   TrendingUp,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
+import { SolutionBackButton } from "@/components/ui/SolutionBackButton";
 
 // =============================================================================
 // DATA
@@ -174,13 +174,7 @@ export default function BusinessIntelligencePage() {
             transition={{ duration: 0.6 }}
             className="mb-6 relative z-20"
           >
-            <Link
-              href="/#oplossing"
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-amber transition-colors mb-6 font-inter text-sm"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Terug naar oplossingen
-            </Link>
+            <SolutionBackButton hoverColor="amber" className="mb-6" />
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center gap-3">

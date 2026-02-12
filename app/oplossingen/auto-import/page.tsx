@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowRight,
   Car,
   Search,
@@ -17,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
+import { SolutionBackButton } from "@/components/ui/SolutionBackButton";
 
 const steps = [
   {
@@ -117,13 +117,7 @@ export default function AutoImportPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link
-              href="/#oplossing"
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-teal transition-colors mb-8 font-inter text-sm"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Terug naar oplossingen
-            </Link>
+            <SolutionBackButton />
 
             <div className="flex items-center gap-4 mb-4">
               <div className="p-3 rounded-xl bg-teal/10 border border-teal/20">
