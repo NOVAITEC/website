@@ -188,7 +188,7 @@ export function SettingsTab({
 
         {/* Made with love */}
         <div className="text-center py-2">
-          <p className="text-[11px] text-gray-300 dark:text-gray-700 flex items-center justify-center gap-1">
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1">
             Gemaakt met <Heart className="w-3 h-3 text-red-400 fill-current" /> door NovaITec
           </p>
         </div>

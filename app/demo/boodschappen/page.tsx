@@ -15,9 +15,11 @@ import {
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { ToastProvider, useToast } from "@/components/demo/boodschappen/ToastContext";
-import { useGroceryStorage } from "@/components/demo/boodschappen/useGroceryStorage";
+import { useGroceryStorage, GroceryItem } from "@/components/demo/boodschappen/useGroceryStorage";
 import { GroceryList } from "@/components/demo/boodschappen/GroceryList";
 import { AddItemModal } from "@/components/demo/boodschappen/AddItemModal";
+import { EditItemModal } from "@/components/demo/boodschappen/EditItemModal";
+import { AddItemDetailModal } from "@/components/demo/boodschappen/AddItemDetailModal";
 import { BottomNav, Tab } from "@/components/demo/boodschappen/BottomNav";
 import { ReceptenTab } from "@/components/demo/boodschappen/ReceptenTab";
 import { WeekmenuTab } from "@/components/demo/boodschappen/WeekmenuTab";
@@ -33,6 +35,8 @@ function BoodschappenAppInner() {
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>("boodschappen");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<GroceryItem | null>(null);
+  const [browseDetailProduct, setBrowseDetailProduct] = useState<{ name: string; category: string } | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showListPicker, setShowListPicker] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -55,6 +59,11 @@ function BoodschappenAppInner() {
         }
       }
     }
+
+    // Cleanup: remove dark class when leaving the demo
+    return () => {
+      document.documentElement.classList.remove("dark");
+    };
   }, [store.darkMode, store.loading]);
 
   if (store.loading) {
@@ -277,6 +286,7 @@ function BoodschappenAppInner() {
                     items={store.items}
                     onToggle={store.toggleItem}
                     onRemove={store.removeItem}
+                    onEdit={setEditingItem}
                   />
                 </div>
 
@@ -295,13 +305,14 @@ function BoodschappenAppInner() {
 
             {/* === Bladeren Tab === */}
             {activeTab === "bladeren" && (
-              <div className="flex-1 min-h-0">
+              <div className="flex-1 min-h-0 overflow-hidden">
                 <BrowseTab
                   favorites={store.favorites}
                   onAddItem={(name, category) => {
                     store.addItem(name, category);
                     showToast(`${name} toegevoegd`, "success");
                   }}
+                  onAddItemDetail={setBrowseDetailProduct}
                   onToggleFavorite={(name, category) => {
                     if (store.isFavorite(name)) {
                       store.removeFavorite(name);
@@ -318,7 +329,7 @@ function BoodschappenAppInner() {
 
             {/* === Recepten Tab === */}
             {activeTab === "recepten" && (
-              <div className="flex-1 min-h-0">
+              <div className="flex-1 min-h-0 overflow-hidden">
                 <ReceptenTab
                   savedRecipes={store.savedRecipes}
                   onSelectRecipe={setSelectedRecipe}
@@ -328,7 +339,7 @@ function BoodschappenAppInner() {
 
             {/* === Weekmenu Tab === */}
             {activeTab === "weekmenu" && (
-              <div className="flex-1 min-h-0">
+              <div className="flex-1 min-h-0 overflow-hidden">
                 <WeekmenuTab
                   weekMenu={store.weekMenu}
                   onAddMeal={store.addMeal}
@@ -341,7 +352,7 @@ function BoodschappenAppInner() {
 
             {/* === Geschiedenis Tab === */}
             {activeTab === "geschiedenis" && (
-              <div className="flex-1 min-h-0">
+              <div className="flex-1 min-h-0 overflow-hidden">
                 <HistoryTab
                   history={store.history}
                   onReaddItems={(items) => {
@@ -425,8 +436,30 @@ function BoodschappenAppInner() {
       <AddItemModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={(name, cat, qty) => {
-          store.addItem(name, cat, qty);
+        onAdd={(name, cat, qty, note) => {
+          store.addItem(name, cat, qty, note);
+          showToast(`${name} toegevoegd`, "success");
+        }}
+      />
+
+      <EditItemModal
+        item={editingItem}
+        onClose={() => setEditingItem(null)}
+        onUpdate={(id, updates) => {
+          store.updateItem(id, updates);
+          showToast("Item bijgewerkt", "success");
+        }}
+        onRemove={(id) => {
+          store.removeItem(id);
+          showToast("Item verwijderd", "info");
+        }}
+      />
+
+      <AddItemDetailModal
+        product={browseDetailProduct}
+        onClose={() => setBrowseDetailProduct(null)}
+        onAdd={(name, category, quantity, note) => {
+          store.addItem(name, category, quantity, note);
           showToast(`${name} toegevoegd`, "success");
         }}
       />

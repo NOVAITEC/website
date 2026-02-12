@@ -11,6 +11,7 @@ import { Favorite } from "./useGroceryStorage";
 interface BrowseTabProps {
   favorites: Favorite[];
   onAddItem: (name: string, category: string) => void;
+  onAddItemDetail: (product: { name: string; category: string }) => void;
   onToggleFavorite: (name: string, category: string) => void;
   isFavorite: (name: string) => boolean;
 }
@@ -18,6 +19,7 @@ interface BrowseTabProps {
 export function BrowseTab({
   favorites,
   onAddItem,
+  onAddItemDetail,
   onToggleFavorite,
   isFavorite,
 }: BrowseTabProps) {
@@ -114,17 +116,18 @@ export function BrowseTab({
                   return (
                     <div
                       key={product.name}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      onClick={() => onAddItemDetail(product)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer active:scale-[0.99]"
                     >
                       <span className="text-lg flex-shrink-0">{cat.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <span className="text-sm font-medium text-gray-800 dark:text-gray-100 block">
                           {product.name}
                         </span>
-                        <span className="text-[10px] text-gray-400">{cat.name}</span>
+                        <span className="text-[10px] text-gray-400 dark:text-gray-500">{cat.name}</span>
                       </div>
                       <button
-                        onClick={() => onToggleFavorite(product.name, product.category)}
+                        onClick={(e) => { e.stopPropagation(); onToggleFavorite(product.name, product.category); }}
                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors active:scale-95 ${
                           isFav
                             ? "text-red-500"
@@ -134,7 +137,7 @@ export function BrowseTab({
                         <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
                       </button>
                       <button
-                        onClick={() => onAddItem(product.name, product.category)}
+                        onClick={(e) => { e.stopPropagation(); onAddItem(product.name, product.category); }}
                         className="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center active:scale-95"
                       >
                         <Plus className="w-4 h-4" />
@@ -202,13 +205,14 @@ export function BrowseTab({
                 return (
                   <div
                     key={product.name}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                    onClick={() => onAddItemDetail(product)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer active:scale-[0.99]"
                   >
                     <span className="text-sm font-medium text-gray-800 dark:text-gray-100 flex-1">
                       {product.name}
                     </span>
                     <button
-                      onClick={() => onToggleFavorite(product.name, product.category)}
+                      onClick={(e) => { e.stopPropagation(); onToggleFavorite(product.name, product.category); }}
                       className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors active:scale-95 ${
                         isFav
                           ? "text-red-500"
@@ -218,7 +222,7 @@ export function BrowseTab({
                       <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
                     </button>
                     <button
-                      onClick={() => onAddItem(product.name, product.category)}
+                      onClick={(e) => { e.stopPropagation(); onAddItem(product.name, product.category); }}
                       className="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center active:scale-95"
                     >
                       <Plus className="w-4 h-4" />

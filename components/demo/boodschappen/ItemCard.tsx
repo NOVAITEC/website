@@ -9,9 +9,10 @@ interface ItemCardProps {
   item: GroceryItem;
   onToggle: (id: string) => void;
   onRemove: (id: string) => void;
+  onEdit?: (item: GroceryItem) => void;
 }
 
-export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove }: ItemCardProps) {
+export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove, onEdit }: ItemCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -20,7 +21,8 @@ export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove }: Ite
       transition={{ duration: 0.2 }}
     >
       <div
-        className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+        onClick={() => onEdit?.(item)}
+        className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${onEdit ? "cursor-pointer" : ""} ${
           item.checked
             ? "bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700"
             : "bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 hover:border-brand-300 dark:hover:border-brand-700"
@@ -28,7 +30,7 @@ export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove }: Ite
       >
         {/* Checkbox */}
         <button
-          onClick={() => onToggle(item.id)}
+          onClick={(e) => { e.stopPropagation(); onToggle(item.id); }}
           className={`flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all active:scale-95 ${
             item.checked
               ? "bg-brand-600 border-brand-600"
@@ -60,7 +62,7 @@ export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove }: Ite
 
         {/* Verwijder knop - altijd zichtbaar */}
         <button
-          onClick={() => onRemove(item.id)}
+          onClick={(e) => { e.stopPropagation(); onRemove(item.id); }}
           className="flex-shrink-0 w-8 h-8 rounded-lg text-gray-300 dark:text-gray-600 hover:text-red-400 dark:hover:text-red-400 flex items-center justify-center transition-colors active:scale-95"
           aria-label={`Verwijder ${item.name}`}
         >

@@ -11,9 +11,10 @@ interface GroceryListProps {
   items: GroceryItem[];
   onToggle: (id: string) => void;
   onRemove: (id: string) => void;
+  onEdit?: (item: GroceryItem) => void;
 }
 
-export function GroceryList({ items, onToggle, onRemove }: GroceryListProps) {
+export function GroceryList({ items, onToggle, onRemove, onEdit }: GroceryListProps) {
   // Groepeer items per categorie
   const groupedItems = useMemo(() => {
     const groups = new Map<string, GroceryItem[]>();
@@ -79,6 +80,7 @@ export function GroceryList({ items, onToggle, onRemove }: GroceryListProps) {
           items={group.items}
           onToggle={onToggle}
           onRemove={onRemove}
+          onEdit={onEdit}
         />
       ))}
     </div>

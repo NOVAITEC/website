@@ -60,12 +60,14 @@ export function RecipeDetailModal({
   return (
     <AnimatePresence>
       {recipe && (
-        <>
+        <motion.div
+          key="recipe-detail-modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
           {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <div
             onClick={onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
           />
@@ -73,9 +75,9 @@ export function RecipeDetailModal({
           {/* Modal - Full screen on mobile */}
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
             <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
+              initial={{ y: 100 }}
+              animate={{ y: 0 }}
+              exit={{ y: 100 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="w-full sm:max-w-lg bg-white dark:bg-gray-900 sm:rounded-2xl shadow-lg overflow-hidden max-h-[90vh] sm:max-h-[85vh] flex flex-col"
               onClick={(e) => e.stopPropagation()}
@@ -240,7 +242,7 @@ export function RecipeDetailModal({
               </div>
             </motion.div>
           </div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );

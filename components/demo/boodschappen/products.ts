@@ -52,7 +52,7 @@ export const PRODUCT_DB: Record<string, string[]> = {
     'Azijn', 'Balsamico', 'Sojasaus', 'Sambal', 'Ketjap', 'Sriracha',
     'Mayonaise', 'Ketchup', 'Mosterd', 'Honing', 'Pindakaas', 'Chocoladepasta',
     'Jam', 'Hagelslag', 'Bonen', 'Kidneybonen', 'Kikkererwten', 'Linzen',
-    'Kokosmmelk blik', 'Tonijn blik', 'Mais blik', 'Olijven',
+    'Kokosmelk blik', 'Tonijn blik', 'Mais blik', 'Olijven',
   ],
   'snacks': [
     'Chips', 'Tortilla chips', 'Noten', 'Pinda\'s', 'Cashewnoten', 'Walnoten',

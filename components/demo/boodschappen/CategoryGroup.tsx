@@ -12,6 +12,7 @@ interface CategoryGroupProps {
   items: GroceryItem[];
   onToggle: (id: string) => void;
   onRemove: (id: string) => void;
+  onEdit?: (item: GroceryItem) => void;
 }
 
 export const CategoryGroup = memo(function CategoryGroup({
@@ -19,6 +20,7 @@ export const CategoryGroup = memo(function CategoryGroup({
   items,
   onToggle,
   onRemove,
+  onEdit,
 }: CategoryGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const checkedCount = items.filter((item) => item.checked).length;
@@ -28,6 +30,7 @@ export const CategoryGroup = memo(function CategoryGroup({
       {/* Category Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
         className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-white/50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:bg-white dark:hover:bg-gray-900 transition-colors active:scale-[0.99]"
       >
         <div className="flex items-center gap-2.5">
@@ -63,6 +66,7 @@ export const CategoryGroup = memo(function CategoryGroup({
                 item={item}
                 onToggle={onToggle}
                 onRemove={onRemove}
+                onEdit={onEdit}
               />
             ))}
           </motion.div>
