@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   Plus,
   Trash2,
   ShoppingCart,
+  ShoppingBag,
   CheckCircle2,
   ChevronDown,
   ListPlus,
@@ -21,6 +22,10 @@ import { BottomNav, Tab } from "@/components/demo/boodschappen/BottomNav";
 import { ReceptenTab } from "@/components/demo/boodschappen/ReceptenTab";
 import { WeekmenuTab } from "@/components/demo/boodschappen/WeekmenuTab";
 import { RecipeDetailModal } from "@/components/demo/boodschappen/RecipeDetailModal";
+import { ShoppingMode } from "@/components/demo/boodschappen/ShoppingMode";
+import { BrowseTab } from "@/components/demo/boodschappen/BrowseTab";
+import { HistoryTab } from "@/components/demo/boodschappen/HistoryTab";
+import { SettingsTab } from "@/components/demo/boodschappen/SettingsTab";
 import { Recipe } from "@/components/demo/boodschappen/recipes";
 
 function BoodschappenAppInner() {
@@ -31,6 +36,26 @@ function BoodschappenAppInner() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showListPicker, setShowListPicker] = useState(false);
   const [newListName, setNewListName] = useState("");
+  const [isShoppingMode, setIsShoppingMode] = useState(false);
+
+  // Apply dark mode within the demo
+  useEffect(() => {
+    if (!store.loading) {
+      const root = document.documentElement;
+      if (store.darkMode === "dark") {
+        root.classList.add("dark");
+      } else if (store.darkMode === "light") {
+        root.classList.remove("dark");
+      } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (prefersDark) {
+          root.classList.add("dark");
+        } else {
+          root.classList.remove("dark");
+        }
+      }
+    }
+  }, [store.darkMode, store.loading]);
 
   if (store.loading) {
     return (
@@ -45,6 +70,7 @@ function BoodschappenAppInner() {
 
   const checkedCount = store.items.filter((item) => item.checked).length;
   const totalCount = store.items.length;
+  const uncheckedCount = totalCount - checkedCount;
   const progress = totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
   const activeList = store.lists.find((l) => l.id === store.activeListId);
 
@@ -56,13 +82,18 @@ function BoodschappenAppInner() {
   };
 
   const handleAddToWeekMenu = (recipe: Recipe) => {
-    // Voeg toe aan vandaag
     const today = new Date();
     const dayOfWeek = today.getDay();
     const dayKeys = ["zo", "ma", "di", "wo", "do", "vr", "za"];
     const todayKey = dayKeys[dayOfWeek];
     store.addMeal(todayKey, { recipeId: recipe.id, name: recipe.name });
     showToast(`${recipe.name} toegevoegd aan weekmenu`, "success");
+  };
+
+  const handleClearAllData = () => {
+    store.clearAllItems();
+    store.clearHistory();
+    showToast("Alle gegevens gewist", "info");
   };
 
   return (
@@ -94,8 +125,8 @@ function BoodschappenAppInner() {
               </h1>
             </div>
             <p className="text-slate-400 font-inter text-sm">
-              Maak boodschappenlijsten, zoek recepten, plan je weekmenu en voeg ingrediënten toe
-              met één klik. Alles wordt per sessie opgeslagen in je browser.
+              Maak boodschappenlijsten, blader door producten, zoek recepten, plan je weekmenu
+              en gebruik de winkelmodus. Alles wordt per sessie opgeslagen in je browser.
             </p>
           </motion.div>
 
@@ -107,7 +138,7 @@ function BoodschappenAppInner() {
             className="bg-gray-100 dark:bg-gray-950 rounded-3xl border border-white/10 overflow-hidden shadow-xl flex flex-col"
             style={{ height: "clamp(600px, 75vh, 800px)" }}
           >
-            {/* Boodschappen Tab */}
+            {/* === Boodschappen Tab === */}
             {activeTab === "boodschappen" && (
               <div className="flex flex-col flex-1 min-h-0">
                 {/* App Header */}
@@ -182,16 +213,26 @@ function BoodschappenAppInner() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {/* Shopping Mode button */}
+                      {uncheckedCount > 0 && (
+                        <button
+                          onClick={() => setIsShoppingMode(true)}
+                          className="px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition-colors active:scale-95 flex items-center gap-1.5"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          Winkelen
+                        </button>
+                      )}
                       {checkedCount > 0 && (
                         <button
                           onClick={() => {
                             store.clearCheckedItems();
-                            showToast(`${checkedCount} items verwijderd`, "info");
+                            showToast(`${checkedCount} items opgeruimd`, "info");
                           }}
                           className="px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-semibold hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors active:scale-95 flex items-center gap-1.5"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          Wis afgevinkt
+                          Opruimen
                         </button>
                       )}
                       {totalCount > 0 && (
@@ -232,7 +273,11 @@ function BoodschappenAppInner() {
 
                 {/* Items */}
                 <div className="flex-1 overflow-y-auto p-4">
-                  <GroceryList items={store.items} onToggle={store.toggleItem} onRemove={store.removeItem} />
+                  <GroceryList
+                    items={store.items}
+                    onToggle={store.toggleItem}
+                    onRemove={store.removeItem}
+                  />
                 </div>
 
                 {/* Add Button */}
@@ -248,7 +293,30 @@ function BoodschappenAppInner() {
               </div>
             )}
 
-            {/* Recepten Tab */}
+            {/* === Bladeren Tab === */}
+            {activeTab === "bladeren" && (
+              <div className="flex-1 min-h-0">
+                <BrowseTab
+                  favorites={store.favorites}
+                  onAddItem={(name, category) => {
+                    store.addItem(name, category);
+                    showToast(`${name} toegevoegd`, "success");
+                  }}
+                  onToggleFavorite={(name, category) => {
+                    if (store.isFavorite(name)) {
+                      store.removeFavorite(name);
+                      showToast(`${name} verwijderd uit favorieten`, "info");
+                    } else {
+                      store.addFavorite(name, category);
+                      showToast(`${name} als favoriet opgeslagen`, "success");
+                    }
+                  }}
+                  isFavorite={store.isFavorite}
+                />
+              </div>
+            )}
+
+            {/* === Recepten Tab === */}
             {activeTab === "recepten" && (
               <div className="flex-1 min-h-0">
                 <ReceptenTab
@@ -258,7 +326,7 @@ function BoodschappenAppInner() {
               </div>
             )}
 
-            {/* Weekmenu Tab */}
+            {/* === Weekmenu Tab === */}
             {activeTab === "weekmenu" && (
               <div className="flex-1 min-h-0">
                 <WeekmenuTab
@@ -271,11 +339,50 @@ function BoodschappenAppInner() {
               </div>
             )}
 
+            {/* === Geschiedenis Tab === */}
+            {activeTab === "geschiedenis" && (
+              <div className="flex-1 min-h-0">
+                <HistoryTab
+                  history={store.history}
+                  onReaddItems={(items) => {
+                    store.addItemsFromHistory(items);
+                    showToast(
+                      `${items.length} items opnieuw toegevoegd`,
+                      "success"
+                    );
+                  }}
+                  onClearHistory={() => {
+                    store.clearHistory();
+                    showToast("Geschiedenis gewist", "info");
+                  }}
+                />
+              </div>
+            )}
+
+            {/* === Instellingen Tab === */}
+            {activeTab === "instellingen" && (
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <SettingsTab
+                  darkMode={store.darkMode}
+                  onSetDarkMode={store.setDarkMode}
+                  onClearHistory={() => {
+                    store.clearHistory();
+                    showToast("Geschiedenis gewist", "info");
+                  }}
+                  onClearAllData={handleClearAllData}
+                  totalItems={totalCount}
+                  totalFavorites={store.favorites.length}
+                  totalHistory={store.history.length}
+                  totalSavedRecipes={store.savedRecipes.length}
+                />
+              </div>
+            )}
+
             {/* Bottom Navigation */}
             <BottomNav
               activeTab={activeTab}
               onTabChange={setActiveTab}
-              itemCount={store.items.filter((i) => !i.checked).length}
+              itemCount={uncheckedCount}
             />
           </motion.div>
 
@@ -287,9 +394,10 @@ function BoodschappenAppInner() {
             className="mt-6 p-4 rounded-xl bg-teal/5 border border-teal/20"
           >
             <p className="text-sm text-slate-400 font-inter text-center">
-              <span className="font-semibold text-teal">Demo</span> — Maak lijsten, blader door
-              30 recepten, plan je weekmenu en voeg ingrediënten toe met één klik. Alles wordt per
-              browser-sessie opgeslagen, zodat elke gebruiker zijn eigen data heeft.
+              <span className="font-semibold text-teal">Demo</span> — 6 tabbladen: boodschappenlijst,
+              productbrowser, 30 recepten, weekplanner, aankoopgeschiedenis en instellingen.
+              Gebruik de winkelmodus voor een handige in-store checkout. Alles wordt per
+              browser-sessie opgeslagen.
             </p>
           </motion.div>
 
@@ -330,15 +438,34 @@ function BoodschappenAppInner() {
         onToggleSave={(id) => {
           store.toggleSavedRecipe(id);
           const wasSaved = store.savedRecipes.includes(id);
-          showToast(wasSaved ? "Recept verwijderd uit opgeslagen" : "Recept opgeslagen", wasSaved ? "info" : "success");
+          showToast(
+            wasSaved ? "Recept verwijderd uit opgeslagen" : "Recept opgeslagen",
+            wasSaved ? "info" : "success"
+          );
         }}
         onAddToWeekMenu={handleAddToWeekMenu}
-        isSaved={selectedRecipe ? store.savedRecipes.includes(selectedRecipe.id) : false}
+        isSaved={
+          selectedRecipe ? store.savedRecipes.includes(selectedRecipe.id) : false
+        }
       />
+
+      {/* Shopping Mode */}
+      <AnimatePresence>
+        {isShoppingMode && (
+          <ShoppingMode
+            items={store.items}
+            onToggle={store.toggleItem}
+            onClose={() => setIsShoppingMode(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Click outside to close list picker */}
       {showListPicker && (
-        <div className="fixed inset-0 z-10" onClick={() => setShowListPicker(false)} />
+        <div
+          className="fixed inset-0 z-10"
+          onClick={() => setShowListPicker(false)}
+        />
       )}
     </>
   );

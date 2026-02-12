@@ -30,12 +30,26 @@ export interface WeekMeal {
 
 export type WeekMenu = Record<string, WeekMeal[]>;
 
+export interface Favorite {
+  name: string;
+  category: string;
+}
+
+export interface HistoryEntry {
+  id: string;
+  items: GroceryItem[];
+  completedAt: number;
+}
+
 interface StorageData {
   lists: GroceryList[];
   activeListId: string;
   items: Record<string, GroceryItem[]>; // per list
   savedRecipes: string[]; // recipeId[]
   weekMenu: WeekMenu;
+  favorites: Favorite[];
+  history: HistoryEntry[];
+  darkMode: 'light' | 'dark' | 'system';
 }
 
 // --- Storage helpers ---
@@ -58,14 +72,34 @@ function storageKey() {
 
 const DEFAULT_LIST: GroceryList = { id: 'default', name: 'Mijn Boodschappen', createdAt: Date.now() };
 
+const DEFAULT_DATA: StorageData = {
+  lists: [DEFAULT_LIST],
+  activeListId: 'default',
+  items: { default: [] },
+  savedRecipes: [],
+  weekMenu: {},
+  favorites: [],
+  history: [],
+  darkMode: 'system',
+};
+
 function loadData(): StorageData {
-  if (typeof window === 'undefined')
-    return { lists: [DEFAULT_LIST], activeListId: 'default', items: { default: [] }, savedRecipes: [], weekMenu: {} };
+  if (typeof window === 'undefined') return DEFAULT_DATA;
   try {
     const raw = localStorage.getItem(storageKey());
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Migrate older data that doesn't have new fields
+      return {
+        ...DEFAULT_DATA,
+        ...parsed,
+        favorites: parsed.favorites || [],
+        history: parsed.history || [],
+        darkMode: parsed.darkMode || 'system',
+      };
+    }
   } catch { /* ignore */ }
-  return { lists: [DEFAULT_LIST], activeListId: 'default', items: { default: [] }, savedRecipes: [], weekMenu: {} };
+  return DEFAULT_DATA;
 }
 
 function saveData(data: StorageData) {
@@ -152,8 +186,8 @@ export function useGroceryStorage() {
   const addItems = useCallback((newItems: Array<{ name: string; category: string; quantity?: string; note?: string }>) => {
     update((d) => {
       const current = d.items[d.activeListId] || [];
-      const toAdd = newItems.map((it) => ({
-        id: `i_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      const toAdd = newItems.map((it, idx) => ({
+        id: `i_${Date.now()}_${idx}_${Math.random().toString(36).slice(2, 7)}`,
         name: it.name,
         quantity: it.quantity || '',
         category: it.category,
@@ -187,14 +221,42 @@ export function useGroceryStorage() {
     }));
   }, [update]);
 
-  const clearCheckedItems = useCallback(() => {
+  const updateItem = useCallback((id: string, updates: Partial<GroceryItem>) => {
     update((d) => ({
       ...d,
       items: {
         ...d.items,
-        [d.activeListId]: (d.items[d.activeListId] || []).filter((i) => !i.checked),
+        [d.activeListId]: (d.items[d.activeListId] || []).map((i) =>
+          i.id === id ? { ...i, ...updates } : i
+        ),
       },
     }));
+  }, [update]);
+
+  const clearCheckedItems = useCallback(() => {
+    update((d) => {
+      const currentItems = d.items[d.activeListId] || [];
+      const checkedItems = currentItems.filter((i) => i.checked);
+      const uncheckedItems = currentItems.filter((i) => !i.checked);
+
+      // Move checked items to history
+      const newHistory = checkedItems.length > 0
+        ? [
+            {
+              id: `h_${Date.now()}`,
+              items: checkedItems,
+              completedAt: Date.now(),
+            },
+            ...d.history,
+          ].slice(0, 50) // Keep max 50 history entries
+        : d.history;
+
+      return {
+        ...d,
+        items: { ...d.items, [d.activeListId]: uncheckedItems },
+        history: newHistory,
+      };
+    });
   }, [update]);
 
   const clearAllItems = useCallback(() => {
@@ -242,6 +304,54 @@ export function useGroceryStorage() {
     }));
   }, [update]);
 
+  // --- Favorites ---
+  const favorites = data?.favorites || [];
+
+  const addFavorite = useCallback((name: string, category: string) => {
+    update((d) => {
+      if (d.favorites.some((f) => f.name === name)) return d;
+      return { ...d, favorites: [...d.favorites, { name, category }] };
+    });
+  }, [update]);
+
+  const removeFavorite = useCallback((name: string) => {
+    update((d) => ({
+      ...d,
+      favorites: d.favorites.filter((f) => f.name !== name),
+    }));
+  }, [update]);
+
+  const isFavorite = useCallback((name: string) => {
+    return (data?.favorites || []).some((f) => f.name === name);
+  }, [data?.favorites]);
+
+  // --- History ---
+  const history = data?.history || [];
+
+  const addItemsFromHistory = useCallback((items: GroceryItem[]) => {
+    update((d) => {
+      const current = d.items[d.activeListId] || [];
+      const toAdd = items.map((it, idx) => ({
+        ...it,
+        id: `i_${Date.now()}_${idx}_${Math.random().toString(36).slice(2, 7)}`,
+        checked: false,
+        addedAt: Date.now(),
+      }));
+      return { ...d, items: { ...d.items, [d.activeListId]: [...current, ...toAdd] } };
+    });
+  }, [update]);
+
+  const clearHistory = useCallback(() => {
+    update((d) => ({ ...d, history: [] }));
+  }, [update]);
+
+  // --- Dark Mode ---
+  const darkMode = data?.darkMode || 'system';
+
+  const setDarkMode = useCallback((mode: 'light' | 'dark' | 'system') => {
+    update((d) => ({ ...d, darkMode: mode }));
+  }, [update]);
+
   return {
     loading,
     // Lists
@@ -256,6 +366,7 @@ export function useGroceryStorage() {
     addItems,
     removeItem,
     toggleItem,
+    updateItem,
     clearCheckedItems,
     clearAllItems,
     // Recipes
@@ -265,5 +376,17 @@ export function useGroceryStorage() {
     weekMenu,
     addMeal,
     removeMeal,
+    // Favorites
+    favorites,
+    addFavorite,
+    removeFavorite,
+    isFavorite,
+    // History
+    history,
+    addItemsFromHistory,
+    clearHistory,
+    // Dark Mode
+    darkMode,
+    setDarkMode,
   };
 }

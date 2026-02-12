@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -33,7 +33,14 @@ export function RecipeDetailModal({
   onAddToWeekMenu,
   isSaved,
 }: RecipeDetailModalProps) {
-  const [servings, setServings] = useState(recipe?.servings || 4);
+  const [servings, setServings] = useState(4);
+
+  // Reset servings when recipe changes
+  useEffect(() => {
+    if (recipe) {
+      setServings(recipe.servings);
+    }
+  }, [recipe]);
 
   if (!recipe) return null;
 
