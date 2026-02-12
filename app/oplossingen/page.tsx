@@ -13,6 +13,8 @@ import {
   Workflow,
   Bot,
   LayoutDashboard,
+  ShoppingCart,
+  Smartphone,
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
@@ -75,6 +77,20 @@ const categories = [
         description: "ROI per kanaal, funnel analyse, A/B test resultaten en posting heatmap.",
         icon: TrendingUp,
         href: "/oplossingen/marketing-dashboard",
+      },
+    ],
+  },
+  {
+    title: "Demo Applicaties",
+    subtitle: "Interactieve voorbeelden van maatwerk software",
+    icon: Smartphone,
+    color: "teal" as const,
+    solutions: [
+      {
+        title: "Boodschappen App",
+        description: "Volledig werkende boodschappenlijst met categorieën, localStorage en dark mode.",
+        icon: ShoppingCart,
+        href: "/demo/boodschappen",
       },
     ],
   },
