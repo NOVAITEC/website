@@ -64,8 +64,8 @@ export function GroceryList({ items, onToggle, onRemove, onEdit }: GroceryListPr
         <h2 className="text-lg font-bold text-gray-700 dark:text-gray-200 mb-1">
           Je boodschappenlijst is leeg
         </h2>
-        <p className="text-sm text-gray-400 dark:text-gray-500 max-w-[240px] mx-auto">
-          Voeg producten toe door op de + knop te klikken
+        <p className="text-sm text-gray-400 dark:text-gray-500 max-w-[260px] mx-auto">
+          Ga naar het tabblad <span className="font-semibold text-brand-600 dark:text-brand-400">Bladeren</span> om producten toe te voegen
         </p>
       </div>
     );

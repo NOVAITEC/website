@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
-  Plus,
   Trash2,
   ShoppingCart,
   ShoppingBag,
@@ -17,7 +16,6 @@ import { Header } from "@/components/layout/Header";
 import { ToastProvider, useToast } from "@/components/demo/boodschappen/ToastContext";
 import { useGroceryStorage, GroceryItem } from "@/components/demo/boodschappen/useGroceryStorage";
 import { GroceryList } from "@/components/demo/boodschappen/GroceryList";
-import { AddItemModal } from "@/components/demo/boodschappen/AddItemModal";
 import { EditItemModal } from "@/components/demo/boodschappen/EditItemModal";
 import { AddItemDetailModal } from "@/components/demo/boodschappen/AddItemDetailModal";
 import { BottomNav, Tab } from "@/components/demo/boodschappen/BottomNav";
@@ -34,7 +32,6 @@ function BoodschappenAppInner() {
   const store = useGroceryStorage();
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>("boodschappen");
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GroceryItem | null>(null);
   const [browseDetailProduct, setBrowseDetailProduct] = useState<{ name: string; category: string } | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
@@ -49,16 +46,21 @@ function BoodschappenAppInner() {
     if (!container) return;
 
     const onWheel = (e: WheelEvent) => {
-      let target = e.target as HTMLElement | null;
-      while (target && target !== container) {
-        if (target.scrollHeight > target.clientHeight + 1) {
-          const { scrollTop, scrollHeight, clientHeight } = target;
-          const atTop = scrollTop <= 0 && e.deltaY < 0;
-          const atBottom =
-            scrollTop + clientHeight >= scrollHeight - 1 && e.deltaY > 0;
-          if (!atTop && !atBottom) return;
+      // Walk up from event target to find an actually scrollable element
+      let el = e.target as HTMLElement | null;
+      while (el && el !== container) {
+        const style = window.getComputedStyle(el);
+        if (style.overflowY === "auto" || style.overflowY === "scroll") {
+          if (el.scrollHeight > el.clientHeight) {
+            const atTop = el.scrollTop <= 0 && e.deltaY < 0;
+            const atBottom =
+              el.scrollTop + el.clientHeight >= el.scrollHeight - 1 &&
+              e.deltaY > 0;
+            if (!atTop && !atBottom) return; // Inner element can scroll
+          }
+          break; // Found scroll container but at boundary
         }
-        target = target.parentElement;
+        el = el.parentElement;
       }
       e.preventDefault();
     };
@@ -170,13 +172,16 @@ function BoodschappenAppInner() {
           </motion.div>
 
           {/* App Container */}
-          <motion.div
+          <div
             ref={appContainerRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="bg-gray-100 dark:bg-gray-950 rounded-3xl border border-white/10 overflow-hidden shadow-xl flex flex-col"
+            className="rounded-3xl overflow-hidden shadow-xl"
             style={{ height: "clamp(600px, 75vh, 800px)" }}
+          >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-gray-100 dark:bg-gray-950 border border-white/10 flex flex-col h-full"
           >
             {/* === Boodschappen Tab === */}
             {activeTab === "boodschappen" && (
@@ -321,16 +326,6 @@ function BoodschappenAppInner() {
                   />
                 </div>
 
-                {/* Add Button */}
-                <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex-shrink-0">
-                  <button
-                    onClick={() => setIsAddModalOpen(true)}
-                    className="w-full bg-brand-600 text-white rounded-xl py-3 text-sm font-semibold hover:bg-brand-700 transition-colors active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Product toevoegen
-                  </button>
-                </div>
               </div>
             )}
 
@@ -427,6 +422,7 @@ function BoodschappenAppInner() {
               itemCount={uncheckedCount}
             />
           </motion.div>
+          </div>
 
           {/* Info Banner */}
           <motion.div
@@ -507,15 +503,6 @@ function BoodschappenAppInner() {
       </main>
 
       {/* Modals */}
-      <AddItemModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={(name, cat, qty, note) => {
-          store.addItem(name, cat, qty, note);
-          showToast(`${name} toegevoegd`, "success");
-        }}
-      />
-
       <EditItemModal
         item={editingItem}
         onClose={() => setEditingItem(null)}
