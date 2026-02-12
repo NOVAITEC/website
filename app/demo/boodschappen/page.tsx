@@ -40,13 +40,19 @@ function BoodschappenAppInner() {
   const [isShoppingMode, setIsShoppingMode] = useState(false);
   const appContainerRef = useRef<HTMLDivElement>(null);
 
-  // Trap mouse wheel inside the app — prevent page scroll, manually scroll inner content
+  // Trap mouse wheel inside the app — stop Lenis page scroll, scroll inner content
   useEffect(() => {
     const container = appContainerRef.current;
     if (!container) return;
 
+    // Pause Lenis (smooth page scroll) while mouse is over the app
+    const onMouseEnter = () => { window.lenis?.stop(); };
+    const onMouseLeave = () => { window.lenis?.start(); };
+
     const onWheel = (e: WheelEvent) => {
+      // Stop event from reaching page-level scroll listeners
       e.preventDefault();
+      e.stopPropagation();
 
       // Find nearest scrollable ancestor of the event target
       let el = e.target as HTMLElement | null;
@@ -64,8 +70,15 @@ function BoodschappenAppInner() {
       }
     };
 
+    container.addEventListener("mouseenter", onMouseEnter);
+    container.addEventListener("mouseleave", onMouseLeave);
     container.addEventListener("wheel", onWheel, { passive: false });
-    return () => container.removeEventListener("wheel", onWheel);
+    return () => {
+      container.removeEventListener("mouseenter", onMouseEnter);
+      container.removeEventListener("mouseleave", onMouseLeave);
+      container.removeEventListener("wheel", onWheel);
+      window.lenis?.start(); // Restore page scroll on cleanup
+    };
   }, [store.loading]);
 
   // Apply dark mode within the demo
