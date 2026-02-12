@@ -8,23 +8,31 @@ import {
   Trash2,
   ShoppingCart,
   CheckCircle2,
+  ChevronDown,
+  ListPlus,
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
+import { ToastProvider, useToast } from "@/components/demo/boodschappen/ToastContext";
 import { useGroceryStorage } from "@/components/demo/boodschappen/useGroceryStorage";
 import { GroceryList } from "@/components/demo/boodschappen/GroceryList";
 import { AddItemModal } from "@/components/demo/boodschappen/AddItemModal";
+import { BottomNav, Tab } from "@/components/demo/boodschappen/BottomNav";
+import { ReceptenTab } from "@/components/demo/boodschappen/ReceptenTab";
+import { WeekmenuTab } from "@/components/demo/boodschappen/WeekmenuTab";
+import { RecipeDetailModal } from "@/components/demo/boodschappen/RecipeDetailModal";
+import { Recipe } from "@/components/demo/boodschappen/recipes";
 
-export default function BoodschappenDemoPage() {
-  const { items, loading, addItem, removeItem, toggleItem, clearCheckedItems, clearAllItems } =
-    useGroceryStorage();
+function BoodschappenAppInner() {
+  const store = useGroceryStorage();
+  const { showToast } = useToast();
+  const [activeTab, setActiveTab] = useState<Tab>("boodschappen");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [showListPicker, setShowListPicker] = useState(false);
+  const [newListName, setNewListName] = useState("");
 
-  const checkedCount = items.filter((item) => item.checked).length;
-  const totalCount = items.length;
-  const progress = totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
-
-  if (loading) {
+  if (store.loading) {
     return (
       <>
         <Header />
@@ -35,37 +43,59 @@ export default function BoodschappenDemoPage() {
     );
   }
 
+  const checkedCount = store.items.filter((item) => item.checked).length;
+  const totalCount = store.items.length;
+  const progress = totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
+  const activeList = store.lists.find((l) => l.id === store.activeListId);
+
+  const handleAddToListFromRecipe = (
+    items: Array<{ name: string; category: string; quantity: string; note: string }>
+  ) => {
+    store.addItems(items);
+    showToast(`${items.length} ingrediënten toegevoegd`, "success");
+  };
+
+  const handleAddToWeekMenu = (recipe: Recipe) => {
+    // Voeg toe aan vandaag
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const dayKeys = ["zo", "ma", "di", "wo", "do", "vr", "za"];
+    const todayKey = dayKeys[dayOfWeek];
+    store.addMeal(todayKey, { recipeId: recipe.id, name: recipe.name });
+    showToast(`${recipe.name} toegevoegd aan weekmenu`, "success");
+  };
+
   return (
     <>
       <Header />
       <main className="bg-midnight min-h-screen pt-20 sm:pt-24 pb-12">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
-          {/* Header */}
+          {/* Page Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-8"
+            className="mb-6"
           >
             <Link
-              href="/#oplossing"
+              href="/oplossingen"
               className="inline-flex items-center gap-2 text-slate-400 hover:text-teal transition-colors mb-6 font-inter text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
               Terug naar oplossingen
             </Link>
 
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-3">
               <div className="p-3 rounded-xl bg-teal/10 border border-teal/20">
                 <ShoppingCart className="w-6 h-6 text-teal" strokeWidth={1.5} />
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-montserrat font-bold text-paper">
-                Boodschappen App Demo
+                Boodschappen App
               </h1>
             </div>
-            <p className="text-slate-400 font-inter">
-              Een volledig werkende boodschappenlijst app. Al je wijzigingen worden automatisch
-              opgeslagen in je browser.
+            <p className="text-slate-400 font-inter text-sm">
+              Maak boodschappenlijsten, zoek recepten, plan je weekmenu en voeg ingrediënten toe
+              met één klik. Alles wordt per sessie opgeslagen in je browser.
             </p>
           </motion.div>
 
@@ -74,76 +104,179 @@ export default function BoodschappenDemoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="bg-gray-100 dark:bg-gray-950 rounded-3xl border border-white/10 overflow-hidden shadow-xl"
+            className="bg-gray-100 dark:bg-gray-950 rounded-3xl border border-white/10 overflow-hidden shadow-xl flex flex-col"
+            style={{ height: "clamp(600px, 75vh, 800px)" }}
           >
-            {/* App Header */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-                  Mijn Boodschappen
-                </h2>
-                <div className="flex items-center gap-2">
-                  {checkedCount > 0 && (
-                    <button
-                      onClick={clearCheckedItems}
-                      className="px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-semibold hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors active:scale-95 flex items-center gap-1.5"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Wis afgevinkt
-                    </button>
-                  )}
+            {/* Boodschappen Tab */}
+            {activeTab === "boodschappen" && (
+              <div className="flex flex-col flex-1 min-h-0">
+                {/* App Header */}
+                <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 flex-shrink-0">
+                  {/* List selector */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowListPicker(!showListPicker)}
+                        className="flex items-center gap-2 text-lg font-bold text-gray-800 dark:text-gray-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                      >
+                        {activeList?.name || "Mijn Boodschappen"}
+                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                      </button>
+
+                      {/* List dropdown */}
+                      {showListPicker && (
+                        <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 overflow-hidden">
+                          {store.lists.map((list) => (
+                            <button
+                              key={list.id}
+                              onClick={() => {
+                                store.switchList(list.id);
+                                setShowListPicker(false);
+                              }}
+                              className={`w-full flex items-center justify-between px-3 py-2.5 text-sm text-left hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                                list.id === store.activeListId
+                                  ? "text-brand-600 dark:text-brand-400 font-semibold"
+                                  : "text-gray-700 dark:text-gray-300"
+                              }`}
+                            >
+                              {list.name}
+                              {list.id === store.activeListId && (
+                                <CheckCircle2 className="w-4 h-4" />
+                              )}
+                            </button>
+                          ))}
+                          <div className="border-t border-gray-100 dark:border-gray-700 p-2">
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={newListName}
+                                onChange={(e) => setNewListName(e.target.value)}
+                                placeholder="Nieuwe lijst..."
+                                className="flex-1 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" && newListName.trim()) {
+                                    store.addList(newListName.trim());
+                                    setNewListName("");
+                                    setShowListPicker(false);
+                                    showToast("Nieuwe lijst aangemaakt", "success");
+                                  }
+                                }}
+                              />
+                              <button
+                                onClick={() => {
+                                  if (newListName.trim()) {
+                                    store.addList(newListName.trim());
+                                    setNewListName("");
+                                    setShowListPicker(false);
+                                    showToast("Nieuwe lijst aangemaakt", "success");
+                                  }
+                                }}
+                                className="px-2.5 py-1.5 bg-brand-600 text-white rounded-lg text-xs font-semibold active:scale-95"
+                              >
+                                <ListPlus className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {checkedCount > 0 && (
+                        <button
+                          onClick={() => {
+                            store.clearCheckedItems();
+                            showToast(`${checkedCount} items verwijderd`, "info");
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-semibold hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors active:scale-95 flex items-center gap-1.5"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          Wis afgevinkt
+                        </button>
+                      )}
+                      {totalCount > 0 && (
+                        <button
+                          onClick={() => {
+                            store.clearAllItems();
+                            showToast("Lijst geleegd", "info");
+                          }}
+                          className="w-8 h-8 rounded-lg text-gray-300 dark:text-gray-600 hover:text-red-400 flex items-center justify-center transition-colors active:scale-95"
+                          aria-label="Verwijder alles"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
                   {totalCount > 0 && (
-                    <button
-                      onClick={() => {
-                        if (confirm("Weet je zeker dat je alle items wilt verwijderen?")) {
-                          clearAllItems();
-                        }
-                      }}
-                      className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors active:scale-95"
-                      aria-label="Verwijder alles"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div>
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+                        <span className="font-medium">
+                          {checkedCount} van {totalCount} afgevinkt
+                        </span>
+                        <span className="font-mono">{Math.round(progress)}%</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                        />
+                      </div>
+                    </div>
                   )}
+                </div>
+
+                {/* Items */}
+                <div className="flex-1 overflow-y-auto p-4">
+                  <GroceryList items={store.items} onToggle={store.toggleItem} onRemove={store.removeItem} />
+                </div>
+
+                {/* Add Button */}
+                <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex-shrink-0">
+                  <button
+                    onClick={() => setIsAddModalOpen(true)}
+                    className="w-full bg-brand-600 text-white rounded-xl py-3 text-sm font-semibold hover:bg-brand-700 transition-colors active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Product toevoegen
+                  </button>
                 </div>
               </div>
+            )}
 
-              {/* Progress Bar */}
-              {totalCount > 0 && (
-                <div>
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5">
-                    <span className="font-medium">
-                      {checkedCount} van {totalCount} afgevinkt
-                    </span>
-                    <span className="font-mono">{Math.round(progress)}%</span>
-                  </div>
-                  <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* Recepten Tab */}
+            {activeTab === "recepten" && (
+              <div className="flex-1 min-h-0">
+                <ReceptenTab
+                  savedRecipes={store.savedRecipes}
+                  onSelectRecipe={setSelectedRecipe}
+                />
+              </div>
+            )}
 
-            {/* App Content */}
-            <div className="p-4 min-h-[400px]">
-              <GroceryList items={items} onToggle={toggleItem} onRemove={removeItem} />
-            </div>
+            {/* Weekmenu Tab */}
+            {activeTab === "weekmenu" && (
+              <div className="flex-1 min-h-0">
+                <WeekmenuTab
+                  weekMenu={store.weekMenu}
+                  onAddMeal={store.addMeal}
+                  onRemoveMeal={store.removeMeal}
+                  onAddIngredientsToList={handleAddToListFromRecipe}
+                  onSelectRecipe={setSelectedRecipe}
+                />
+              </div>
+            )}
 
-            {/* Add Button */}
-            <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="w-full bg-brand-600 text-white rounded-xl py-3 text-sm font-semibold hover:bg-brand-700 transition-colors active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20"
-              >
-                <Plus className="w-5 h-5" />
-                Product toevoegen
-              </button>
-            </div>
+            {/* Bottom Navigation */}
+            <BottomNav
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              itemCount={store.items.filter((i) => !i.checked).length}
+            />
           </motion.div>
 
           {/* Info Banner */}
@@ -151,23 +284,71 @@ export default function BoodschappenDemoPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-8 p-4 rounded-xl bg-teal/5 border border-teal/20"
+            className="mt-6 p-4 rounded-xl bg-teal/5 border border-teal/20"
           >
             <p className="text-sm text-slate-400 font-inter text-center">
-              💡 <span className="font-semibold text-teal">Tip:</span> Je boodschappenlijst wordt
-              automatisch opgeslagen in je browser. Open deze pagina in een ander tabblad of op een
-              ander apparaat om te zien dat elke gebruiker zijn eigen lijst heeft!
+              <span className="font-semibold text-teal">Demo</span> — Maak lijsten, blader door
+              30 recepten, plan je weekmenu en voeg ingrediënten toe met één klik. Alles wordt per
+              browser-sessie opgeslagen, zodat elke gebruiker zijn eigen data heeft.
             </p>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 text-center"
+          >
+            <p className="text-slate-400 font-inter mb-4 text-sm">
+              Wil je een vergelijkbare app voor jouw bedrijf?
+            </p>
+            <Link
+              href="/#contact"
+              className="inline-flex items-center gap-3 bg-teal text-midnight font-montserrat font-bold text-sm px-8 py-4 rounded-xl hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] transition-shadow"
+            >
+              Neem contact op
+            </Link>
           </motion.div>
         </div>
       </main>
 
-      {/* Add Item Modal */}
+      {/* Modals */}
       <AddItemModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={addItem}
+        onAdd={(name, cat, qty) => {
+          store.addItem(name, cat, qty);
+          showToast(`${name} toegevoegd`, "success");
+        }}
       />
+
+      <RecipeDetailModal
+        recipe={selectedRecipe}
+        onClose={() => setSelectedRecipe(null)}
+        onAddToList={handleAddToListFromRecipe}
+        onToggleSave={(id) => {
+          store.toggleSavedRecipe(id);
+          const wasSaved = store.savedRecipes.includes(id);
+          showToast(wasSaved ? "Recept verwijderd uit opgeslagen" : "Recept opgeslagen", wasSaved ? "info" : "success");
+        }}
+        onAddToWeekMenu={handleAddToWeekMenu}
+        isSaved={selectedRecipe ? store.savedRecipes.includes(selectedRecipe.id) : false}
+      />
+
+      {/* Click outside to close list picker */}
+      {showListPicker && (
+        <div className="fixed inset-0 z-10" onClick={() => setShowListPicker(false)} />
+      )}
     </>
+  );
+}
+
+// Wrap met ToastProvider
+export default function BoodschappenDemoPage() {
+  return (
+    <ToastProvider>
+      <BoodschappenAppInner />
+    </ToastProvider>
   );
 }

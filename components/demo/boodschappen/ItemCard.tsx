@@ -18,7 +18,6 @@ export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove }: Ite
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
-      className="group relative"
     >
       <div
         className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
@@ -33,27 +32,36 @@ export const ItemCard = memo(function ItemCard({ item, onToggle, onRemove }: Ite
           className={`flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all active:scale-95 ${
             item.checked
               ? "bg-brand-600 border-brand-600"
-              : "border-gray-300 dark:border-gray-600 hover:border-brand-500 dark:hover:border-brand-500"
+              : "border-gray-300 dark:border-gray-600 hover:border-brand-500"
           }`}
         >
           {item.checked && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
         </button>
 
-        {/* Item naam */}
-        <span
-          className={`flex-1 text-sm font-medium transition-all ${
-            item.checked
-              ? "text-gray-400 dark:text-gray-500 line-through"
-              : "text-gray-800 dark:text-gray-100"
-          }`}
-        >
-          {item.name}
-        </span>
+        {/* Item info */}
+        <div className="flex-1 min-w-0">
+          <span
+            className={`text-sm font-medium block transition-all ${
+              item.checked
+                ? "text-gray-400 dark:text-gray-500 line-through"
+                : "text-gray-800 dark:text-gray-100"
+            }`}
+          >
+            {item.name}
+          </span>
+          {(item.quantity || item.note) && (
+            <span className="text-xs text-gray-400 dark:text-gray-500 block truncate">
+              {item.quantity && <span className="font-mono">{item.quantity}</span>}
+              {item.quantity && item.note && " · "}
+              {item.note}
+            </span>
+          )}
+        </div>
 
-        {/* Verwijder knop */}
+        {/* Verwijder knop - altijd zichtbaar */}
         <button
           onClick={() => onRemove(item.id)}
-          className="flex-shrink-0 w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors active:scale-95 opacity-0 group-hover:opacity-100 sm:opacity-100"
+          className="flex-shrink-0 w-8 h-8 rounded-lg text-gray-300 dark:text-gray-600 hover:text-red-400 dark:hover:text-red-400 flex items-center justify-center transition-colors active:scale-95"
           aria-label={`Verwijder ${item.name}`}
         >
           <Trash2 className="w-4 h-4" />
