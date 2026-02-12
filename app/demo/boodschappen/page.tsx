@@ -66,7 +66,7 @@ function BoodschappenAppInner() {
 
     container.addEventListener("wheel", onWheel, { passive: false });
     return () => container.removeEventListener("wheel", onWheel);
-  }, []);
+  }, [store.loading]);
 
   // Apply dark mode within the demo
   useEffect(() => {
