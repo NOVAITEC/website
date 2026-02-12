@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   Trash2,
   ShoppingCart,
   ShoppingBag,
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
+import { SolutionBackButton } from "@/components/ui/SolutionBackButton";
 import { ToastProvider, useToast } from "@/components/demo/boodschappen/ToastContext";
 import { useGroceryStorage, GroceryItem } from "@/components/demo/boodschappen/useGroceryStorage";
 import { GroceryList } from "@/components/demo/boodschappen/GroceryList";
@@ -156,13 +156,7 @@ function BoodschappenAppInner() {
             transition={{ duration: 0.6 }}
             className="mb-6"
           >
-            <Link
-              href="/oplossingen"
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-teal transition-colors mb-6 font-inter text-sm"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Terug naar oplossingen
-            </Link>
+            <SolutionBackButton className="mb-6" />
 
             <div className="flex items-center gap-4 mb-3">
               <div className="p-3 rounded-xl bg-teal/10 border border-teal/20">
