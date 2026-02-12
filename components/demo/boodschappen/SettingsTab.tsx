@@ -176,7 +176,7 @@ export function SettingsTab({
                 Boodschappen App
               </span>
               <span className="text-[11px] text-gray-400 dark:text-gray-500">
-                Demo versie · NovaITec
+                Demo versie · NOVAITEC
               </span>
             </div>
           </div>
@@ -189,7 +189,7 @@ export function SettingsTab({
         {/* Made with love */}
         <div className="text-center py-2">
           <p className="text-[11px] text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1">
-            Gemaakt met <Heart className="w-3 h-3 text-red-400 fill-current" /> door NovaITec
+            Gemaakt met <Heart className="w-3 h-3 text-red-400 fill-current" /> door NOVAITEC
           </p>
         </div>
       </div>
